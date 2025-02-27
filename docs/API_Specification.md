@@ -1,7 +1,7 @@
 # API Documentation
 
 ## Overview
-This document provides detailed information about the API endpoints for the AI Mock Interview Platform. It includes request and response structures, authentication requirements, and error handling guidelines.
+This document provides detailed information about the API endpoints for the IPREP project. It includes request and response structures, authentication requirements, and error handling guidelines.
 
 ## Base URL
 ```
@@ -129,5 +129,5 @@ Errors follow this standard format:
 ```
 
 ## Conclusion
-This API allows seamless management of users, interview sessions, and AI-generated feedback. Future updates will introduce additional features such as real-time coaching and premium content access.
+This API allows seamless management of users, interview sessions, and AI-generated feedback.
 
