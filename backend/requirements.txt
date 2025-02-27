@@ -1,0 +1,9 @@
+requests
+Flask
+Flask-SQLAlchemy
+Flask-Cors
+Flask-Migrate
+SQLAlchemy
+gunicorn
+python-dotenv
+flask-restx

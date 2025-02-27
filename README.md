@@ -78,10 +78,48 @@ README.md                   # Project documentation
 
 ## **Getting Started**
 ### **1. Prerequisites**
-List of tools required to set up the project (e.g., Python, Node.js, PostgreSQL, etc.)
+
+1. Install Node.js (18 or higher) and npm: Required for running the React frontend
+
+2. Install Python (3.9 or higher) and pip: Required for running the AI services and Flask backend
+
+3. Install SQLite or MySQL: Required for the database
+
+4. Install Flask: Web framework for backend.
+
+5. Install React: Frontend framework for the application.
+
+6. Install required packages: Run `npm install` and `pip install -r requirements.txt
+
+7. Virtual Environment: Recommended for Python dependency management
+
+8. Git: Version control system
 
 ### **2. Backend Setup (Flask API)**
 Step-by-step guide on setting up the backend, installing dependencies, configuring environment variables, and running the server.
+
+1. Clone the repository:
+    - git clone <repo_url>
+    - cd <directory>
+
+2. Create and activate a virtual environment
+    - python -m venv venv
+    - venv\Scripts\activate # Windows
+    - source venv/bin/activate # Linux/Mac
+
+3. Install dependencies:
+    - pip install -r requirements.txt
+
+4. Set environmnet variables (create a .env file)
+    - FLASK_APP=app.py
+    - FLASK_ENV=development
+    - DATABASE_URL=<your_database_url>
+
+5. Run database migrations
+    - flask db upgrade
+
+6. Start the backend server:
+    - flask run
 
 ### **3. Frontend Setup (React App)**
 Steps to install frontend dependencies and start the development server.
@@ -89,23 +127,67 @@ Steps to install frontend dependencies and start the development server.
 ### **4. Database Setup**
 Instructions for setting up the database, running migrations, and seeding test data.
 
+1. Install MySQL or SQL and create a new database
+
+2. Update the .env file with the correct database URL.
+
+3. Apply migrations:
+    - flask db init
+    - flask db migrate -m "Initial migration"
+    - flask db upgrade
+
+4. Verify database tables are created using your database management tool e.g MySQL Workbench or SSMS
+
+
 ### **5. AI Services Setup**
 Guide for setting up AI-related tools, dependencies, and models.
+(WILL COMPLETE AS WE GO BY DEVELOPING)
 
 ### **6. Running the Application**
 Commands to start the backend and frontend together, including environment variable setup.
 
+1. Start the backend server
+    - flask run
+
+2. Start the frontend development server
+    - npm install
+    - npm start
+
+3. Open your web browser and navigate to http://localhost:3000
+
+
 ### **7. Version Control and Branching Strategy**
 Explanation of Git branching model (e.g., `main`, `dev`, `feature-branches`), commit guidelines, and code review process.
 
-### **8. Deployment Guide**
+1. main branch: Stable production-ready code
+
+2. dev branch: Active Development branch
+
+3. feature-branches: Feature-specific branches (e.g., `feature/new-feature`)
+
+4. Commit guidelines:
+- Use imperative mood (e.g., "Add new feature")
+- Use present tense (e.g., "Add new feature")
+- Use descriptive commit messages (e.g., "Add new feature to improve user experience")
+
+5. Code review process:
+- Review code before merging into dev branch
+- Ensure code adheres to coding standards and best practices
+- Use code review tools to facilitate collaboration and feedback
+
+6. Best Practices:
+- Use meaningful commit messages
+- Always create a feature branch from develop
+- Use pull requests to review code before merging into develop
+- Submit a pull request (PR) to merge into develop
+- Code reviews should be conducted before merging
+
+
+### **8. Deployment Guide** (IF WE NEED CI/CD NICE TO HAVE)
 Instructions for deploying the application, both frontend and backend, in different environments (e.g., local, staging, production).
 
 ### **9. Troubleshooting & FAQs**
 Common issues and solutions, including debugging tips for backend, frontend, and AI services.
-
-### **10. Contribution Guidelines**
-How contributors should structure their code, commit messages, and pull requests.
 
 ---
 This document serves as a guide for setting up and maintaining the project. It will be updated as the project evolves.
