@@ -1,32 +1,31 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_cors import CORS
-import os
+from flask import Flask, jsonify
+from app.routes import api_bp
+from .exts import db, migrate, jwt
 from .config import config_dict
-from flask_restx import Api, Resource
-
-#Initialize extensions
-# db = SQLAlchemy()
-# migrate = Migrate()
+from .commands import seed_db
 
 def create_app(config_name="development"):
     app = Flask(__name__)
 
+    # Load the appropriate configuration class
     config_class = config_dict.get(config_name, "development")
     app.config.from_object(config_class)
+    app.config["JWT_SECRET_KEY"] = "your_secret_key"
 
-    # db.init_app(app)
-    # migrate.init_app(app, db)
-    # CORS(app) 
 
-    #initialize API
-    api = Api(app, version='1.0', title='I-Prep API', description="API for AI-driven interviews")
+    # Register the seed command
+    app.cli.add_command(seed_db)
+    
+    # Initialize database and migrations
+    migrate.init_app(app, db)
+    
+    jwt.init_app(app)
+    
+    # Initialize the database
+    db.init_app(app)
+    
+    # Register the Flask-RESTX API instance (with the Swagger UI)
+    app.register_blueprint(api_bp, url_prefix='/')
 
-    #register namespaces
-    from .routes.routes import ns_hello
-    api.add_namespace(ns_hello, path="/api/hello")
-
-    # Register blueprints as well if we want to
-
+    # Return the app instance
     return app
