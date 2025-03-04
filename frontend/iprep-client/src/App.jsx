@@ -3,6 +3,7 @@ import "./App.css";
 import Layout from './pages/Layout'
 import Home from "./pages/Home";
 import StartInterview from "./pages/StartInterview";
+import CVManager from "./pages/CVManager";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="start" element={<StartInterview />} />
           <Route path="login" element={<login />} />
+          <Route path="cv-upload" element={<CVManager />} />
           {/* <Route path="*" element={<NoPage />} /> */}
         </Route>
       </Routes>
