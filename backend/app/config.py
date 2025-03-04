@@ -1,5 +1,4 @@
 #This File will centralize configuration settings for different environments.
-
 import os
 from dotenv import load_dotenv
 
@@ -8,18 +7,18 @@ load_dotenv()
 
 class Config:
     """Base configuration"""
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
     SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret_key")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///dev.db")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
 
 class ProductionConfig(Config):
     """Production configuration"""
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///prod.db")
-    DEBUG = False
+    pass
 
 #We can also put testing config if we want to
 

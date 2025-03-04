@@ -11,12 +11,16 @@ The project follows a well-structured and modular approach, ensuring scalability
 backend/
 │── app/
 │   ├── models/             # Database models (SQLAlchemy ORM)
+│   ├── api/                # API endpoints (Flask-Restful)
+│   ├── services/           # Business logic and data processing
+│   ├── utils/              # Utility functions and constants
 │   ├── routes/             # API route handlers
 │   ├── services/           # Business logic and AI processing
-│   ├── utils/              # Utility functions and helpers
+│   ├── database/           # All database operations
 │   ├── config.py           # Application configuration settings
 │   ├── __init__.py         # Application entry point
-│   ├── main.py             # Main Flask app instance
+│   ├── app.py              # Main Flask app instance
+│   ├── exts.py             # All python modules which will be reused throughout the app
 │── migrations/             # Database migration scripts
 │── requirements.txt        # Python dependencies
 │── .env                    # Environment variables
@@ -132,7 +136,7 @@ Instructions for setting up the database, running migrations, and seeding test d
 2. Update the .env file with the correct database URL.
 
 3. Apply migrations:
-    - flask db init
+    - flask db init (only once to initialize the migrations)
     - flask db migrate -m "Initial migration"
     - flask db upgrade
 
