@@ -3,9 +3,11 @@ from app.routes import api_bp
 from .exts import db, migrate, jwt
 from .config import config_dict
 from .commands import seed_db
+from flask_cors import CORS
 
 def create_app(config_name="development"):
     app = Flask(__name__)
+    cors = CORS(app, origins='*')
 
     # Load the appropriate configuration class
     config_class = config_dict.get(config_name, "development")

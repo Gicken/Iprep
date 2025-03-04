@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from flask import current_app
 from app.exts import jwt
 from flask_jwt_extended import create_access_token, decode_token
@@ -6,8 +6,11 @@ from flask_jwt_extended import create_access_token, decode_token
 def generate_jwt_token(user):
     """Generate a JWT token with a payload using jwt_extended"""
     additional_claims = {
+        "id": user.id,
         "email": user.email,
-        "role": user.role
+        "role": user.role,
+        "firstName": user.firstName,
+        "lastName": user.lastName
     }
     token=create_access_token(
         identity=user.id, 
