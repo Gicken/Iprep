@@ -1,41 +1,28 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Layout from './pages/Layout'
+import Layout from "./pages/Layout";
+import Login from "./pages/LoginPage";
 import Home from "./pages/Home";
 import StartInterview from "./pages/StartInterview";
-
+import Dashboard from "./pages/Dashboard";
+import RecoveryPage from "./pages/RecoveryPage";
 
 function App() {
-
   return (
     <Router>
       <Routes>
-      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="start" element={<StartInterview />} />
-          <Route path="login" element={<login />} />
-          {/* <Route path="*" element={<NoPage />} /> */}
+          <Route path="home" element={<Home />} />
+          <Route path="recovery" element={<RecoveryPage/>}/>
         </Route>
+        
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
-
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-// import './App.css'
-// import Login from './pages/login'
-
-// function App() {
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<Login />} />
-//         <Route path="/dashboard" element={<h1 className="text-3xl text-center mt-20">Welcome to Dashboard</h1>} />
-//       </Routes>
-//     </Router>
-//   )
-// }
-
-// export default App
