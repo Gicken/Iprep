@@ -7,7 +7,8 @@ from flask_cors import CORS
 
 def create_app(config_name="development"):
     app = Flask(__name__)
-    cors = CORS(app, origins='*')
+    # CORS(app, origins='*')
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
     # Load the appropriate configuration class
     config_class = config_dict.get(config_name, "development")

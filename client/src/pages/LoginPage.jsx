@@ -73,9 +73,9 @@ const Login = () => {
           <div className="login-form-right">
             <h2 className="text-3xl font-semibold mb-4">Hello, Friend!</h2>
             <p className="mb-6">Enter your personal details and start your journey with us</p>
-            <button className="border border-white rounded-md py-2 px-4 hover:bg-white hover:text-black transition duration-300 ease-in-out">
+            <Link to="/registration"><button className="border border-white rounded-md py-2 px-4 hover:bg-white hover:text-black transition duration-300 ease-in-out">
               Sign Up
-            </button>
+            </button></Link>
           </div>
         </div>
       </div>

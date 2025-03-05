@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
 import Layout from "./pages/Layout";
 import Login from "./pages/LoginPage";
 import Home from "./pages/Home";
 import StartInterview from "./pages/StartInterview";
 import Dashboard from "./pages/Dashboard";
 import RecoveryPage from "./pages/RecoveryPage";
+import RegistrationForm from "./components/RegistrationForm";
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
           <Route path="start" element={<StartInterview />} />
           <Route path="home" element={<Home />} />
           <Route path="recovery" element={<RecoveryPage/>}/>
+          <Route path="registration" element={<RegistrationForm/>} />
         </Route>
         
         <Route path="/login" element={<Login />} />

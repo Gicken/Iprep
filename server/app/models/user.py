@@ -12,7 +12,7 @@ class User(db.Model):
     lastName = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(50))
+    role = db.Column(db.String(50), default='user')
     createdAt = db.Column(db.DateTime, default=db.func.current_timestamp())
     updatedAt = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
@@ -30,12 +30,11 @@ class User(db.Model):
         """Check the hashed password"""
         return check_password_hash(self.password_hash, password)
 
-    def __init__(self, firstName, lastName, email, password, role):
+    def __init__(self, firstName, lastName, email, password):
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
         self.password = password
-        self.role = role
 
     def __repr__(self):
         return f'<User {self.firstName} {self.lastName}>'
