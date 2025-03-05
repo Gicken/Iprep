@@ -12,6 +12,7 @@ bcrypt = Bcrypt()
 def create_app(config_name="development"):
     """Create and configure the Flask application."""
     app = Flask(__name__)
+    cors = CORS(app, origins='*')
 
     # Load configuration
     app.config.from_object(config_dict[config_name])
