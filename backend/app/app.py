@@ -1,7 +1,8 @@
-from backend import create_app
+# app.py
+from app import create_app
 
+# Create the Flask app instance
 app = create_app()
 
-if __name__ == "__main__":
-    print("SERVER IS UP AND RUNNING, READY TO ACCEPT REQUESTS! CHEERS!!")
+if __name__ == '__main__':
     app.run(debug=True)

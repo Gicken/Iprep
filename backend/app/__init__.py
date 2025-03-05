@@ -1,32 +1,31 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
 from flask_cors import CORS
-import os
+from flask_restx import Api  
 from .config import config_dict
-from flask_restx import Api, Resource
 
-#Initialize extensions
-# db = SQLAlchemy()
-# migrate = Migrate()
+# Initialize extensions
+db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 def create_app(config_name="development"):
+    """Create and configure the Flask application."""
     app = Flask(__name__)
 
-    config_class = config_dict.get(config_name, "development")
-    app.config.from_object(config_class)
+    # Load configuration
+    app.config.from_object(config_dict[config_name])
 
-    # db.init_app(app)
-    # migrate.init_app(app, db)
-    # CORS(app) 
+    # Initialize extensions
+    db.init_app(app)
+    bcrypt.init_app(app)
+    CORS(app, resources={r"/*": {"origins": "*"}}) 
 
-    #initialize API
-    api = Api(app, version='1.0', title='I-Prep API', description="API for AI-driven interviews")
+    # Initialize Flask-RESTx API
+    api = Api(app, title="User API", version="1.0", description="API for User Management")
 
-    #register namespaces
-    from .routes.routes import ns_hello
-    api.add_namespace(ns_hello, path="/api/hello")
-
-    # Register blueprints as well if we want to
+    # Register routes (Blueprints)
+    from .routes.routes import api as user_namespace
+    api.add_namespace(user_namespace, path="/user")
 
     return app
