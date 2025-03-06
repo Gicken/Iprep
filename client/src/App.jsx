@@ -9,6 +9,7 @@ import ResetPage from "./pages/ResetPage";
 import RegistrationForm from "./components/RegistrationForm";
 import ComingSoon from "./components/coming_soon";
 import AuthLayout from "./layouts/AuthLayout";
+import JobDescriptionApp from "./JobDescription/index";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="recovery" element={<RecoveryPage/>}/>
           <Route path="registration" element={<RegistrationForm/>} />
           <Route path="reset" element={<ResetPage/>} />
+          <Route path="job-description" element={<JobDescriptionApp/>} />
         </Route>
         
       </Routes>

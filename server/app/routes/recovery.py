@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify, url_for
 from flask_mail import Message
 import jwt
 import datetime
-from app import mail
-from app.models import users  
+from app.exts import mail
+from app.models import user 
 
 recovery_bp = Blueprint('recovery', __name__)
 
