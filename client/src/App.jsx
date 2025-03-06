@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import StartInterview from "./pages/StartInterview";
 import Dashboard from "./pages/Dashboard";
 import RecoveryPage from "./pages/RecoveryPage";
+import ResetPage from "./pages/ResetPage";
 import RegistrationForm from "./components/RegistrationForm";
 import ComingSoon from "./components/coming_soon";
 import AuthLayout from "./layouts/AuthLayout";
@@ -20,8 +21,7 @@ function App() {
           <Route path="comingsoon" element={<ComingSoon/>} /> 
           <Route path="recovery" element={<RecoveryPage/>}/>
           <Route path="registration" element={<RegistrationForm/>} />
-          <Route path="/login" element={<Login />} />
-
+          <Route path="reset" element={<ResetPage/>} />
         </Route>
         
       </Routes>

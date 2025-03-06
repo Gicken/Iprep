@@ -4,6 +4,9 @@ from .exts import db, migrate, jwt
 from .config import config_dict
 from .commands import seed_db
 from flask_cors import CORS
+from flask_mail import Mail
+from .routes.recovery import recovery_bp
+from .config import Config
 
 def create_app(config_name="development"):
     app = Flask(__name__)
@@ -29,6 +32,15 @@ def create_app(config_name="development"):
     
     # Register the Flask-RESTX API instance (with the Swagger UI)
     app.register_blueprint(api_bp, url_prefix='/')
+    
 
     # Return the app instance
     return app
+
+    app = Flask(__name__)
+app.config.from_object(Config)
+
+mail = Mail(app)
+
+# Register the recovery blueprint
+app.register_blueprint(recovery_bp, url_prefix='/auth')
