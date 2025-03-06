@@ -27,7 +27,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-dark">
+    <div className="flex items-center justify-center min-h-screen bg-[#1A1C1B]">
       <div className="login-form-container">
         <div className="flex">
           {/* Left Section (Login Form) */}
@@ -63,7 +63,7 @@ const Login = () => {
               </div>
               {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
               <div className="flex justify-between items-center mb-6">
-              <Link to="/recovery"><a className="forgot-password">Forgot your password?</a></Link>
+              <Link to="/recovery" className="forgot-password">Forgot your password?</Link>
               </div>
               <button type="submit" className="primary-button">SIGN IN</button>
             </form>

@@ -1,11 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "./pages/Layout";
+import Layout from "./layouts/Layout";
 import Login from "./pages/LoginPage";
 import Home from "./pages/Home";
 import StartInterview from "./pages/StartInterview";
 import Dashboard from "./pages/Dashboard";
 import RecoveryPage from "./pages/RecoveryPage";
 import RegistrationForm from "./components/RegistrationForm";
+import ComingSoon from "./components/coming_soon";
+import AuthLayout from "./layouts/AuthLayout";
 
 function App() {
   return (
@@ -13,14 +15,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="dashboard" element={<Dashboard />} />
           <Route path="start" element={<StartInterview />} />
           <Route path="home" element={<Home />} />
+          <Route path="comingsoon" element={<ComingSoon/>} /> 
           <Route path="recovery" element={<RecoveryPage/>}/>
           <Route path="registration" element={<RegistrationForm/>} />
-        </Route>
+          <Route path="login" element={<Login />} />
         
-        <Route path="/login" element={<Login />} />
+        
+        </Route>
+        <Route path="dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );

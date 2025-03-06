@@ -8,7 +8,17 @@
     --color-primary: #59FF00;
     --color-white: #ffffff;
   }
-  
+
+body {
+    height: 100%;
+    overflow-y: hidden;
+  }
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+   */
   .login-form-container {
     background-color: var(--color-white);
     border-radius: 0.5rem;
