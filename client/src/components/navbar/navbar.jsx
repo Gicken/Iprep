@@ -1,24 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import '../../assets/styles/NavbarStyles.css';
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-800">
-      <div className="relative flex h-16 items-center justify-between">
-        <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div className="sm:ml-6 sm:block">
-            <div className="flex space-x-4">
-            <a href="/" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home</a>
-
-              <Link to="login" className="nav-link rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Login</Link>
-              <a href="start" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Start</a>
-              <a href="dashboard" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Dashboard</a>
-              <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Upload</a>
+    <nav className="bg-[#1A1C1B] py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex-shrink-0">
+            <NavLink to="/" className="text-white font-bold text-xl">FDM</NavLink>
+          </div>
+          <div className="flex items-center justify-center w-full">
+            <div className="hidden md:flex space-x-4">
+              <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}>Home</NavLink>
+              <NavLink to="/comingsoon" className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}>How It Works</NavLink>
+              <NavLink to="/comingsoon" className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}>FAQ's</NavLink>
             </div>
+          </div>
+          <div className="ml-4 flex items-center md:ml-6">
+            <NavLink to="/login" className="btn-primary mr-2">Login</NavLink>
+            <NavLink to="/registration" className="btn-secondary">Signup</NavLink>
+          </div>
         </div>
       </div>
-    </div>
-  </nav>);
+    </nav>
+  );
 };
 
 export default Navbar;
