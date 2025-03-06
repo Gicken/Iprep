@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import StartInterview from "./pages/StartInterview";
 import Dashboard from "./pages/Dashboard";
 import RecoveryPage from "./pages/RecoveryPage";
+import ResetPage from "./pages/ResetPage";
 import RegistrationForm from "./components/RegistrationForm";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route path="recovery" element={<RecoveryPage/>}/>
           <Route path="registration" element={<RegistrationForm/>} />
+          <Route path="reset" element={<ResetPage/>} />
         </Route>
         
         <Route path="/login" element={<Login />} />

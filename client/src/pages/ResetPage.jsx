@@ -4,13 +4,25 @@ import { useNavigate } from "react-router-dom";
 export default function ResetPage() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(""); 
+  const [error, setError] = useState("");  
   const navigate = useNavigate(); 
 
+  const validatePassword = (password) => {
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    return password.length >= 8 && specialCharRegex.test(password);
+  };
+
   const handlePasswordReset = () => {
-    if (password) {
-      setMessage("Password has been successfully reset.");
+    if (!password) {
+      setError("Please enter a password.");
+      setMessage("");
+    } else if (!validatePassword(password)) {
+      setError("Password must be at least 8 characters long and contain at least 1 special character.");
+      setMessage("");
     } else {
-      setMessage("Please enter a password.");
+      setError("");
+      setMessage("Password has been successfully reset.");
+      // Add actual password reset logic here (e.g., API call)
     }
   };
 
@@ -26,15 +38,17 @@ export default function ResetPage() {
         placeholder="Enter new password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 rounded mb-4"
+        className="border p-2 rounded mb-2"
       />
       <button 
         onClick={handlePasswordReset} 
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
       >
         Confirm
       </button>
-      {message && <p className="mt-4 text-green-500">{message}</p>}
+
+      {error && <p className="mt-2 text-red-500">{error}</p>}
+      {message && <p className="mt-2 text-green-500">{message}</p>}
 
       <button 
         onClick={handleReturnToLogin} 
