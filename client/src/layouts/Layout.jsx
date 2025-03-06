@@ -7,7 +7,7 @@ const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-grow">
+      <main style={{ height: 'calc(100vh - 64px - 128px)' }} className="flex-grow h-full">
         <Outlet />
       </main>
       <Footer />

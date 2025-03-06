@@ -9,6 +9,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             <NavLink to="/" className="text-white font-bold text-xl">FDM</NavLink>
+            {/* <img src={imagePath} alt="AI Assistant"/> */}
           </div>
           <div className="flex items-center justify-center w-full">
             <div className="hidden md:flex space-x-4">
