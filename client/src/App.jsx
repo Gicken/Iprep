@@ -20,11 +20,10 @@ function App() {
           <Route path="comingsoon" element={<ComingSoon/>} /> 
           <Route path="recovery" element={<RecoveryPage/>}/>
           <Route path="registration" element={<RegistrationForm/>} />
-          <Route path="login" element={<Login />} />
-        
-        
+          <Route path="/login" element={<Login />} />
+
         </Route>
-        <Route path="dashboard" element={<Dashboard />} />
+        
       </Routes>
     </Router>
   );
