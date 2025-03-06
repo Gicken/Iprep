@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import imagePath from '../assets/images/artificial-intelligence-icon-png-14771.png';
 // undraw_progress-indicator_c14b.png
 import '../assets/styles/Homepage.css';
@@ -15,7 +16,8 @@ const Home = () => {
           <p className="text-lg md:text-xl text-gray-300 mb-8">
             Practice and perfect your interview skills with FDM's AI-powered interview tool. Get personalized feedback and guidance to get ready for the client.
           </p>
-          <button className="btn-primary">Sign In</button>
+          <NavLink to="/login">
+          <button className="btn-primary">Sign In</button></NavLink>
         </div>
 
         {/* Right Side */}

@@ -19,7 +19,7 @@ const Login = () => {
     try {
       const response = await login(email, password);
       console.log('LoginPage: login', response);
-      navigate('/dashboard');
+      navigate('/comingsoon');
     } catch (error) {
       console.log('LoginPage: Error', error);
       setError(error.response?.data?.message || 'Invalid login credentials.');
