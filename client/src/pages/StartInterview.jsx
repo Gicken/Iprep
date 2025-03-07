@@ -98,7 +98,7 @@ function StartInterview() {
                             <div className="ml-4 mt-2">
                                 Please select a difficulty:
                             </div>
-                            <ul className="items-center ml-4 w-7/8 sm:flex">
+                            <ul className="items-center ml-4 mb-2 w-7/8 sm:flex">
                                 <li className="w-full">
                                     <div className="flex items-center">
                                         <input
