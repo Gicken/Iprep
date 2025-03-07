@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import '../../assets/styles/NavbarStyles.css';
+import imagePath from '../assets/images/FDM_Logo_White_RGB.png';
 
 const Navbar = () => {
   return (
@@ -8,14 +8,15 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <NavLink to="/" className="text-white font-bold text-xl">FDM</NavLink>
-            {/* <img src={imagePath} alt="AI Assistant"/> */}
+            <NavLink to="/" className="text-white font-bold text-xl flex items-center">
+                <img src={imagePath} className="max-h-12 mr-2" alt="FDM Logo"/>
+            </NavLink>
           </div>
           <div className="flex items-center justify-center w-full">
             <div className="hidden md:flex space-x-4">
               <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}>Home</NavLink>
-              <NavLink to="/comingsoon" className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}>How It Works</NavLink>
-              <NavLink to="/comingsoon" className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}>FAQ's</NavLink>
+              <NavLink to="/how-it-works" className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}>How It Works</NavLink>
+              <NavLink to="/faqs" className={({ isActive }) => `nav-link ${isActive ? 'active-link' : ''}`}>FAQ's</NavLink>
             </div>
           </div>
           <div className="ml-4 flex items-center md:ml-6">

@@ -8,23 +8,39 @@ import RecoveryPage from "./pages/RecoveryPage";
 import ResetPage from "./pages/ResetPage";
 import RegistrationForm from "./components/RegistrationForm";
 import ComingSoon from "./components/coming_soon";
+import FAQs from "./pages/FAQs";
+import HowItWorks from "./pages/HowItWorks";
 import AuthLayout from "./layouts/AuthLayout";
+import DashboardLayout from "./layouts/DashboardLayout";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
+      {/* Normal Layout */}
+      <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="start" element={<StartInterview />} />
           <Route path="home" element={<Home />} />
           <Route path="comingsoon" element={<ComingSoon/>} /> 
           <Route path="recovery" element={<RecoveryPage/>}/>
           <Route path="registration" element={<RegistrationForm/>} />
           <Route path="reset" element={<ResetPage/>} />
+          <Route path="how-it-works" element={<HowItWorks />} />
+          <Route path="faqs" element={<FAQs />} />
+          <Route path="login" element={<Login/>}/>
+          
         </Route>
         
-      </Routes>
+
+      {/* DASHBOARD LAYOUT */}
+      <Route path="/" element={<DashboardLayout/>}>
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="start" element={<StartInterview />} />
+
+        </Route>
+
+      </Routes>     
     </Router>
   );
 }
