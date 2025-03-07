@@ -5,7 +5,7 @@ import DashboardHeader from "../components/DashboardHeader";
 
 const DashboardLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const [title, setTitle] = useState("Dashboard");
+    const [title, setTitle] = useState("Page");
     console.log("setTitle", setTitle);
 
     const toggleSidebar = () => {
@@ -17,7 +17,7 @@ const DashboardLayout = () => {
             <DashboardNavbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
             <main className={`flex-1 flex flex-col p-8 ${isSidebarOpen ? 'ml-64' : 'ml-20'}`}>
                 <DashboardHeader title={title} />
-                <Outlet />
+                <Outlet context={{setTitle}} />
             </main>
         </div>
     );

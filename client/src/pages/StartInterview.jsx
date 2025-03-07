@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
+import { useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
+
 
 function StartInterview() {
     const [cvList] = useState(["pythonCV", "javaCV", "testingCV"]);
     const [selectedCv, setSelectedCv] = useState("");
-    const [title,setTitle] = useState("StartInterview");
-    console.log("Title of this page: ", title);
 
     const [jobSpecList] = useState([
         "python dev role",
@@ -26,18 +27,17 @@ function StartInterview() {
         setDifficulty(event.target.value);
     };
 
-    const location = useLocation();
-    React.useEffect(() => {
-        if (location.pathname === '/start') {
-            setTitle('Start Interview');
-        } else {
-            setTitle('Start Interview');
-        }
-    }, [location]);
+    const { setTitle } = useOutletContext();
+
+    useEffect(() => {
+        setTitle("Start Interview");
+    });
+
     
 
     return (
         <>
+
             {/* Main Content Cards */}
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                 <div className="bg-gray-800 rounded-md p-6">
@@ -47,12 +47,13 @@ function StartInterview() {
                     <form onSubmit={null}>
                         {/* Select for CV */}
                         <div className="w-full border-2 relative mb-4">
-                            <label className="ml-4 mt-2" htmlFor="selectCV">
+                            <div className="flex mt-2">
+                            <div className=" w-3/16 ml-4 mt-2" >
                                 Choose a CV:
-                            </label>
+                            </div>
                             <select
                                 id="selectCV"
-                                className="w-7/8 ml-4 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
+                                className="w-5/8 mr-2 input-field"
                                 value={selectedCv}
                                 onChange={handleChangeCV}
                             >
@@ -62,57 +63,32 @@ function StartInterview() {
                                     </option>
                                 ))}
                             </select>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.2"
-                                stroke="currentColor"
-                                className="h-5 w-5 ml-1 absolute top-10.5 right-7.5 text-slate-700 pointer-events-none"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M8.25 15 12 18.75 15.75 15m-7.5"
-                                />
-                            </svg>
-                            <p className="ml-4 mb-2">
+                            </div>
+                            <p className="ml-4 mb-3">
                                 You selected: {selectedCv || "None"}
                             </p>
                         </div>
 
                         {/* Select for Job spec */}
                         <div className="w-full border-2 relative mb-4">
-                            <label className="ml-4 mt-2" htmlFor="selectJob">
+                        <div className="flex mt-2">
+                        <div className=" w-3/16 ml-4 mt-2" >
                                 Choose a Job Spec:
-                            </label>
+                                </div>
                             <select
                                 id="selectJob"
-                                className="w-7/8 ml-4 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
+                                className="w-5/8 mr-2 input-field"
                                 value={selectedJobSpec}
                                 onChange={handleChangeJob}
                             >
                                 {jobSpecList.map((opt) => (
-                                    <option key={opt} value={opt}>
+                                    <option key={opt} value={opt} className="input-field">
                                         {opt}
                                     </option>
                                 ))}
                             </select>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.2"
-                                stroke="currentColor"
-                                className="h-5 w-5 ml-1 absolute top-10.5 right-7.5 text-slate-700 pointer-events-none"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M8.25 15 12 18.75 15.75 15m-7.5"
-                                />
-                            </svg>
-                            <p className="ml-4 mb-2">
+                            </div>
+                            <p className="ml-4 mb-3">
                                 You selected: {selectedJobSpec || "None"}
                             </p>
                         </div>

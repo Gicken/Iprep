@@ -1,7 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
+
 
 const Dashboard = () => {
+
+    const { setTitle } = useOutletContext(); // Get `setTitle` from context
+
+    useEffect(() => {
+        setTitle("Dashboard"); // Update title when component mounts
+    });
+
     return (
         <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
