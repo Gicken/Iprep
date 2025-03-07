@@ -36,11 +36,3 @@ def create_app(config_name="development"):
 
     # Return the app instance
     return app
-
-    app = Flask(__name__)
-app.config.from_object(Config)
-
-mail = Mail(app)
-
-# Register the recovery blueprint
-app.register_blueprint(recovery_bp, url_prefix='/auth')

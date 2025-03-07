@@ -38,11 +38,3 @@ api.add_namespace(login_api, path='/auth')
 
 # Add the registration namespace to the API instance
 api.add_namespace(registration_api, path='/register')
-
-app = Flask(__name__)
-app.config.from_object(Config)
-
-mail = Mail(app)
-
-# Register the recovery blueprint
-app.register_blueprint(recovery_bp, url_prefix='/auth')
