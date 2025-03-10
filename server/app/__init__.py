@@ -7,6 +7,7 @@ from flask_cors import CORS
 from flask_mail import Mail
 from .routes.recovery import recovery_bp
 from .config import Config
+import os
 
 def create_app(config_name="development"):
     app = Flask(__name__)
@@ -17,6 +18,7 @@ def create_app(config_name="development"):
     config_class = config_dict.get(config_name, "development")
     app.config.from_object(config_class)
     app.config["JWT_SECRET_KEY"] = "your_secret_key"
+    app.config["UPLOAD_FOLDER"] = os.getenv("UPLOAD_FOLDER")
 
 
     # Register the seed command
