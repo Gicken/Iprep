@@ -4,8 +4,8 @@ from .exts import db, migrate, jwt
 from .config import config_dict
 from .commands import seed_db
 from flask_cors import CORS
-from flask_mail import Mail
-from .routes.recovery import recovery_bp
+# from flask_mail import Mail
+# from .routes.recovery import recovery_bp
 from .config import Config
 import os
 

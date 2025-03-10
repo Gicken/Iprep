@@ -38,6 +38,8 @@ const AuthProvider = ({ children }) => {
       const response = await AuthService.login(email, password);
       if (response?.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("token", response.data.access_token);
+        console.log("AuthContext: Response: ", response);
         setIsAuthenticated(true);
         setUser(response.data);
         return response;

@@ -5,9 +5,9 @@ from .registration_routes import api as registration_api
 from .auth import auth_ns as login_api
 from .cv_routes import cv_ns as cv_api  # Add this import
 from flask_cors import CORS
-from flask_mail import Mail
-from .routes.recovery import recovery_bp
-from .config import Config
+# from flask_mail import Mail
+# from .routes.recovery import recovery_bp
+# from .config import Config
 
 # Initialize the API instance
 api_bp = Blueprint('api', __name__)
