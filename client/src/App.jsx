@@ -12,6 +12,7 @@ import FAQs from "./pages/FAQs";
 import HowItWorks from "./pages/HowItWorks";
 import AuthLayout from "./layouts/AuthLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
+import CVManager from "./pages/CVManager";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="how-it-works" element={<HowItWorks />} />
           <Route path="faqs" element={<FAQs />} />
           <Route path="login" element={<Login/>}/>
+          <Route path="CVManager" element={<CVManager/>}/>
           
         </Route>
         

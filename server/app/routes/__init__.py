@@ -3,6 +3,7 @@ from flask_restx import Namespace, Api
 from .users import api as users_api
 from .registration_routes import api as registration_api
 from .auth import auth_ns as login_api
+from .cv_routes import cv_ns as cv_api  # Add this import
 from flask_cors import CORS
 from flask_mail import Mail
 from .routes.recovery import recovery_bp
@@ -38,3 +39,6 @@ api.add_namespace(login_api, path='/auth')
 
 # Add the registration namespace to the API instance
 api.add_namespace(registration_api, path='/register')
+
+# Add the CV namespace to the API instance
+api.add_namespace(cv_api, path='/cv')  # Add this line
