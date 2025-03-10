@@ -7,7 +7,6 @@ const AuthService = {
     console.log("AuthService: Sending request: ", {email, password})
     try {
       const response = await axios.post(API_ENDPOINTS.LOGIN, { email, password });
-      console.log("AuthService: response: ", response)
       const { token } = response.data;
 
       if (token) {

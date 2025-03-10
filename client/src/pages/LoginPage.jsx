@@ -19,7 +19,7 @@ const Login = () => {
     try {
       const response = await login(email, password);
       console.log('LoginPage: login', response);
-      navigate('/comingsoon');
+      navigate('/dashboard');
     } catch (error) {
       console.log('LoginPage: Error', error);
       setError(error.response?.data?.message || 'Invalid login credentials.');
@@ -37,8 +37,8 @@ const Login = () => {
             </div>
             <div className="flex space-x-4 mb-6">
               <button className="social-button">f</button>
-              <button className="social-button">G+</button>
-              <button className="social-button">in</button>
+              <button className="social-button">G</button>
+              <button className="social-button">In</button>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">

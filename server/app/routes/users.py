@@ -2,7 +2,7 @@ from flask_restx import Namespace, Resource, fields
 from flask import request
 from ..models.user import User
 from ..exts import db, logger
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import uuid
 
 # Define the user namespace
@@ -43,3 +43,20 @@ class UserList(Resource):
         users = User.query.all()
         logger.info(f"Retrived {len(users)} users")
         return [serialize_user(user) for user in users], 200
+
+@api.route('/me')
+class CurrentUser(Resource):
+    """Handles GET request for current user details"""
+
+    @jwt_required()
+    @api.doc(security='BearerAuth')
+    def get(self):
+        """Get current user details"""
+        logger.debug("Fetching current user details")
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if not user:
+            logger.warning(f"User with ID {user_id} not found")
+            return {'message': 'User not found'}, 404
+        logger.info(f"Retrieved details for user {user.email}")
+        return serialize_user(user), 200
