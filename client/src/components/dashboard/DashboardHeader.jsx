@@ -1,11 +1,10 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import imagePath from '../assets/images/profile.png'
-import logoPath from '../assets/images/FDM_Logo_White_RGB.png'
+import imagePath from '../../assets/images/profile.png'
+import logoPath from '../../assets/images/FDM_Logo_White_RGB.png'
 
 const DashboardHeader = ({ title }) => {
-  // Get user data from localStorage
-  const user = JSON.parse(localStorage.getItem('user')) || {}
+  const user = JSON.parse(sessionStorage.getItem('user')) || {}
 
   return (
     <header className='flex justify-between items-center mb-8'>
@@ -18,14 +17,17 @@ const DashboardHeader = ({ title }) => {
         {title}
       </h1>
       <div className='flex items-center'>
+      <NavLink to='/dashboard/profile'>
         <img
           src={imagePath}
           alt='User Avatar'
           className='w-10 h-10 rounded-full mr-2'
         />
+        </NavLink>
         <span>
           {user.firstName || 'Guest'} {user.lastName || ''}
         </span>
+        
       </div>
     </header>
   )

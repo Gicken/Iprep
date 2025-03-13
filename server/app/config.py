@@ -14,7 +14,7 @@ class Config:
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME', 'your_email@gmail.com')  # Use environment variables
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME', 'your_email@gmail.com')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', 'your_password') 
 
 class DevelopmentConfig(Config):
@@ -26,12 +26,16 @@ class ProductionConfig(Config):
     """Production configuration"""
     pass
 
-#We can also put testing config if we want to
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:%40%21uthandO5657082@localhost:3306/iprep-testdb"
+    SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
+    DEBUG = False
 
 #Dictionary to map environment variables
 config_dict = {
     "development": DevelopmentConfig,
-    "production": ProductionConfig,
-    #tesing as well
+    "testing": TestingConfig,
+    "production": ProductionConfig
 }
 
