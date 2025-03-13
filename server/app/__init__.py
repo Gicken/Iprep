@@ -1,23 +1,27 @@
-from flask import Flask, jsonify
+from flask import Flask
 from app.routes import api_bp
 from .exts import db, migrate, jwt
 from .config import config_dict
 from .commands import seed_db
 from flask_cors import CORS
-# from flask_mail import Mail
-# from .routes.recovery import recovery_bp
 from .config import Config
 import os
 from flask_mail import Mail
 
-def create_app(config_name="development"):
+def create_app(config_name="testing"):
     app = Flask(__name__)
-    # CORS(app, origins='*')
+    
+    # Load the correct config
+    config_class = config_dict.get(config_name, "testing")
+    app.config.from_object(config_class)
+
+    # Debugging: Print current config/checking to see which server i am using
+    print(f"⚡ Running in {config_name} mode")
+    
+    # CORS POLICY TO ALLOW ALL ORIGINS, THIS IS IMPORTANT FOR SECURITY REASONS
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
-    # Load the appropriate configuration class
-    config_class = config_dict.get(config_name, "development")
-    app.config.from_object(config_class)
     app.config["JWT_SECRET_KEY"] = "your_secret_key"
     app.config["UPLOAD_FOLDER"] = os.getenv("UPLOAD_FOLDER")
 

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask_restx import Namespace, Api
+from flask_restx import Api
 from .users import api as users_api
 from .registration_routes import api as registration_api
 from .auth import auth_ns as login_api

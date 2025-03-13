@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from ..utils.jwt_handler import generate_jwt_token
+from ..utils.jwt_handler import generate_jwt_token
 from flask_restx import Namespace, Resource, fields
 from ..models.user import User
 from ..exts import logger
@@ -30,38 +31,31 @@ class LoginResource(Resource):
     @auth_ns.response(200, "Success", response_model)
     @auth_ns.response(400, "Bad Request")
     @auth_ns.response(401, "Unauthorized")
+    @auth_ns.response(404, "Not Found")
+    @auth_ns.response(500, "Internal Server Error")
     def post(self):
         """Handles user authentication and return a JWT token"""
-        data = request.json
-        # log data
-        logger.info(f"Login data: {data}")
-        
-        # Make sure email and password are provided
-        if not data or "email" not in data or "password" not in data:
-            return {"Error": "Missing email or password"}, 400
-        
-        # fetch user by their email
-        user = User.query.filter_by(email=data["email"]).first()
-        
-        # log the fetched user
-        logger.info(f"Fetched user: {user.firstName}")
-        
-        # log the user
-        logger.info(f"Eetched User email: {user.email}")
+        try:
+            data = request.json
+            logger.info(f"Login data: {data}")
 
-        if not user:
-            return {"Error": "User with this email does not exist"}, 404
-        
-        # log the check_password function answer
-        logger.info(f"Password check result: {user.check_password(data['password'])}")
-        
-        if not user.check_password(data["password"]):
-            return {"Error": "Invalid email or password"}, 401
-        # Generate JWT token
-        access_token = generate_jwt_token(user)
-        
-        # Return a success message and the token
-        return {
-            "message": "Logged in successfully", 
-            "access_token": access_token
+            if not data or "email" not in data or "password" not in data:
+                return {"Error": "Missing email or password"}, 400
+
+            user = User.query.filter_by(email=data["email"]).first()
+
+            if not user:
+                return {"Error": "User with this email does not exist"}, 404
+
+            if not user.check_password(data["password"]):
+                return {"Error": "Invalid email or password"}, 401
+
+            access_token = generate_jwt_token(user)
+
+            return {
+                "message": "Logged in successfully",
+                "access_token": access_token
             }, 200
+        except Exception as e:
+            logger.error(f"Login error: {str(e)}")
+            return {"Error": "Internal Server Error"}, 500

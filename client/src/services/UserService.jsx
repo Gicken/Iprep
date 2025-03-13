@@ -4,7 +4,7 @@ import AuthService from './AuthService';
 
 const UserService = {
   getProfile: async () => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     if (!token) {
       console.warn("No authentication token found. Redirecting to login...");
@@ -22,7 +22,7 @@ const UserService = {
 
       if (error.response?.status === 401) {
         console.warn("Unauthorized! Logging out...");
-        AuthService.logout();
+        // AuthService.logout();
         window.location.href = "/login";
       }
 

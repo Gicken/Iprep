@@ -1,9 +1,8 @@
-from flask import request, current_app
+from flask import request
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
-import os
-import uuid
+from werkzeug.datastructures import FileStorage
 
 from app.exts import db
 from app.models.user import User
@@ -12,10 +11,14 @@ from ..models.CV import CV
 # Create the namespace for CV-related routes
 cv_ns = Namespace('cv', description='CV related operations')
 
+upload_parser = cv_ns.parser()
+upload_parser.add_argument('file', location='files', type=FileStorage, required=True, help='CV file to upload')
+
+
 # Define CV model for API responses
 cv_model = cv_ns.model('CV', {
     'id': fields.String(readOnly=True, description='CV ID'),
-    'file_path': fields.String(required=True, description='Path to the CV file'),
+    'file_name': fields.String(required=True, description='Name of the CV file'),
     'upload_date': fields.DateTime(readOnly=True, description='CV upload timestamp'),
     'user_id': fields.String(required=True, description='ID of the user who uploaded the CV')
 })
@@ -27,7 +30,7 @@ cv_upload_model = cv_ns.model('CVUpload', {
 
 @cv_ns.route('/upload')
 class CVUpload(Resource):
-    @cv_ns.expect(cv_upload_model)
+    @cv_ns.expect(upload_parser)
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
     def post(self):
@@ -46,21 +49,14 @@ class CVUpload(Resource):
         # Check file type
         if file and self.allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            
-            # Create uploads directory if it doesn't exist
-            upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
-            os.makedirs(upload_folder, exist_ok=True)
-            
-            # Generate unique filename to prevent overwriting
-            unique_filename = f"{current_user_id}_{str(uuid.uuid4())}_{filename}"
-            file_path = os.path.join(upload_folder, unique_filename)
-            
-            # Save the file
-            file.save(file_path)
 
-            # Create CV record and link to user
+            # Read the file content into memory
+            file_content = file.read()
+
+            # Create CV record and link to user, storing file content
             new_cv = CV(
-                file_path=file_path,
+                file_name=filename,
+                file_data=file_content,
                 user_id=current_user_id
             )
             
@@ -70,7 +66,7 @@ class CVUpload(Resource):
                 return {
                     'message': 'CV uploaded successfully', 
                     'cv_id': new_cv.id,
-                    'file_path': new_cv.file_path
+                    'file_name': new_cv.file_name
                 }, 201
             except Exception as e:
                 db.session.rollback()
@@ -95,72 +91,31 @@ class CVList(Resource):
         # Serialize CV list
         cv_list = [{
             'id': cv.id,
-            'file_path': cv.file_path,
+            'file_name': cv.file_name,
             'upload_date': cv.upload_date.strftime('%Y-%m-%d %H:%M:%S') if cv.upload_date else None
         } for cv in cvs]
         
         return cv_list, 200
 
-@cv_ns.route('/<string:cv_id>')
-class CVManagement(Resource):
-    @cv_ns.doc(security='BearerAuth')
-    @jwt_required()
-    def put(self, cv_id):
-        """Update a specific CV for the current user"""
-        current_user_id = get_jwt_identity()
-        
-        # Find the CV and ensure it belongs to the current user
-        cv = CV.query.filter_by(id=cv_id, user_id=current_user_id).first()
-        if not cv:
-            return {'error': 'CV not found'}, 404
+# @cv_ns.route('/<string:cv_id>/download')
+# class CVDownload(Resource):
+#     @cv_ns.doc(security='BearerAuth')
+#     @jwt_required()
+#     def get(self, cv_id):
+#         """Download a CV by ID"""
+#         current_user_id = get_jwt_identity()
 
-        if 'file' not in request.files:
-            return {'error': 'No file provided'}, 400
+#         cv = CV.query.filter_by(id=cv_id, user_id=current_user_id).first()
 
-        file = request.files['file']
-        if file.filename == '':
-            return {'error': 'No file selected'}, 400
+#         if not cv:
+#             return {'error': 'CV not found'}, 404
 
-        if file and self.allowed_file(file.filename):
-            # Remove old file
-            if os.path.exists(cv.file_path):
-                os.remove(cv.file_path)
+#         from flask import send_file
+#         import io
 
-            # Save new file
-            filename = secure_filename(file.filename)
-            upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
-            unique_filename = f"{current_user_id}_{str(uuid.uuid4())}_{filename}"
-            file_path = os.path.join(upload_folder, unique_filename)
-            file.save(file_path)
-
-            # Update CV record
-            cv.file_path = file_path
-            db.session.commit()
-
-            return {'message': 'CV updated successfully', 'file_path': file_path}, 200
-
-    @cv_ns.doc(security='BearerAuth')
-    @jwt_required()
-    def delete(self, cv_id):
-        """Delete a specific CV for the current user"""
-        current_user_id = get_jwt_identity()
-        
-        # Find the CV and ensure it belongs to the current user
-        cv = CV.query.filter_by(id=cv_id, user_id=current_user_id).first()
-        if not cv:
-            return {'error': 'CV not found'}, 404
-
-        # Remove file from disk
-        if os.path.exists(cv.file_path):
-            os.remove(cv.file_path)
-
-        # Remove from database
-        db.session.delete(cv)
-        db.session.commit()
-
-        return {'message': 'CV deleted successfully'}, 200
-
-    def allowed_file(self, filename):
-        """Check if file extension is allowed"""
-        ALLOWED_EXTENSIONS = {'pdf', 'docx', 'doc', 'txt'}
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+#         return send_file(
+#             io.BytesIO(cv.file_data),
+#             mimetype='application/octet-stream',
+#             as_attachment=True,
+#             download_name=cv.file_name
+#         )

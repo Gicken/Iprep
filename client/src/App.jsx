@@ -11,42 +11,47 @@ import ComingSoon from './components/coming_soon'
 import FAQs from './pages/FAQs'
 import HowItWorks from './pages/HowItWorks'
 import DashboardLayout from './layouts/DashboardLayout'
-import PrivateRoute from './components/PrivateRoute'
+import PrivateRoute from './routes/PrivateRoute'
 import NotFoundPage from './components/NotFound'
-import DashboardNotFoundPage from './components/DashboardNotFound'
+import CVManager from './pages/CVManager'
+import ProfilePage from './pages/ProfilePage'
+import PublicRoute from './routes/PublicRoute'
 
 function App () {
-  const isAuthenticated = !!localStorage.getItem('token')
-  console.log('Is user Authenticated? ', isAuthenticated)
-  // console.log("Token: ", localStorage.getItem("token"));
-
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path='/' element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path='home' element={<Home />} />
-          <Route path='comingsoon' element={<ComingSoon />} />
-          <Route path='recovery' element={<RecoveryPage />} />
-          <Route path='registration' element={<RegistrationForm />} />
-          <Route path='reset' element={<ResetPage />} />
-          <Route path='how-it-works' element={<HowItWorks />} />
-          <Route path='faqs' element={<FAQs />} />
-          <Route path='login' element={<Login />} />
-          <Route path='*' element={<NotFoundPage />} />
+        <Route element={<PublicRoute/>}>
+          <Route path='/' element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path='home' element={<Home />} />
+            <Route path='comingsoon' element={<ComingSoon />} />
+            <Route path='recovery' element={<RecoveryPage />} />
+            <Route path='registration' element={<RegistrationForm />} />
+            <Route path='reset' element={<ResetPage />} />
+            <Route path='how-it-works' element={<HowItWorks />} />
+            <Route path='faqs' element={<FAQs />} />
+            <Route path='login' element={<Login />} />
+          </Route>
         </Route>
 
         {/* Protected Routes */}
-        <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
-          <Route path='/dashboard' element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path='start' element={<StartInterview />} />
-            {/* Dashboard-Specific 404 Page */}
-            
-          </Route>
+        <Route
+          path='dashboard'
+          element={
+            <PrivateRoute>
+              <DashboardLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path='start' element={<StartInterview />} />
+          <Route path='cv-manager' element={<CVManager />} />
+          <Route path='profile' element={<ProfilePage />} />
         </Route>
-        
+
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </Router>
   )

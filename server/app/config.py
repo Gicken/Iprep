@@ -17,24 +17,8 @@ class Config:
     MAIL_SERVER = 'smtp.gmail.com'  # Replace with your email provider
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = 'your-email@example.com'
-    MAIL_PASSWORD = 'your-email-password'  # or better, use environment variables for sensitive data
-    MAIL_DEFAULT_SENDER = 'your-email@example.com'
-
-class DevelopmentConfig(Config):
-    """Development environment config."""
-    DEBUG = True
-    ENV = 'development'
-
-class TestingConfig(Config):
-    """Testing environment config."""
-    TESTING = True
-    ENV = 'testing'
-
-class ProductionConfig(Config):
-    """Production environment config."""
-    DEBUG = False
-    ENV = 'production'
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME', 'your_email@gmail.com')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', 'your_password') 
 
 class DevelopmentConfig(Config):
     """Development configuration"""
@@ -45,12 +29,16 @@ class ProductionConfig(Config):
     """Production configuration"""
     pass
 
-#We can also put testing config if we want to
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_TESTING_URI")
+    SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
+    DEBUG = False
 
 #Dictionary to map environment variables
 config_dict = {
     "development": DevelopmentConfig,
-    "production": ProductionConfig,
-    #tesing as well
+    "testing": TestingConfig,
+    "production": ProductionConfig
 }
 

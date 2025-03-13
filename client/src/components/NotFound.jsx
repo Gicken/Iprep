@@ -1,38 +1,35 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import errorImage from "../assets/images/3.png";
 
-const NotFound = () => {
-  const [isFlipped, setIsFlipped] = useState(false);
-
-  const handleClick = () => {
-    setIsFlipped(!isFlipped);
-  };
+const NotFoundPage = () => {
+  const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-#2A2E2E-100">
-      <div
-        className={`relative w-64 h-64 rounded-lg overflow-hidden cursor-pointer transition-transform ${
-          isFlipped ? 'transform-gpu rotate-y-180' : ''
-        }`}
-        onClick={handleClick}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-          <h1 className="text-6xl font-bold text-white">404</h1>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-yellow-500 rotate-y-180 backface-hidden flex items-center justify-center">
-          <h2 className="text-3xl font-semibold text-white">
-            Oops! Page not found.
-          </h2>
-        </div>
+    <div className="flex items-center justify-center h-screen px-6">
+      {/* Left: Error Image */}
+      <div className="flex-1 flex justify-center">
+        <img src={errorImage} alt="404 Not Found" style={{ width: "500px", height: "50rem", objectFit: "contain" }} />
       </div>
-      <p className="mt-8 text-gray-600">
-        The page you're looking for doesn't exist.
-      </p>
-      <Link to="/" className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-        Go back home
-      </Link>
+
+      {/* Right: Error Message & Button */}
+      <div className="flex-1 text-center">
+        <h1 className="text-5xl font-bold text-white mb-4">Oops! Page Not Found</h1>
+        <p className="text-lg text-gray-300 mb-6">
+          The page you're looking for doesn't exist or has been moved.
+        </p>
+
+        {/* Go Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="bg-[var(--color-primary)] hover:bg-[var(--color-accent)] text-black font-semibold py-3 px-6 rounded-lg shadow-lg transition-all"
+        >
+          Go Back
+        </button>
+      </div>
     </div>
   );
 };
 
-export default NotFound;
+export default NotFoundPage;
+
