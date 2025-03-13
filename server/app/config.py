@@ -7,11 +7,14 @@ load_dotenv()
 
 class Config:
     """Base configuration"""
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
-    SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret_key")
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:password123@localhost:3306/iprepdb'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    MAIL_SERVER = 'smtp.gmail.com'
+    # Basic configurations for Flask
+    SECRET_KEY = 'your-secret-key'
+
+    # Flask-Mail configuration
+    MAIL_SERVER = 'smtp.gmail.com'  # Replace with your email provider
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.getenv('MAIL_USERNAME', 'your_email@gmail.com')
