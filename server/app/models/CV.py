@@ -8,9 +8,7 @@ class CV(db.Model):
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     file_name = db.Column(db.String(255), nullable=False)
-    file_data = db.Column(db.LargeBinary, nullable=False) #Store the file here
+    file_data = db.Column(db.LargeBinary(length=(2**32)-1), nullable=False) #Store the file here
     upload_date = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('cvs', lazy=True))
-
-
