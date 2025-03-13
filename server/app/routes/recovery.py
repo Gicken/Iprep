@@ -1,43 +1,53 @@
-# from flask import Blueprint, request, jsonify, url_for
-# from flask_mail import Message
-# import jwt
-# import datetime
-# from app import mail
-# from app.models import users  
+from flask import Blueprint, request, jsonify, url_for, current_app
+from flask_restx import Namespace, Resource, fields
+from werkzeug.security import generate_password_hash
+from ..models.user import User
+from ..exts import db
 
-# recovery_bp = Blueprint('recovery', __name__)
+# Blueprint for recovery routes
+recovery_bp = Namespace('recovery', description='password recovery')
 
-# def generate_reset_token(email):
-#     payload = {
-#         'email': email,
-#         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-#     }
-#     return jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+# Model for receiving email data
+recovery_model = recovery_bp.model("User", {
+    'email': fields.String(required=True, description='Email address to send reset link')
+})
 
-# @recovery_bp.route('/recover', methods=['POST'])
-# def recover_password():
-#     data = request.get_json()
-#     email = data.get('email')
-#     if email in users:
-#         token = generate_reset_token(email)
-#         reset_url = url_for('recovery.reset_password', token=token, _external=True)
-#         msg = Message('Password Reset Request', sender=app.config['MAIL_USERNAME'], recipients=[email])
-#         msg.body = f'Click the link to reset your password: {reset_url}'
-#         mail.send(msg)
-#         return jsonify({'message': 'Password reset email sent'}), 200
-#     return jsonify({'error': 'Email not found'}), 404
+# Model for receiving email and password data for reset
+reset_password_model = recovery_bp.model("ResetPassword", {
+    'email': fields.String(required=True, description='Email address for password reset'),
+    'password': fields.String(required=True, description='New password')
+})
 
-# @recovery_bp.route('/reset/<token>', methods=['POST'])
-# def reset_password(token):
-#     try:
-#         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-#         email = payload['email']
-#         if email in users:
-#             data = request.get_json()
-#             new_password = data.get('password')
-#             return jsonify({'message': 'Password has been reset'}), 200
-#         return jsonify({'error': 'Invalid token'}), 400
-#     except jwt.ExpiredSignatureError:
-#         return jsonify({'error': 'Token has expired'}), 400
-#     except jwt.InvalidTokenError:
-#         return jsonify({'error': 'Invalid token'}), 400
+# Route to initiate password recovery (send the reset link as a response)
+@recovery_bp.route('/')
+class recover_password(Resource):
+    @recovery_bp.expect(recovery_model)
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        
+        # Check if user exists in the database
+        user = User.query.filter_by(email=email).first()
+        if user:
+            # Only send the message without reset link
+            return {
+                'message': 'Email found. Redirecting you to password reset link.'
+            }, 200
+        
+        return {'error': 'Email not found'}, 404
+
+
+@recovery_bp.route('/reset-password')
+class ResetPassword(Resource):
+    @recovery_bp.expect(reset_password_model)
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.password = generate_password_hash(password)
+            db.session.commit()
+            return {'message': 'Password has been successfully reset'}, 200
+        return {'error': 'Email not found'}, 404

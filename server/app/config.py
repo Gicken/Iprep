@@ -7,15 +7,34 @@ load_dotenv()
 
 class Config:
     """Base configuration"""
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
-    SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret_key")
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:password123@localhost:3306/iprepdb'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    MAIL_SERVER = 'smtp.gmail.com'
+    # Basic configurations for Flask
+    SECRET_KEY = 'your-secret-key'
+
+    # Flask-Mail configuration
+    MAIL_SERVER = 'smtp.gmail.com'  # Replace with your email provider
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME', 'your_email@gmail.com')  # Use environment variables
-    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', 'your_password') 
+    MAIL_USERNAME = 'your-email@example.com'
+    MAIL_PASSWORD = 'your-email-password'  # or better, use environment variables for sensitive data
+    MAIL_DEFAULT_SENDER = 'your-email@example.com'
+
+class DevelopmentConfig(Config):
+    """Development environment config."""
+    DEBUG = True
+    ENV = 'development'
+
+class TestingConfig(Config):
+    """Testing environment config."""
+    TESTING = True
+    ENV = 'testing'
+
+class ProductionConfig(Config):
+    """Production environment config."""
+    DEBUG = False
+    ENV = 'production'
 
 class DevelopmentConfig(Config):
     """Development configuration"""
