@@ -4,19 +4,23 @@ from .exts import db, migrate, jwt
 from .config import config_dict
 from .commands import seed_db
 from flask_cors import CORS
-# from flask_mail import Mail
-# from .routes.recovery import recovery_bp
 from .config import Config
 import os
 
 def create_app(config_name="development"):
     app = Flask(__name__)
-    # CORS(app, origins='*')
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-
-    # Load the appropriate configuration class
+    
+    # Load the correct config
     config_class = config_dict.get(config_name, "development")
     app.config.from_object(config_class)
+
+    # Debugging: Print current config/checking to see which server i am using
+    print(f"⚡ Running in {config_name} mode")
+    
+    # CORS POLICY TO ALLOW ALL ORIGINS, THIS IS IMPORTANT FOR SECURITY REASONS
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
     app.config["JWT_SECRET_KEY"] = "your_secret_key"
     app.config["UPLOAD_FOLDER"] = os.getenv("UPLOAD_FOLDER")
 
