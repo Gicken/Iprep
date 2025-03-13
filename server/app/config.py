@@ -28,7 +28,7 @@ class ProductionConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:yourpassword@localhost:3306/iprep-testdb"
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_TESTING_URI")
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
     DEBUG = False
 

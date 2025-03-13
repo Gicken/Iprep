@@ -1,3 +1,9 @@
+# ---------------------------------------------------------
+#           AUTH TEST FILE BELOW
+# ---------------------------------------------------------
+# Using this file to write tests for my auth.py file
+# ---------------------------------------------------------
+
 import pytest
 from app.models.user import User
 from app.exts import db
