@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask
 from app.routes import api_bp
 from .exts import db, migrate, jwt
 from .config import config_dict
@@ -7,11 +7,11 @@ from flask_cors import CORS
 from .config import Config
 import os
 
-def create_app(config_name="development"):
+def create_app(config_name="testing"):
     app = Flask(__name__)
     
     # Load the correct config
-    config_class = config_dict.get(config_name, "development")
+    config_class = config_dict.get(config_name, "testing")
     app.config.from_object(config_class)
 
     # Debugging: Print current config/checking to see which server i am using
