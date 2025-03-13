@@ -7,7 +7,7 @@ load_dotenv()
 
 class Config:
     """Base configuration"""
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:password123@localhost:3306/iprepdb'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:fdmSQL@localhost:3306/iprepdb'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Basic configurations for Flask

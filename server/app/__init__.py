@@ -8,11 +8,11 @@ from .config import Config
 import os
 from flask_mail import Mail
 
-def create_app(config_name="testing"):
+def create_app(config_name="development"):
     app = Flask(__name__)
     
     # Load the correct config
-    config_class = config_dict.get(config_name, "testing")
+    config_class = config_dict.get(config_name, "development")
     app.config.from_object(config_class)
 
     # Debugging: Print current config/checking to see which server i am using
