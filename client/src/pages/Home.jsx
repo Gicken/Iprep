@@ -1,11 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import imagePath from '../assets/images/artificial-intelligence-icon-png-14771.png';
-// undraw_progress-indicator_c14b.png
 import '../assets/styles/Homepage.css';
 
 const Home = () => {
   return (
+    // <div className="flex items-start justify-center flex-grow bg-[#1A1C1B] text-white">
     <div className="flex items-center justify-center min-h-screen bg-[#1A1C1B]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
         {/* Left Side */}
@@ -26,6 +26,7 @@ const Home = () => {
         </div>
       </div>
     </div>
+    // </div>
   );
 };
 
