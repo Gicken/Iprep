@@ -1,6 +1,5 @@
 from flask import request, jsonify
 from ..utils.jwt_handler import generate_jwt_token
-from ..utils.jwt_handler import generate_jwt_token
 from flask_restx import Namespace, Resource, fields
 from ..models.user import User
 from ..exts import logger
