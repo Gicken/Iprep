@@ -5,15 +5,15 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { API_ENDPOINTS } from "../utils/constants";
 
 function StartInterview() {
-  const [cvList, setCvList] = useState(["None"]);
+  const [cvList, setCvList] = useState([]);
   const [CVerror, setCVError] = useState("");
   const navigate = useNavigate();
 
- const [errors, setErrors] = useState({
-        cv: '',
-        jobSpec: '',
-        difficulty: ''
-    });
+  const [errors, setErrors] = useState({
+    cv: '',
+    jobSpec: '',
+    difficulty: ''
+  });
 
   const [selectedCvID, setSelectedCvID] = useState(null);
   const [selectedCvName, setSelectedCvName] = useState(null);
@@ -31,27 +31,24 @@ function StartInterview() {
     const selectedCV = cvList.find((cv) => cv.id === event.target.value);
     setSelectedCvID(selectedCV ? selectedCV.id : null);
     setSelectedCvName(selectedCV ? selectedCV.file_name : null);
-    // console.log("CV:", selectedCvName);
+    // validateForm();  
   };
 
   const handleChangeJob = (event) => {
-     
     setSelectedJobSpec(event.target.value);
-    // console.log("JOB SPEC:", event.target.value);
-    console.log("ERRORS:", errors);
-
+    // validateForm();
   };
 
   const handleDifficultyChange = (event) => {
     setDifficulty(event.target.value);
-
+    // validateForm();
   };
 
   const { setTitle } = useOutletContext();
 
   useEffect(() => {
     setTitle("Start Interview");
-  });
+  }, []);
 
   useEffect(() => {
     fetchCVs();
@@ -71,20 +68,24 @@ function StartInterview() {
       console.log("FETCH CVs", response);
       setCvList(response.data);
       setCVError("");
-
+      try {
         setSelectedCvID(response.data[0].id);
         setSelectedCvName(response.data[0].file_name);
-
- 
+      } catch {
+        setSelectedCvID(null);
+        setSelectedCvName(null);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          cv: "No CVs found"
+        }));
       }
-
-     catch (err) {
+    } catch (err) {
       setCVError("Failed to fetch CVs. Please try again.");
       console.error("CV fetch error:", err);
     }
   };
-//   console.log("CV at start:", selectedCvName);
-const validateForm = () => {
+
+  const validateForm = () => {
     let newErrors = { ...errors };
     if (!selectedCvID) {
       newErrors.cv = "Please select a CV";
@@ -110,26 +111,27 @@ const validateForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     validateForm();
-    let valid = true;
+    let valid =true;
 
     if(!selectedCvID){
-        valid = false;
-        setErrors("No CV found")
+      valid = false;
+      setErrors("No CV found")
+  }
+  // if(!selectedJobSpecID){
+  //     valid = false;
+  // }
+  if(!difficulty){
+      valid = false;
+  }
+  if(valid){
+    const { cv, jobSpec, difficulty } = errors;
+    if (!cv && !jobSpec && !difficulty) {
+      navigate("/dashboard");
+      sessionStorage.setItem("cvID", selectedCvID);
+      sessionStorage.setItem("difficulty", difficulty);
+      console.log("Begin Interview successful");
     }
-    // if(!selectedJobSpecID){
-    //     valid = false;
-    // }
-    if(!difficulty){
-        valid = false;
-    }
-
-    if (valid) {
-        navigate("/dashboard")
-        sessionStorage.setItem("cvID",selectedCvID)
-        // sessionStorage.setItem("jobSpecID",selectedJobSpecID)
-        sessionStorage.setItem("difficulty",difficulty)
-        console.log("Begin Interview successful");
-    }
+  }
   };
 
   return (
@@ -146,7 +148,7 @@ const validateForm = () => {
                 <select
                   id="selectCV"
                   className="w-5/8 mr-2 input-field"
-                  value={selectedCvID}
+                  value={selectedCvID || ''}
                   onChange={handleChangeCV}
                 >
                   {cvList.map((cv) => (
@@ -154,12 +156,13 @@ const validateForm = () => {
                       {cv.file_name}
                     </option>
                   ))}
+                  <option value="">None</option>
                 </select>
-                {errors.cv && <p className="text-red-500 text-sm mt-1">{errors.cv}</p>}
               </div>
               <p className="ml-4 mb-3">
                 You selected: {selectedCvName ? selectedCvName : "None yet"}
               </p>
+              {errors.cv && <p className="text-red-500 text-sm mt-1">{errors.cv}</p>}
             </div>
 
             {/* Select for Job spec */}
@@ -169,11 +172,11 @@ const validateForm = () => {
                 <select
                   id="selectJob"
                   className="w-5/8 mr-2 input-field"
-                  value={selectedJobSpec}
+                  value={selectedJobSpec || ''}
                   onChange={handleChangeJob}
                 >
                   {jobSpecList.map((opt) => (
-                    <option key={opt} value={opt} className="input-field">
+                    <option key={opt} value={opt}>
                       {opt}
                     </option>
                   ))}
@@ -182,6 +185,7 @@ const validateForm = () => {
               <p className="ml-4 mb-3">
                 You selected: {selectedJobSpec || "None"}
               </p>
+              {errors.jobSpec && <p className="text-red-500 text-sm mt-1">{errors.jobSpec}</p>}
             </div>
 
             {/* Difficulty select */}
@@ -232,6 +236,8 @@ const validateForm = () => {
                 </li>
               </ul>
             </div>
+
+            {errors.difficulty && <p className="text-red-500 text-sm mt-1">{errors.difficulty}</p>}
 
             <button
               type="submit"
