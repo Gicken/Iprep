@@ -8,32 +8,25 @@ function StartInterview() {
   const [cvList, setCvList] = useState([]);
   const navigate = useNavigate();
 
- const [errors, setErrors] = useState({
-        cv: 'OHNO',
-        difficulty: ''
-    });
+  const [errors, setErrors] = useState({
+    cv: "",
+    jobdesc: "",
+    difficulty: "",
+  });
 
-  const [selectedCv, setSelectedCv] = useState(null);
-  const [selectedCvID, setSelectedCvID] = useState(null);
-  const [selectedCvName, setSelectedCvName] = useState(null);
-
+  var [selectedCv, setSelectedCv] = useState(null);
+  // var [selectedJobdesc, setSelectedJobdesc] = useState(null);
 
   const [difficulty, setDifficulty] = useState("");
 
   const handleChangeCV = (event) => {
-    const selectedCV = cvList.find((cv) => cv.id === event.target.value);
-    setSelectedCv(selectedCv ? selectedCV : null)
-    // setSelectedCvID(selectedCV ? selectedCV.id : null);
-    // setSelectedCvName(selectedCV ? selectedCV.file_name : null);
-    console.log("CV:", selectedCV);
-
-    console.log("CVLIST: "+cvList[0].id);
-
+    const foundCV = cvList.find((cv) => cv.id === event.target.value);
+    setSelectedCv(foundCV);
+    console.log("CV:", foundCV);
   };
 
   const handleDifficultyChange = (event) => {
     setDifficulty(event.target.value);
-
   };
 
   const { setTitle } = useOutletContext();
@@ -44,7 +37,6 @@ function StartInterview() {
 
   useEffect(() => {
     fetchCVs();
-    // sessionStorage.setItem("cvList", JSON.stringify(cvList))
   }, []);
 
   // Fetch CVs for the current user
@@ -60,36 +52,42 @@ function StartInterview() {
       });
       // console.log("FETCH CVs", response.data);
       setCvList(response.data);
-      if (response.data && Array.isArray(response.data)) {  
-        response.data.forEach((item, index) => {         
-          sessionStorage.setItem(response.data[index].id,JSON.stringify(response.data[index]))
-      });
-    }
-      }
-     catch (err) {
+    } catch (err) {
       console.error("CV fetch error:", err);
     }
   };
-const validateForm = () => {
+  
+  const validateForm = () => {
     let newErrors = { ...errors };
-    if (!selectedCvID) {
-      console.error("CV ERROR")
-
+    if (!selectedCv) {
+      console.error("CV not found ERROR");
       newErrors.cv = "Please select a CV";
     } else {
-      newErrors.cv = '';
+      newErrors.cv = "";
     }
+
+    // if (!selectedJobdesc) {
+    //   console.error("JOBDESC not found ERROR");
+    //   newErrors.jobdesc = "Please select a Job Description";
+    // } else {
+    //   newErrors.cv = "";
+    // }
 
     if (!difficulty) {
-      console.error("DIFFICULTY ERROR")
-
+      console.error("DIFFICULTY not selected ERROR");
       newErrors.difficulty = "Please select a difficulty level";
     } else {
-      newErrors.difficulty = '';
+      newErrors.difficulty = "";
     }
-
     setErrors(newErrors);
-    console.log(newErrors)
+    console.log(
+      "CV Error: " +
+        errors.cv +
+        "\nJob Error: " +
+        errors.jobdesc +
+        "\nDifficulty Error: " +
+        errors.difficulty
+    );
   };
 
   const handleSubmit = async (event) => {
@@ -97,27 +95,27 @@ const validateForm = () => {
     validateForm();
     let valid = true;
 
-    if(!selectedCvID){
-        valid = false;
-        setErrors("No CV found")
+    if (!selectedCv) {
+      valid = false;
     }
-    if(!difficulty){
-        valid = false;
+    // if (!selectedJobDesc) {
+    //   valid = false;
+    // }
+    if (!difficulty) {
+      valid = false;
     }
 
     if (valid) {
-        navigate("/dashboard")
-        var startParams = {
-          'userId': JSON.parse(sessionStorage.getItem("user")).id,
-          'cvId': selectedCvID,
-          'jobDescId': null, //change when job desc is done
-          'difficulty': difficulty
-      }
-        sessionStorage.setItem("startParams",JSON.stringify(startParams));
-        console.log("Begin Interview successful");
-
+      navigate("/dashboard");
+      var startParams = {
+        userId: JSON.parse(sessionStorage.getItem("user")).id,
+        cvId: selectedCv.id,
+        jobDescId: null, //change when job desc is done
+        difficulty: difficulty,
+      };
+      sessionStorage.setItem("startParams", JSON.stringify(startParams));
+      console.log("Begin Interview successful");
     }
-
   };
 
   return (
@@ -134,7 +132,7 @@ const validateForm = () => {
                 <select
                   id="selectCV"
                   className="w-5/8 mr-2 input-field"
-                  value={selectedCvID}
+                  value={selectedCv?.id}
                   onChange={handleChangeCV}
                 >
                   {cvList.map((cv) => (
@@ -144,13 +142,14 @@ const validateForm = () => {
                   ))}
                   <option value={null}>None</option>
                 </select>
-                {errors.cv && <p className="text-red-500 text-sm mt-1">{errors.cv}</p>}
               </div>
               <p className="ml-4 mb-3">
-                You selected: {selectedCvName ? selectedCvName : "None yet"}
+                You selected: {selectedCv ? selectedCv.file_name : "None yet"}
               </p>
+              {errors.cv && (
+                  <p className="ml-4 mb-3 text-red-500 text-sm mt-1">{errors.cv}</p>
+                )}
             </div>
-
             {/* Difficulty select */}
             <div className="w-full border-2 relative mb-4">
               <div className="ml-4 mt-2">Please select a difficulty:</div>
@@ -198,8 +197,10 @@ const validateForm = () => {
                   </div>
                 </li>
               </ul>
+              {errors.difficulty && (
+                <p className="ml-4 mb-3 text-red-500 text-sm mt-1">{errors.difficulty}</p>
+              )}
             </div>
-
             <button
               type="submit"
               className="btn-primary bg-blue-500 text-white px-4 py-2 rounded"
