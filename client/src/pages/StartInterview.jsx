@@ -5,41 +5,25 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { API_ENDPOINTS } from "../utils/constants";
 
 function StartInterview() {
-  const [cvList, setCvList] = useState(["None"]);
-  const [CVerror, setCVError] = useState("");
+  const [cvList, setCvList] = useState([]);
   const navigate = useNavigate();
 
  const [errors, setErrors] = useState({
         cv: '',
-        jobSpec: '',
         difficulty: ''
     });
 
   const [selectedCvID, setSelectedCvID] = useState(null);
   const [selectedCvName, setSelectedCvName] = useState(null);
 
-  const [jobSpecList] = useState([
-    "python dev role",
-    "data engineering role",
-    "automated testing opp",
-  ]);
 
-  const [selectedJobSpec, setSelectedJobSpec] = useState("");
   const [difficulty, setDifficulty] = useState("");
 
   const handleChangeCV = (event) => {
     const selectedCV = cvList.find((cv) => cv.id === event.target.value);
     setSelectedCvID(selectedCV ? selectedCV.id : null);
     setSelectedCvName(selectedCV ? selectedCV.file_name : null);
-    // console.log("CV:", selectedCvName);
-  };
-
-  const handleChangeJob = (event) => {
-     
-    setSelectedJobSpec(event.target.value);
-    // console.log("JOB SPEC:", event.target.value);
-    console.log("ERRORS:", errors);
-
+    console.log("CV:", event.target.value);
   };
 
   const handleDifficultyChange = (event) => {
@@ -55,6 +39,7 @@ function StartInterview() {
 
   useEffect(() => {
     fetchCVs();
+    // sessionStorage.setItem("cvList", JSON.stringify(cvList))
   }, []);
 
   // Fetch CVs for the current user
@@ -68,34 +53,25 @@ function StartInterview() {
           accept: "application/json",
         },
       });
-      console.log("FETCH CVs", response);
+      console.log("FETCH CVs", response.data);
       setCvList(response.data);
-      setCVError("");
 
-        setSelectedCvID(response.data[0].id);
-        setSelectedCvName(response.data[0].file_name);
+        // setSelectedCvID(response.data[0].id);
+        // setSelectedCvName(response.data[0].file_name);
 
  
       }
 
      catch (err) {
-      setCVError("Failed to fetch CVs. Please try again.");
       console.error("CV fetch error:", err);
     }
   };
-//   console.log("CV at start:", selectedCvName);
 const validateForm = () => {
     let newErrors = { ...errors };
     if (!selectedCvID) {
       newErrors.cv = "Please select a CV";
     } else {
       newErrors.cv = '';
-    }
-
-    if (!selectedJobSpec) {
-      newErrors.jobSpec = "Please select a job spec";
-    } else {
-      newErrors.jobSpec = '';
     }
 
     if (!difficulty) {
@@ -116,9 +92,6 @@ const validateForm = () => {
         valid = false;
         setErrors("No CV found")
     }
-    // if(!selectedJobSpecID){
-    //     valid = false;
-    // }
     if(!difficulty){
         valid = false;
     }
@@ -126,7 +99,6 @@ const validateForm = () => {
     if (valid) {
         navigate("/dashboard")
         sessionStorage.setItem("cvID",selectedCvID)
-        // sessionStorage.setItem("jobSpecID",selectedJobSpecID)
         sessionStorage.setItem("difficulty",difficulty)
         console.log("Begin Interview successful");
     }
@@ -150,7 +122,7 @@ const validateForm = () => {
                   onChange={handleChangeCV}
                 >
                   {cvList.map((cv) => (
-                    <option key={cv.id} value={cv.id}>
+                    <option key={cv.id} value={cv}>
                       {cv.file_name}
                     </option>
                   ))}
@@ -159,28 +131,6 @@ const validateForm = () => {
               </div>
               <p className="ml-4 mb-3">
                 You selected: {selectedCvName ? selectedCvName : "None yet"}
-              </p>
-            </div>
-
-            {/* Select for Job spec */}
-            <div className="w-full border-2 relative mb-4">
-              <div className="flex mt-2">
-                <div className=" w-3/16 ml-4 mt-2">Choose a Job Spec:</div>
-                <select
-                  id="selectJob"
-                  className="w-5/8 mr-2 input-field"
-                  value={selectedJobSpec}
-                  onChange={handleChangeJob}
-                >
-                  {jobSpecList.map((opt) => (
-                    <option key={opt} value={opt} className="input-field">
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <p className="ml-4 mb-3">
-                You selected: {selectedJobSpec || "None"}
               </p>
             </div>
 
