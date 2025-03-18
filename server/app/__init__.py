@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from app.routes import api_bp
 from .exts import db, migrate, jwt
 from .config import config_dict
