@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../assets/styles/styles.css';
-import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const RegistrationForm = () => {
@@ -18,7 +18,7 @@ const RegistrationForm = () => {
         confirmPassword: ''
     });
 
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -62,7 +62,7 @@ const RegistrationForm = () => {
 
         if (valid) {
             try {
-                const response = await axios.post("http://127.0.0.1:5000/register/register", formData, {
+                const response = await axios.post("http://127.0.0.1:5000/register/", formData, {
                     headers: {
                         "Content-Type": "application/json"
                     }
@@ -71,7 +71,7 @@ const RegistrationForm = () => {
                 alert(response.data.message);
                 setFormData({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
                 setErrors({ email: '', password: '', confirmPassword: '' });
-                navigate('/login'); // Redirect to login after successful registration
+                navigate('/login');
 
             } catch (error) {
                 if (error.response) {

@@ -7,19 +7,20 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const { login } = useContext(AuthContext);
+  const { login, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
-    console.log('Login form submitted:', { email, password });
-    console.log('Checking if login function is available:', login);
 
     try {
-      const response = await login(email, password);
-      console.log('LoginPage: login', response);
-      navigate('/comingsoon');
+      await login(email, password);
+       login();
+       console.log("✅ LOGINPAGE:", login);
+      console.log('LoginPage: login Login success');
+      console.log("IS USER AUTHENTICATED",isAuthenticated);
+      navigate('/dashboard');
     } catch (error) {
       console.log('LoginPage: Error', error);
       setError(error.response?.data?.message || 'Invalid login credentials.');
@@ -37,8 +38,8 @@ const Login = () => {
             </div>
             <div className="flex space-x-4 mb-6">
               <button className="social-button">f</button>
-              <button className="social-button">G+</button>
-              <button className="social-button">in</button>
+              <button className="social-button">G</button>
+              <button className="social-button">In</button>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
