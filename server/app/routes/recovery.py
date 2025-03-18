@@ -1,8 +1,9 @@
-from flask import Blueprint, request, jsonify, url_for, current_app
-from flask_restx import Namespace, Resource, fields
-from werkzeug.security import generate_password_hash
-from ..models.user import User
-from ..exts import db
+from flask import Blueprint, request, jsonify, url_for
+from flask_mail import Message
+import jwt
+import datetime
+from app.exts import mail
+from app.models import user 
 
 # Blueprint for recovery routes
 recovery_bp = Namespace('recovery', description='password recovery')

@@ -1,18 +1,18 @@
-from flask import Flask, jsonify
-from app.routes import api_bp
-from .exts import db, migrate, jwt
-from .config import config_dict
-from .commands import seed_db
+from flask import Flask
 from flask_cors import CORS
-from .config import Config
-import os
-from flask_mail import Mail
+from .routes import api_bp
+from .exts import db, mail, migrate, jwt
+from .config import config_dict, Config
+from .commands import seed_db
+from .routes.recovery import recovery_bp
+from .job_description import init_job_description
 
 def create_app(config_name="development"):
     app = Flask(__name__)
-    
-    # Load the correct config
-    config_class = config_dict.get(config_name, "development")
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
+    # Load configuration
+    config_class = config_dict.get(config_name, Config)
     app.config.from_object(config_class)
 
     # Debugging: Print current config/checking to see which server i am using
@@ -35,23 +35,20 @@ def create_app(config_name="development"):
 
     mail = Mail(app)
 
-
     # Register the seed command
     app.cli.add_command(seed_db)
-    
-    # Initialize database and migrations
-    migrate.init_app(app, db)
-    
-    jwt.init_app(app)
-    
-    # Initialize the database
+
+    # Initialize extensions
     db.init_app(app)
-    
-    # Register the Flask-RESTX API instance (with the Swagger UI)
+    migrate.init_app(app, db)
+    jwt.init_app(app)
+    mail.init_app(app) 
+
+    # Register blueprints
     app.register_blueprint(api_bp, url_prefix='/')
+    app.register_blueprint(recovery_bp, url_prefix='/auth')
 
-    
-    
+    # Initialize job description module
+    init_job_description(app)
 
-    # Return the app instance
     return app
