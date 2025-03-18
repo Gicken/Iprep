@@ -30,12 +30,12 @@ class User(db.Model):
         """Check the hashed password"""
         return check_password_hash(self.password_hash, password)
 
-    def __init__(self, firstName, lastName, email, password):
+    def __init__(self, firstName, lastName, email, password,role='user'):
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
         self.password = password
-        self.role
+        self.role = role
 
     def __repr__(self):
         return f'<User {self.firstName} {self.lastName}>'
