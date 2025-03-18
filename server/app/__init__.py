@@ -1,8 +1,4 @@
-from flask import Flask, jsonify
-from app.routes import api_bp
-from .exts import db, migrate, jwt
-from .config import config_dict
-from .commands import seed_db
+from flask import Flask
 from flask_cors import CORS
 from flask_mail import Mail
 from flask_restx import Api
@@ -36,6 +32,11 @@ def create_app(config_name="development"):
     # File Upload Configuration
     app.config["UPLOAD_FOLDER"] = os.getenv("UPLOAD_FOLDER", "./uploads")
 
+    mail = Mail(app)
+
+    # Register the seed command
+    app.cli.add_command(seed_db)
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
@@ -60,5 +61,9 @@ def create_app(config_name="development"):
 
     # Register Blueprints
     app.register_blueprint(api_bp, url_prefix='/')
+    app.register_blueprint(recovery_bp, url_prefix='/auth')
+
+    # Initialize job description module
+    init_job_description(app)
 
     return app
