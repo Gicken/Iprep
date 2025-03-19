@@ -26,6 +26,12 @@ function StartInterview() {
     setSelectedCv(foundCV);
     console.log("CV:", foundCV);
   };
+  
+  const handleChangeJob = (event) => {
+    const foundJob = jobList.find((job) => job.id === event.target.value);
+    setSelectedJob(foundJob);
+    console.log("Job:", foundJob);
+  };
 
   
 
@@ -41,6 +47,10 @@ function StartInterview() {
 
   useEffect(() => {
     fetchCVs();
+  }, []);
+
+  useEffect(() => {
+    fetchJobs();
   }, []);
 
   // Fetch CVs for the current user
@@ -92,7 +102,7 @@ function StartInterview() {
       console.error("JOBDESC not found ERROR");
       newErrors.job = "Please select a Job Description";
     } else {
-      newErrors.cv = "";
+      newErrors.job = "";
     }
 
     if (!difficulty) {
@@ -106,7 +116,7 @@ function StartInterview() {
       "CV Error: " +
         errors.cv +
         "\nJob Error: " +
-        errors.jobdesc +
+        errors.job +
         "\nDifficulty Error: " +
         errors.difficulty
     );
@@ -132,7 +142,7 @@ function StartInterview() {
       var startParams = {
         userId: JSON.parse(sessionStorage.getItem("user")).id,
         cvId: selectedCv.id,
-        jobDescId: null, //change when job desc is done
+        jobDescId: selectedJob.id, 
         difficulty: difficulty,
       };
       sessionStorage.setItem("startParams", JSON.stringify(startParams));
@@ -175,26 +185,26 @@ function StartInterview() {
              {/* Select for Job */}
              <div className="w-full border-2 relative mb-4">
               <div className="flex mt-2">
-                <div className=" w-3/16 ml-4 mt-2">Choose a Job Description:</div>
+                <div className=" w-3/16 ml-4 mt-2">Choose a Job Spec:</div>
                 <select
                   id="selectJob"
                   className="w-5/8 mr-2 input-field"
                   value={selectedJob?.id}
-                  onChange={handleChangeCV}
+                  onChange={handleChangeJob}
                 >
-                  {cvList.map((job) => (
+                  {jobList.map((job) => (
                     <option key={job.id} value={job.id}>
-                      {job.file_name}
+                      {job.title}
                     </option>
                   ))}
                   <option value={null}>None</option>
                 </select>
               </div>
               <p className="ml-4 mb-3">
-                You selected: {selectedCv ? selectedCv.file_name : "None yet"}
+                You selected: {selectedJob ? selectedJob.title : "None yet"}
               </p>
-              {errors.cv && (
-                  <p className="ml-4 mb-3 text-red-500 text-sm mt-1">{errors.cv}</p>
+              {errors.job && (
+                  <p className="ml-4 mb-3 text-red-500 text-sm mt-1">{errors.job}</p>
                 )}
             </div>
             {/* Difficulty select */}

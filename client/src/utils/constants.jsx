@@ -6,5 +6,6 @@ export const API_ENDPOINTS = {
     CURRENT_USER: '/api/me',
     All_CVs: `${BASE_URL}/cv`,
     All_Jobs:`${BASE_URL}/jobdescription/`,
+    RECOVER:`${BASE_URL}/recover/`,
     // USER_PROFILE: '/api/profile',
   };

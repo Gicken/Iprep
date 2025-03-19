@@ -16,8 +16,7 @@ const Login = () => {
 
     try {
       await login(email, password);
-       login();
-       console.log("✅ LOGINPAGE:", login);
+      console.log("✅ LOGINPAGE:", login);
       console.log('LoginPage: login Login success');
       console.log("IS USER AUTHENTICATED",isAuthenticated);
       navigate('/dashboard');
