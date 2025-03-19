@@ -10,6 +10,7 @@ from .recovery import api as recovery_api
 # Initialize the API instance
 api_bp = Blueprint('api', __name__)
 
+
 security_scheme = {
     'BearerAuth':
         {
@@ -36,6 +37,10 @@ api.add_namespace(login_api, path='/auth')
 
 # Add the registration namespace to the API instance
 api.add_namespace(registration_api, path='/register')
+api.add_namespace(job_description_ns, path="/api/job_descriptions")
+
+# Add the CV namespace to the API instance
+api.add_namespace(cv_api, path='/cv')  # Add this line
 
 # Add the CV namespace to the API instance
 api.add_namespace(cv_api, path='/cv')

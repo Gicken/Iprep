@@ -62,7 +62,7 @@ const RegistrationForm = () => {
 
         if (valid) {
             try {
-                const response = await axios.post("http://127.0.0.1:5000/register/register", formData, {
+                const response = await axios.post("http://127.0.0.1:5000/register/", formData, {
                     headers: {
                         "Content-Type": "application/json"
                     }

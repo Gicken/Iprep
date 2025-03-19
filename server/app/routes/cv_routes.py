@@ -46,6 +46,9 @@ class CVUpload(Resource):
         if file.filename == '':
             return {'error': 'No file selected'}, 400
 
+        if request.content_length > 5 * 1024 * 1024:  # 5MB
+                return {'error': 'File too large. Maximum size is 10MB'}, 413
+        
         # Check file type
         if file and self.allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -72,6 +75,8 @@ class CVUpload(Resource):
                 db.session.rollback()
                 return {'error': str(e)}, 500
 
+        return {'error': 'Invalid file type'}, 400
+    
     def allowed_file(self, filename):
         """Check if file extension is allowed"""
         ALLOWED_EXTENSIONS = {'pdf', 'docx', 'doc', 'txt'}
