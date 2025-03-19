@@ -97,25 +97,24 @@ class CVList(Resource):
         
         return cv_list, 200
 
-# @cv_ns.route('/<string:cv_id>/download')
-# class CVDownload(Resource):
-#     @cv_ns.doc(security='BearerAuth')
-#     @jwt_required()
-#     def get(self, cv_id):
-#         """Download a CV by ID"""
-#         current_user_id = get_jwt_identity()
-
-#         cv = CV.query.filter_by(id=cv_id, user_id=current_user_id).first()
-
-#         if not cv:
-#             return {'error': 'CV not found'}, 404
-
-#         from flask import send_file
-#         import io
-
-#         return send_file(
-#             io.BytesIO(cv.file_data),
-#             mimetype='application/octet-stream',
-#             as_attachment=True,
-#             download_name=cv.file_name
-#         )
+@cv_ns.route('/<string:cv_id>')
+class CVItem(Resource):
+    @cv_ns.doc(security='BearerAuth')
+    @jwt_required()
+    def delete(self, cv_id):
+        """Delete a specific CV"""
+        current_user_id = get_jwt_identity()
+        
+        # Find the CV and ensure it belongs to the current user
+        cv = CV.query.filter_by(id=cv_id, user_id=current_user_id).first()
+        
+        if not cv:
+            return {'error': 'CV not found or you do not have permission to delete it'}, 404
+        
+        try:
+            db.session.delete(cv)
+            db.session.commit()
+            return {'message': 'CV deleted successfully'}, 200
+        except Exception as e:
+            db.session.rollback()
+            return {'error': str(e)}, 500

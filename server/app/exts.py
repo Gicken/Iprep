@@ -4,11 +4,14 @@ from flask_restx import Api
 from flask_jwt_extended import JWTManager
 import logging
 import os
+from flask_mail import Mail
+
 
 db = SQLAlchemy()
 api = Api()
 migrate = Migrate()
 jwt = JWTManager()
+mail = Mail()
 
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)

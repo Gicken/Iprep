@@ -1,23 +1,27 @@
 from flask import Flask
 from app.routes import api_bp
-from .exts import db, migrate, jwt
+from .exts import db, migrate, jwt, mail
 from .config import config_dict
 from .commands import seed_db
 from flask_cors import CORS
+# from .config import MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USERNAME, MAIL_PASSWORD
 from .config import Config
+# from .utils import mail
+# from utils import mail
 import os
 
-def create_app(config_name="testing"):
+def create_app(config_name="development"):
     app = Flask(__name__)
     
     # Load the correct config
-    config_class = config_dict.get(config_name, "testing")
+    config_class = config_dict.get(config_name, "development")
     app.config.from_object(config_class)
 
     # Debugging: Print current config/checking to see which server i am using
     print(f"⚡ Running in {config_name} mode")
     
     # CORS POLICY TO ALLOW ALL ORIGINS, THIS IS IMPORTANT FOR SECURITY REASONS
+    CORS(app)
     CORS(app, resources={r"/api/*": {"origins": "*"}})
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
@@ -39,6 +43,14 @@ def create_app(config_name="testing"):
     # Register the Flask-RESTX API instance (with the Swagger UI)
     app.register_blueprint(api_bp, url_prefix='/')
     
+    app.config.update(
+    MAIL_SERVER=Config.MAIL_SERVER,
+    MAIL_PORT=Config.MAIL_PORT,
+    MAIL_USE_TLS=Config.MAIL_USE_TLS,
+    MAIL_USERNAME=Config.MAIL_USERNAME,
+    MAIL_PASSWORD=Config.MAIL_PASSWORD)
 
+    mail.init_app(app)
+    
     # Return the app instance
     return app
