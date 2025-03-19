@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useOutletContext } from "react-router-dom";
 import { API_ENDPOINTS } from '../utils/constants';
-import { set } from 'express/lib/application';
 
 const CVManager = () => {
   const [cvs, setCvs] = useState([]);
