@@ -37,7 +37,6 @@ api.add_namespace(login_api, path='/auth')
 
 # Add the registration namespace to the API instance
 api.add_namespace(registration_api, path='/register')
-api.add_namespace(job_description_ns, path="/api/job_descriptions")
 
 # Add the CV namespace to the API instance
 api.add_namespace(cv_api, path='/cv')  # Add this line
