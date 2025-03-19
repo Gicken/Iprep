@@ -10,11 +10,6 @@ export default function RecoveryPage() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-export default function RecoveryPage() {
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
-    const [error, setError] = useState("");
-    const navigate = useNavigate();
 
     const handleRecover = async () => {
 
