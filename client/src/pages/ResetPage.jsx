@@ -28,6 +28,7 @@ export default function ResetPage() {
         } catch (err) {
             setError("An error occurred. Please try again.");
             setMessage(""); // Clear success message
+            console.error(err)
         }
     };
 

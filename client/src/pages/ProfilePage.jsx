@@ -32,7 +32,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-[#1A1C1B]-100">
+    <div className="flex justify-center items-center bg-[#1A1C1B]-100">
       <div className="bg-[#555D58] p-6 rounded-lg shadow-md w-96">
         <div className="flex justify-center mb-4">
           <img

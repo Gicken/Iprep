@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import '../assets/styles/styles.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { API_ENDPOINTS } from "../utils/constants";
+
 
 const RegistrationForm = () => {
     const [formData, setFormData] = useState({
@@ -59,10 +61,11 @@ const RegistrationForm = () => {
             newErrors.confirmPassword = 'Passwords do not match.';
             valid = false;
         }
-
         if (valid) {
             try {
-                const response = await axios.post("http://127.0.0.1:5000/register/", formData, {
+                console.log("Here")
+
+                const response = await axios.post(`${API_ENDPOINTS.REGISTER}`, formData, {
                     headers: {
                         "Content-Type": "application/json"
                     }
