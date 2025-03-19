@@ -14,11 +14,26 @@ def seed_db():
             firstName='Admin',
             lastName='User',
             email='admin@example.com',
-            password='adminpassword',
-            role='admin'
+            password='adminpassword'
         )
+        admin.role='admin'
         db.session.add(admin)
         db.session.commit()
         print("Admin user seeded.")
     else:
         print("Admin user already exists.")
+        
+    if not User.query.filter_by(email='luthandolincoln@gmail.com').first():
+        test = User(
+            firstName='Test',
+            lastName='Testing',
+            email='luthandolincoln@gmail.com',
+            password='testing123'
+            # new password would be 123@tester
+        )
+        test.role='test-user'
+        db.session.add(test)
+        db.session.commit()
+        print("Test user seeded.")
+    else:
+        print("Test user already exists.")

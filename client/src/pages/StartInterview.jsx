@@ -6,16 +6,18 @@ import { API_ENDPOINTS } from "../utils/constants";
 
 function StartInterview() {
   const [cvList, setCvList] = useState([]);
+  const [jobList, setJobList] = useState([]);
+
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState({
     cv: "",
-    jobdesc: "",
+    job: "",
     difficulty: "",
   });
 
   var [selectedCv, setSelectedCv] = useState(null);
-  // var [selectedJobdesc, setSelectedJobdesc] = useState(null);
+  var [selectedJob, setSelectedJob] = useState(null);
 
   const [difficulty, setDifficulty] = useState("");
 
@@ -24,6 +26,8 @@ function StartInterview() {
     setSelectedCv(foundCV);
     console.log("CV:", foundCV);
   };
+
+  
 
   const handleDifficultyChange = (event) => {
     setDifficulty(event.target.value);
@@ -56,6 +60,24 @@ function StartInterview() {
       console.error("CV fetch error:", err);
     }
   };
+
+  const fetchJobs = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await axios.get(`${API_ENDPOINTS.All_Jobs}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+      });
+      // console.log("FETCH CVs", response.data);
+      setJobList(response.data);
+    } catch (err) {
+      console.error("Job fetch error:", err);
+    }
+  };
+  
   
   const validateForm = () => {
     let newErrors = { ...errors };
@@ -66,12 +88,12 @@ function StartInterview() {
       newErrors.cv = "";
     }
 
-    // if (!selectedJobdesc) {
-    //   console.error("JOBDESC not found ERROR");
-    //   newErrors.jobdesc = "Please select a Job Description";
-    // } else {
-    //   newErrors.cv = "";
-    // }
+    if (!selectedJob) {
+      console.error("JOBDESC not found ERROR");
+      newErrors.job = "Please select a Job Description";
+    } else {
+      newErrors.cv = "";
+    }
 
     if (!difficulty) {
       console.error("DIFFICULTY not selected ERROR");
@@ -98,9 +120,9 @@ function StartInterview() {
     if (!selectedCv) {
       valid = false;
     }
-    // if (!selectedJobDesc) {
-    //   valid = false;
-    // }
+    if (!selectedJob) {
+      valid = false;
+    }
     if (!difficulty) {
       valid = false;
     }
@@ -138,6 +160,31 @@ function StartInterview() {
                   {cvList.map((cv) => (
                     <option key={cv.id} value={cv.id}>
                       {cv.file_name}
+                    </option>
+                  ))}
+                  <option value={null}>None</option>
+                </select>
+              </div>
+              <p className="ml-4 mb-3">
+                You selected: {selectedCv ? selectedCv.file_name : "None yet"}
+              </p>
+              {errors.cv && (
+                  <p className="ml-4 mb-3 text-red-500 text-sm mt-1">{errors.cv}</p>
+                )}
+            </div>
+             {/* Select for Job */}
+             <div className="w-full border-2 relative mb-4">
+              <div className="flex mt-2">
+                <div className=" w-3/16 ml-4 mt-2">Choose a Job Description:</div>
+                <select
+                  id="selectJob"
+                  className="w-5/8 mr-2 input-field"
+                  value={selectedJob?.id}
+                  onChange={handleChangeCV}
+                >
+                  {cvList.map((job) => (
+                    <option key={job.id} value={job.id}>
+                      {job.file_name}
                     </option>
                   ))}
                   <option value={null}>None</option>
