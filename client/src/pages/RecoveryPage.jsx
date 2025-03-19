@@ -34,6 +34,7 @@ export default function RecoveryPage() {
         } catch (err) {
             setError("An error occurred. Please try again.");
             setMessage("");  // Clear success message on error
+            console.error(err)
         }
     };
 
