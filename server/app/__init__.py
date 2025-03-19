@@ -1,17 +1,19 @@
 from flask import Flask
+from app.routes import api_bp
+from .exts import db, migrate, jwt, mail
+from .config import config_dict
+from .commands import seed_db
 from flask_cors import CORS
-from flask_mail import Mail
-from flask_restx import Api
-from .routes.recovery import recovery_bp  # Import the recovery namespace
+# from .config import MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USERNAME, MAIL_PASSWORD
+from .config import Config
+# from .utils import mail
+# from utils import mail
 import os
-
-mail = Mail()  # Initialize Mail here
-api = Api()  # Initialize Flask-RESTX API
 
 def create_app(config_name="development"):
     app = Flask(__name__)
     
-    # Load the correct configuration
+    # Load the correct config
     config_class = config_dict.get(config_name, "development")
     app.config.from_object(config_class)
 
@@ -22,7 +24,8 @@ def create_app(config_name="development"):
     # Debugging: Print current config mode
     print(f"⚡ Running in {config_name} mode")
     
-    # CORS POLICY
+    # CORS POLICY TO ALLOW ALL ORIGINS, THIS IS IMPORTANT FOR SECURITY REASONS
+    CORS(app)
     CORS(app, resources={r"/api/*": {"origins": "*"}})
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
@@ -61,9 +64,15 @@ def create_app(config_name="development"):
 
     # Register Blueprints
     app.register_blueprint(api_bp, url_prefix='/')
-    app.register_blueprint(recovery_bp, url_prefix='/auth')
+    
+    app.config.update(
+    MAIL_SERVER=Config.MAIL_SERVER,
+    MAIL_PORT=Config.MAIL_PORT,
+    MAIL_USE_TLS=Config.MAIL_USE_TLS,
+    MAIL_USERNAME=Config.MAIL_USERNAME,
+    MAIL_PASSWORD=Config.MAIL_PASSWORD)
 
-    # Initialize job description module
-    init_job_description(app)
-
+    mail.init_app(app)
+    
+    # Return the app instance
     return app

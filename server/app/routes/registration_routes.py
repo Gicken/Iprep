@@ -1,13 +1,14 @@
 from flask import request, jsonify
 from flask_restx import Namespace, Resource, fields
-from app.models.user import User, db
+from ..exts import db
+from ..models.user import User
 import re
 
 # Define API namespace for users
 api = Namespace("register", description="User registration related operations")
 
 # Define user model for Swagger UI
-user_model = api.model('User', {
+user_model = api.model('RegisterUser', {
     'firstName': fields.String(required=True, description="First Name"),
     'lastName': fields.String(required=True, description="Last Name"),
     'email': fields.String(required=True, description="Email Address"),
@@ -23,7 +24,7 @@ def is_valid_fdm_email(email):
 def is_valid_password(password):
     return len(password) >= 8 and bool(re.search(r"[!@#$%^&*(),.?\":{}|<>]", password))
 
-@api.route('/')
+@api.route('/register')
 class RegisterUser(Resource):
     @api.expect(user_model)
     def post(self):
