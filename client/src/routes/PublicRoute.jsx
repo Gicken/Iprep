@@ -14,9 +14,9 @@ const PublicRoute = () => {
     );
   }
 
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  // if (isAuthenticated) {
+  //   return <Navigate to="/dashboard" replace />;
+  // }
 
   return <Outlet />;
 };

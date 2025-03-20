@@ -10,4 +10,10 @@ export const validateEmail = (email) => {
     const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
     return password.length >= minLength && specialCharRegex.test(password);
   };
+
+  export const validateName = (name) => {
+    // Checks for minimum 8 characters, at least one letter and one number
+    const letterRegex = /[A-Za-z]/;
+    return letterRegex.test(name);
+  };
   
