@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
 
     // Sync logout across tabs
     localStorage.setItem("logout", Date.now());
-  }, []);
+  },[]);
 
   const resetInactivityTimer = useCallback(() => {
     if (!isAuthenticated) return;
