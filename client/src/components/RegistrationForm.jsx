@@ -30,7 +30,20 @@ const RegistrationForm = () => {
         let valid = true;
         const newErrors = {};
 
-        if (!validateEmail(formData.email)) {
+        // Validate First Name
+        if (!formData.firstName || !validateName(formData.firstName)) {
+            newErrors.firstName = 'First name should only contain alphabets.';
+            valid = false;
+        }
+
+        // Validate Last Name
+        if (!formData.lastName || !validateName(formData.lastName)) {
+            newErrors.lastName = 'Last name should only contain alphabets.';
+            valid = false;
+        }
+
+        // Validate Email
+        if (!formData.email || !validateEmail(formData.email)) {
             newErrors.email = 'Please use a valid FDM email address.';
             valid = false;
         }
@@ -40,11 +53,11 @@ const RegistrationForm = () => {
             valid = false;
         }
 
+        // Validate Password Confirmation
         if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Passwords do not match.';
             valid = false;
         }
-
         if (valid) {
             try {
                 const response = await AuthService.registerUser(formData);

@@ -34,8 +34,9 @@ export default function ResetPage() {
             setError("");
             setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
-            setError(err.message);
-            setMessage("");
+            setError("An error occurred. Please try again.");
+            setMessage(""); // Clear success message
+            console.error(err)
         }
     };
 

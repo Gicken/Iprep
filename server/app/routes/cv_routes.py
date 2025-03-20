@@ -102,7 +102,6 @@ class CVList(Resource):
         
         return cv_list, 200
 
-
 @cv_ns.route('/<string:cv_id>')
 class CVItem(Resource):
     @cv_ns.doc(security='BearerAuth')

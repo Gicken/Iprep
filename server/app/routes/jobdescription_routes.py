@@ -1,6 +1,6 @@
 from flask import request, jsonify, make_response
 from flask_restx import Namespace, Resource, fields
-from .services import JobDescriptionService
+from ..services.JobDescriptionService import JobDescriptionService
 
 
 job_description_ns = Namespace('job_descriptions', description='Job description operations')

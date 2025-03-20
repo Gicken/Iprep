@@ -1,4 +1,4 @@
-from .models import JobDescription
+from ..models.JobDescription import JobDescription
 from app.exts import db
 
 class JobDescriptionService:
