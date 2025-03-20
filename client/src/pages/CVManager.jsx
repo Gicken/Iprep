@@ -142,7 +142,7 @@ const CVManager = () => {
   return (
     <div className="container mx-auto p-4">
       {/* CV Upload Form */}
-      <form onSubmit={handleUpload} className="mb-6 bg-white p-4 rounded shadow">
+      <form onSubmit={handleUpload} className="bg-gray-800 mb-6  p-4 rounded shadow">
         <h3 className="text-lg font-semibold mb-3">Upload New CV</h3>
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
           <input
@@ -150,7 +150,7 @@ const CVManager = () => {
             type="file"
             onChange={handleFileChange}
             accept=".pdf,.doc,.docx"
-            className="border p-2 rounded w-full"
+            className="border p-2 rounded w-full input-field"
           />
           <button
             type="submit"
@@ -182,8 +182,8 @@ const CVManager = () => {
       )}
 
       {/* CV List */}
-      <div className="bg-white p-4 rounded shadow">
-        <h3 className="text-xl font-semibold mb-4">Your CVs</h3>
+      <div className=" bg-gray-800 p-4 rounded shadow">
+        <h3 className="text-xl  font-semibold mb-4">Your CVs</h3>
         {cvs.length === 0 ? (
           <p className="text-gray-500">No CVs uploaded yet</p>
         ) : (
@@ -191,7 +191,7 @@ const CVManager = () => {
             {cvs.map((cv) => (
               <li
                 key={cv.id}
-                className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-gray-50 p-4 rounded border"
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-black p-4 rounded border"
               >
                 <div className="flex flex-col">
                   <span className="font-medium">{cv.file_name}</span>
