@@ -1,12 +1,37 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_ENDPOINTS } from "../utils/constants";
+import {isValidEmail} from "../utils/validators";
 import "../assets/styles/styles.css";
 
 export default function RecoveryPage() {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    const handleRecover = () => {
-        setMessage("If this email exists, a recovery link has been sent.");
+    const handleRecover = async () => {
+
+        if(isValidEmail(email)){
+        try {
+            const response = await axios.post(`${API_ENDPOINTS.RECOVER}`, { email });
+                setMessage(response.data.message);  // Set the success message
+                setError(null);  // Clear any previous errors
+                setTimeout(() => {
+                    // Redirect to the reset password page after a few seconds
+                    navigate("/login");  // Ensure the path matches your reset route
+                }, 2000);  // Delay for 2 seconds before redirecting
+                        
+        } catch (error) {
+            setMessage("");  // Clear success message on error
+            setError(error.response.data.error || "An error occurred");
+        }
+    }
+    else{
+        setMessage("");  
+        setError("Please enter a valid email");
+    }
     };
 
     return (
@@ -30,8 +55,11 @@ export default function RecoveryPage() {
                         Recover
                     </button>
                     {message && (
-                        <p className="mt-4 text-green-500">{message}</p>
+                        <p className="mt-4 text-green-500 whitespace-pre-line">{message}</p>
                     )}
+                    {error ? 
+                        <p className="mt-4 text-red-500">{error}</p> :null
+                    }
                 </div>
             </div>
         </div>

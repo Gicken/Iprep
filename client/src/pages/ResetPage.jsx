@@ -1,64 +1,68 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function ResetPage() {
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(""); 
-  const [error, setError] = useState("");  
-  const navigate = useNavigate(); 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
 
-  const validatePassword = (password) => {
-    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-    return password.length >= 8 && specialCharRegex.test(password);
-  };
+    const handleReset = async () => {
+        try {
+            const response = await fetch("http://127.0.0.1:5000/recovery/reset-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
-  const handlePasswordReset = () => {
-    if (!password) {
-      setError("Please enter a password.");
-      setMessage("");
-    } else if (!validatePassword(password)) {
-      setError("Password must be at least 8 characters long and contain at least 1 special character.");
-      setMessage("");
-    } else {
-      setError("");
-      setMessage("Password has been successfully reset.");
-      // Add actual password reset logic here (e.g., API call)
-    }
-  };
+            const data = await response.json();
 
-  const handleReturnToLogin = () => {
-    navigate("/login"); 
-  };
+            if (response.ok) {
+                setMessage(`Success: ${data.message}`);
+                setError(""); // Clear errors
+            } else {
+                setError(`Error: ${data.error}`);
+                setMessage(""); // Clear success message
+            }
+        } catch (err) {
+            setError("An error occurred. Please try again.");
+            setMessage(""); // Clear success message
+            console.error(err)
+        }
+    };
 
-  return (
-    <div className="p-6 flex flex-col items-center">
-      <h2 className="text-xl font-bold mb-4">Reset Password</h2>
-      <input
-        type="password"
-        placeholder="Enter new password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 rounded mb-2"
-      />
-      <button 
-        onClick={handlePasswordReset} 
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
-      >
-        Confirm
-      </button>
-
-      {error && <p className="mt-2 text-red-500">{error}</p>}
-      {message && <p className="mt-2 text-green-500">{message}</p>}
-
-      <button 
-        onClick={handleReturnToLogin} 
-        className="bg-gray-500 text-white px-4 py-2 rounded mt-4"
-      >
-        Return to Login Page
-      </button>
-    </div>
-  );
+    return (
+        <div className="flex items-center justify-center min-h-screen bg-[#1A1C1B]">
+            <div className="login-form-container max-w-md w-full">
+                <div className="p-6 flex flex-col items-center">
+                    <h2 className="text-xl font-bold mb-4 text-white">
+                        Reset Password
+                    </h2>
+                    <input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="input-field border p-2 rounded mb-4 text-white"
+                    />
+                    <input
+                        type="password"
+                        placeholder="Enter new password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="input-field border p-2 rounded mb-4 text-white"
+                    />
+                    <button
+                        onClick={handleReset}
+                        className="primary-button bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                        Reset Password
+                    </button>
+                    {message && <p className="mt-4 text-green-500">{message}</p>}
+                    {error && <p className="mt-4 text-red-500">{error}</p>}
+                </div>
+            </div>
+        </div>
+    );
 }
-
-
-
