@@ -19,7 +19,7 @@ const DashboardNavbar = ({ isSidebarOpen, toggleSidebar }) => {
         <aside
             className={`transition-all duration-300 ease-in-out ${
                 isSidebarOpen ? "w-64 p-4" : "w-20 p-2"
-            } bg-gray-900 rounded-3xl m-4 mt-0 mb-0 h-screen fixed flex flex-col justify-between`}
+            } bg-gray-900 rounded-3xl m-4 mt-0 mb-0 h-120 fixed flex flex-col justify-between`}
             style={{
                 boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
             }}

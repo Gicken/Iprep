@@ -6,7 +6,7 @@ import '../assets/styles/Homepage.css';
 const Home = () => {
   return (
     // <div className="flex items-start justify-center flex-grow bg-[#1A1C1B] text-white">
-    <div className="flex items-center justify-center min-h-screen bg-[#1A1C1B]">
+    <div className="flex items-center justify-center bg-[#1A1C1B]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
         {/* Left Side */}
         <div className="w-1/2 pr-8">

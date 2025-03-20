@@ -9,6 +9,10 @@
     --color-white: #ffffff;
   }
 
+.profile-link {
+    color: #d1d5db;
+}
+
 .nav-link {
     color: #d1d5db;
     padding: 0.5rem 0.75rem;

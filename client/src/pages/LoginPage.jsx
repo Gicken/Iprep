@@ -27,7 +27,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#1A1C1B]">
+    <div className="flex items-center justify-center bg-[#1A1C1B]">
       <div className="login-form-container">
         <div className="flex">
           {/* Left Section (Login Form) */}
