@@ -1,12 +1,13 @@
-export const isValidEmail = (email) => {
+export const validateEmail = (email) => {
     // Uses regex to validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@(fdm\.com|fdmgroup\.com)$/;
     return emailRegex.test(email);
   };
   
-  export const isValidPassword = (password) => {
+  export const validatePassword = (password) => {
     // Checks for minimum 8 characters, at least one letter and one number
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    return passwordRegex.test(password);
+    const minLength = 8;
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    return password.length >= minLength && specialCharRegex.test(password);
   };
   

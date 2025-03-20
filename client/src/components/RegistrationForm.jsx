@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import '../assets/styles/styles.css';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from "axios";
+import { validateEmail, validatePassword } from '../utils/validators';
+import  AuthService from '../services/AuthService';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const RegistrationForm = () => {
     const [formData, setFormData] = useState({
@@ -12,38 +14,21 @@ const RegistrationForm = () => {
         confirmPassword: ''
     });
 
-    const [errors, setErrors] = useState({
-        email: '',
-        password: '',
-        confirmPassword: ''
-    });
+    const [errors, setErrors] = useState({});
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
-
-    const validateEmail = (email) => {
-        const regex = /^[a-zA-Z0-9._%+-]+@(fdm\.com|fdmgroup\.com)$/;
-        return regex.test(email);
-    };
-
-    const validatePassword = (password) => {
-        const minLength = 8;
-        const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-        return password.length >= minLength && specialCharRegex.test(password);
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         let valid = true;
-        const newErrors = { email: '', password: '', confirmPassword: '' };
+        const newErrors = {};
 
         if (!validateEmail(formData.email)) {
             newErrors.email = 'Please use a valid FDM email address.';
@@ -51,7 +36,7 @@ const RegistrationForm = () => {
         }
 
         if (!validatePassword(formData.password)) {
-            newErrors.password = 'Password must be at least 8 characters long and include one special character.';
+            newErrors.password = 'Password must be at least 8 characters and include one special character.';
             valid = false;
         }
 
@@ -62,23 +47,13 @@ const RegistrationForm = () => {
 
         if (valid) {
             try {
-                const response = await axios.post("http://127.0.0.1:5000/register/", formData, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-
-                alert(response.data.message);
+                const response = await AuthService.registerUser(formData);
+                alert(response.message);
                 setFormData({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
-                setErrors({ email: '', password: '', confirmPassword: '' });
+                setErrors({});
                 navigate('/login');
-
             } catch (error) {
-                if (error.response) {
-                    alert(error.response.data.error);
-                } else {
-                    alert("Error: Could not connect to the server.");
-                }
+                alert(error);
             }
         } else {
             setErrors(newErrors);
@@ -91,28 +66,55 @@ const RegistrationForm = () => {
                 <div className="flex">
                     {/* Left Section (Registration Form) */}
                     <div className="login-form-left">
-                        <div className="mb-6">
-                            <h2 className="text-2xl font-semibold text-white">Create an Account</h2>
-                        </div>
+                        <h2 className="text-2xl font-semibold text-white mb-6">Create an Account</h2>
                         <form onSubmit={handleSubmit}>
-                            <div className="mb-4">
-                                <input type="text" placeholder="First Name" name="firstName" value={formData.firstName} onChange={handleChange} className="input-field" required />
+                            <input type="text" placeholder="First Name" name="firstName" value={formData.firstName} onChange={handleChange} className="input-field mb-4" required />
+                            <input type="text" placeholder="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} className="input-field mb-4" required />
+                            <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} className="input-field mb-4" required />
+                            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+
+                            {/* Password Field with Eye Icon */}
+                            <div className="relative mb-4">
+                                <input 
+                                    type={showPassword ? "text" : "password"} 
+                                    placeholder="Password" 
+                                    name="password" 
+                                    value={formData.password} 
+                                    onChange={handleChange} 
+                                    className="input-field pr-10" 
+                                    required 
+                                />
+                                <button 
+                                    type="button" 
+                                    className="absolute right-3 top-3 text-white" 
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </button>
                             </div>
-                            <div className="mb-4">
-                                <input type="text" placeholder="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} className="input-field" required />
+                            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+
+                            {/* Confirm Password Field with Eye Icon */}
+                            <div className="relative mb-6">
+                                <input 
+                                    type={showConfirmPassword ? "text" : "password"} 
+                                    placeholder="Confirm Password" 
+                                    name="confirmPassword" 
+                                    value={formData.confirmPassword} 
+                                    onChange={handleChange} 
+                                    className="input-field pr-10" 
+                                    required 
+                                />
+                                <button 
+                                    type="button" 
+                                    className="absolute right-3 top-3 text-white" 
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                >
+                                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                                </button>
                             </div>
-                            <div className="mb-4">
-                                <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} className="input-field" required />
-                                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                            </div>
-                            <div className="mb-4">
-                                <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} className="input-field" required />
-                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-                            </div>
-                            <div className="mb-6">
-                                <input type="password" placeholder="Confirm Password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="input-field" required />
-                                {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
-                            </div>
+                            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
+
                             <button type="submit" className="primary-button">SIGN UP</button>
                         </form>
                     </div>
