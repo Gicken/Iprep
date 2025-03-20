@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../assets/styles/styles.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { validateEmail, validatePassword } from '../utils/validators';
+import { validateEmail, validatePassword, validateName } from '../utils/validators';
 import  AuthService from '../services/AuthService';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
@@ -32,13 +32,13 @@ const RegistrationForm = () => {
 
         // Validate First Name
         if (!formData.firstName || !validateName(formData.firstName)) {
-            newErrors.firstName = 'First name should only contain alphabets.';
+            newErrors.firstName = 'First name should only contain letters.';
             valid = false;
         }
 
         // Validate Last Name
         if (!formData.lastName || !validateName(formData.lastName)) {
-            newErrors.lastName = 'Last name should only contain alphabets.';
+            newErrors.lastName = 'Last name should only contain letters.';
             valid = false;
         }
 
