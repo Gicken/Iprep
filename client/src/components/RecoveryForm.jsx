@@ -28,17 +28,6 @@ const RecoveryForm = ({ onSubmit, error, message }) => {
           Recover
         </button>
 
-        {/* <button
-          onClick={() => onSubmit(email)}
-          className='primary-button bg-blue-500 text-white px-4 py-2 rounded'
-        >
-          Recover
-        </button>
-        {message && (
-          <p className='mt-4 text-green-500 whitespace-pre-line'>{message}</p>
-        )}
-        {error && <p className='mt-4 text-red-500'>{error}</p>} */}
-
         {message && (
           <p className='mt-4 text-green-500 text-center'>{message}</p>
         )}
