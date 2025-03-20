@@ -15,6 +15,8 @@ const RegistrationForm = () => {
     });
 
     const [errors, setErrors] = useState({
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         confirmPassword: ''
@@ -28,6 +30,11 @@ const RegistrationForm = () => {
             ...formData,
             [name]: value
         });
+    };
+
+    const validateName = (name) => {
+        const regex = /^[A-Za-z]+$/;  // Regex to allow only alphabets
+        return regex.test(name);
     };
 
     const validateEmail = (email) => {
@@ -45,18 +52,39 @@ const RegistrationForm = () => {
         e.preventDefault();
 
         let valid = true;
-        const newErrors = { email: '', password: '', confirmPassword: '' };
+        const newErrors = {
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+        };
 
-        if (!validateEmail(formData.email)) {
+        // Validate First Name
+        if (!formData.firstName || !validateName(formData.firstName)) {
+            newErrors.firstName = 'First name should only contain alphabets.';
+            valid = false;
+        }
+
+        // Validate Last Name
+        if (!formData.lastName || !validateName(formData.lastName)) {
+            newErrors.lastName = 'Last name should only contain alphabets.';
+            valid = false;
+        }
+
+        // Validate Email
+        if (!formData.email || !validateEmail(formData.email)) {
             newErrors.email = 'Please use a valid FDM email address.';
             valid = false;
         }
 
-        if (!validatePassword(formData.password)) {
+        // Validate Password
+        if (!formData.password || !validatePassword(formData.password)) {
             newErrors.password = 'Password must be at least 8 characters long and include one special character.';
             valid = false;
         }
 
+        // Validate Password Confirmation
         if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Passwords do not match.';
             valid = false;
@@ -73,7 +101,7 @@ const RegistrationForm = () => {
 
                 alert(response.data.message);
                 setFormData({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
-                setErrors({ email: '', password: '', confirmPassword: '' });
+                setErrors({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
                 navigate('/login');
 
             } catch (error) {
@@ -99,21 +127,63 @@ const RegistrationForm = () => {
                         </div>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
-                                <input type="text" placeholder="First Name" name="firstName" value={formData.firstName} onChange={handleChange} className="input-field" required />
+                                <input 
+                                    type="text" 
+                                    placeholder="First Name" 
+                                    name="firstName" 
+                                    value={formData.firstName} 
+                                    onChange={handleChange} 
+                                    className="input-field" 
+                                    required 
+                                />
+                                {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                             </div>
                             <div className="mb-4">
-                                <input type="text" placeholder="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} className="input-field" required />
+                                <input 
+                                    type="text" 
+                                    placeholder="Last Name" 
+                                    name="lastName" 
+                                    value={formData.lastName} 
+                                    onChange={handleChange} 
+                                    className="input-field" 
+                                    required 
+                                />
+                                {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                             </div>
                             <div className="mb-4">
-                                <input type="email" placeholder="Email" name="email" value={formData.email} onChange={handleChange} className="input-field" required />
+                                <input 
+                                    type="email" 
+                                    placeholder="Email" 
+                                    name="email" 
+                                    value={formData.email} 
+                                    onChange={handleChange} 
+                                    className="input-field" 
+                                    required 
+                                />
                                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                             </div>
                             <div className="mb-4">
-                                <input type="password" placeholder="Password" name="password" value={formData.password} onChange={handleChange} className="input-field" required />
+                                <input 
+                                    type="password" 
+                                    placeholder="Password" 
+                                    name="password" 
+                                    value={formData.password} 
+                                    onChange={handleChange} 
+                                    className="input-field" 
+                                    required 
+                                />
                                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
                             <div className="mb-6">
-                                <input type="password" placeholder="Confirm Password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="input-field" required />
+                                <input 
+                                    type="password" 
+                                    placeholder="Confirm Password" 
+                                    name="confirmPassword" 
+                                    value={formData.confirmPassword} 
+                                    onChange={handleChange} 
+                                    className="input-field" 
+                                    required 
+                                />
                                 {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
                             </div>
                             <button type="submit" className="primary-button">SIGN UP</button>

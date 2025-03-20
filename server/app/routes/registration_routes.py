@@ -15,6 +15,9 @@ user_model = api.model('RegisterUser', {
     'password': fields.String(required=True, description="Password"),
     'confirmPassword': fields.String(required=True, description="Confirm Password"),
 })
+# name validation function
+def is_valid_name(name):
+    return bool(re.match(r"^[A-Za-z]+$", name))
 
 # Email validation function
 def is_valid_fdm_email(email):
@@ -39,12 +42,17 @@ class RegisterUser(Resource):
         # Validate input data
         if not first_name or not last_name:
             return {"error": "First name and last name are required."}, 400
+        if not is_valid_name(first_name) or not is_valid_name(last_name):
+            return {"error": "First name and last name should only contain alphabets."}, 400
+
         if not is_valid_fdm_email(email):
             return {"error": "Please use a valid FDM email address."}, 400
         if not is_valid_password(password):
             return {"error": "Password must be at least 8 characters long and include one special character."}, 400
         if  confirm_password != password:
             return {"error": "Passwords do not match."}, 400
+        if User.query.filter_by(email=email).first():
+            return {"error": "Email address already in use."}, 409
 
         # Create the user object
         user = User(firstName=first_name, lastName=last_name, email=email, password=confirm_password)
