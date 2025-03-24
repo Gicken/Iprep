@@ -7,6 +7,7 @@ from werkzeug.datastructures import FileStorage
 from app.exts import db
 from app.models.user import User
 from ..models.CV import CV
+import base64
 
 # Create the namespace for CV-related routes
 cv_ns = Namespace('cv', description='CV related operations')
@@ -106,6 +107,27 @@ class CVList(Resource):
 class CVItem(Resource):
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
+    def get(self, cv_id):
+        """Get details + file data (Base64) of a specific CV"""
+        current_user_id = get_jwt_identity()
+
+        # Find the CV and ensure it belongs to the current user
+        cv = CV.query.filter_by(id=cv_id, user_id=current_user_id).first()
+
+        if not cv:
+            return {'error': 'CV not found or you do not have permission to view it'}, 404
+
+        # Encode file data as Base64 for transport
+        file_base64 = base64.b64encode(cv.file_data).decode('utf-8')
+
+        return {
+            'id': cv.id,
+            'file_name': cv.file_name,
+            'upload_date': cv.upload_date.strftime('%Y-%m-%d %H:%M:%S') if cv.upload_date else None,
+            'file_base64': file_base64,
+            'user_id': cv.user_id
+        }, 200
+    
     def delete(self, cv_id):
         """Delete a specific CV"""
         current_user_id = get_jwt_identity()
