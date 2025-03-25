@@ -25,9 +25,7 @@ def create_app(config_name="development"):
     print(f"⚡ Running in {config_name} mode")
     
     # CORS POLICY TO ALLOW ALL ORIGINS, THIS IS IMPORTANT FOR SECURITY REASONS
-    # CORS(app)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+    CORS(app, resources={r"/*": {"origins": "*","expose_headers": ["Content-Disposition","file-name"],}}, supports_credentials=True)
 
     # JWT Secret Key
     # app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "your_secret_key")

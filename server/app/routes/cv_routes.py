@@ -1,13 +1,11 @@
-from flask import request
+from flask import request, Response
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
-
 from app.exts import db
 from app.models.user import User
 from ..models.CV import CV
-import base64
 
 # Create the namespace for CV-related routes
 cv_ns = Namespace('cv', description='CV related operations')
@@ -82,7 +80,6 @@ class CVUpload(Resource):
         """Check if file extension is allowed"""
         ALLOWED_EXTENSIONS = {'pdf', 'docx', 'doc', 'txt'}
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @cv_ns.route('')
 class CVList(Resource):
     @cv_ns.doc(security='BearerAuth')
@@ -108,7 +105,7 @@ class CVItem(Resource):
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self, cv_id):
-        """Get details + file data (Base64) of a specific CV"""
+        """Get CV by ID as blob"""
         current_user_id = get_jwt_identity()
 
         # Find the CV and ensure it belongs to the current user
@@ -117,19 +114,17 @@ class CVItem(Resource):
         if not cv:
             return {'error': 'CV not found or you do not have permission to view it'}, 404
 
-        # Encode file data as Base64 for transport
-        file_base64 = base64.b64encode(cv.file_data).decode('utf-8')
-
-        return {
-            'id': cv.id,
-            'file_name': cv.file_name,
-            'upload_date': cv.upload_date.strftime('%Y-%m-%d %H:%M:%S') if cv.upload_date else None,
-            'file_base64': file_base64,
-            'user_id': cv.user_id
-        }, 200
-    
+        try:
+            response = Response(cv.file_data,mimetype="application/msword")
+            response.headers["Content-Disposition"] = f"attachment; filename={cv.file_name}"
+            response.headers["file-name"] = f"{cv.file_name}"
+            return response
+        except Exception as e:
+            return {'error': str(e)}, 500
+    @cv_ns.doc(security='BearerAuth')
+    @jwt_required()
     def delete(self, cv_id):
-        """Delete a specific CV"""
+        """Delete a specific CV by ID"""
         current_user_id = get_jwt_identity()
         
         # Find the CV and ensure it belongs to the current user

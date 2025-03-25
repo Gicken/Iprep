@@ -139,6 +139,30 @@ const CVManager = () => {
     }
   };
 
+     // Handle CV download
+     const handleDownload = async (cvId) => {
+      
+      try {
+        const token = sessionStorage.getItem('token');
+        const response = await axios.get(`${API_ENDPOINTS.All_CVs}/${cvId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          responseType: 'blob'
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download',response.headers.get('file-name')); 
+          document.body.appendChild(link);
+          link.click();
+
+      } catch (err) {
+        console.error('Download error:', err);
+        setError('Failed to download CV. Please try again.');
+      }
+    };
+
   return (
     <div className="container mx-auto p-4">
       {/* CV Upload Form */}
@@ -200,12 +224,18 @@ const CVManager = () => {
                   </span>
                 </div>
                 <div className="flex gap-2 mt-2 sm:mt-0">
-                  <button
-                    onClick={() => handleDelete(cv.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-                  >
-                    Delete
-                  </button>
+                <button
+                      onClick={() => handleDownload(cv.id)}
+                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                    >
+                      Download
+                    </button>
+                    <button
+                      onClick={() => handleDelete(cv.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                    >
+                      Delete
+                    </button>
                 </div>
               </li>
             ))}
