@@ -3,6 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.exts import db
 from ..models.Feedback import Feedback
+from ..services.feedback_services import process_feedback
 
 # Create namespace for feedback
 feedback_ns = Namespace('feedback', description='Feedback related operations')
@@ -37,15 +38,18 @@ class FeedbackList(Resource):
     @feedback_ns.doc(security='BearerAuth')
     @jwt_required()
     def post(self):
-        """Store AI-evaluated feedback"""
+        """Store AI-evaluated feedback in a structured format"""
         current_user_id = get_jwt_identity()
         data = request.json
+
+        # Process AI feedback into structured sections
+        structured_feedback = process_feedback(data['feedback'])
 
         new_feedback = Feedback(
             user_id=current_user_id,
             question=data['question'],
             answer=data['answer'],
-            feedback=data['feedback']
+            feedback= structured_feedback  # Storing the structured feedback
         )
 
         try:
