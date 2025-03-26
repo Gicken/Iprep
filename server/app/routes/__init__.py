@@ -6,6 +6,7 @@ from .auth import auth_ns as login_api
 from .cv_routes import cv_ns as cv_api
 from .jobdescription_routes import job_description_ns as jobdescription_api
 from .recovery import api as recovery_api
+from .feedback_routes import feedback_ns as feedback_api
 
 # Initialize the API instance
 api_bp = Blueprint('api', __name__)
@@ -50,3 +51,6 @@ api.add_namespace(jobdescription_api, path='/jobdescription')
 # # Add the recovery namespace to the API instance
 api.add_namespace(recovery_api, path='/recover')
 # api.add_namespace(recovery_api, path='/recovery')
+
+# Add the feedback namespace to the API instance
+api.add_namespace(feedback_api, path='/feedback')
