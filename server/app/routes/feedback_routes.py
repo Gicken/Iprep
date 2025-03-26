@@ -42,14 +42,21 @@ class FeedbackList(Resource):
         current_user_id = get_jwt_identity()
         data = request.json
 
-        # Process AI feedback using the new FeedbackProcessor
+        # Validate required fields
+        required_fields = ['question', 'answer', 'feedback']
+        missing_fields = [field for field in required_fields if field not in data or not data[field]]
+
+        if missing_fields:
+            return {'error': f'Missing required fields: {", ".join(missing_fields)}'}, 400
+
+        # Process AI feedback
         structured_feedback = FeedbackProcessor.process_feedback(data['feedback'])
 
         new_feedback = Feedback(
             user_id=current_user_id,
             question=data['question'],
             answer=data['answer'],
-            feedback=structured_feedback  # Storing the structured feedback
+            feedback=structured_feedback
         )
 
         try:
