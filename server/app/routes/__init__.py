@@ -4,6 +4,8 @@ from .users import api as users_api
 from .registration_routes import api as registration_api
 from .auth import auth_ns as login_api
 from .cv_routes import cv_ns as cv_api
+from .interview_routes import interview_ns as interview_api
+
 from .jobdescription_routes import job_description_ns as jobdescription_api
 from .recovery import api as recovery_api
 
@@ -49,4 +51,6 @@ api.add_namespace(jobdescription_api, path='/jobdescription')
 
 # # Add the recovery namespace to the API instance
 api.add_namespace(recovery_api, path='/recover')
-# api.add_namespace(recovery_api, path='/recovery')
+
+# # Add the recovery namespace to the API instance
+api.add_namespace(interview_api, path='/interview')

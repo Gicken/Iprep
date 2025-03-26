@@ -82,11 +82,13 @@ class CVUpload(Resource):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @cv_ns.route('')
 class CVList(Resource):
-    @cv_ns.doc(security='BearerAuth')
-    @jwt_required()
+    # @cv_ns.doc(security='BearerAuth')
+    # @jwt_required()
     def get(self):
         """Get all CVs for the current user"""
-        current_user_id = get_jwt_identity()
+        current_user_id = "f4a5d0f9-4cbc-4430-ae8e-10e657f45c7e"
+        # current_user_id = get_jwt_identity()
+
         
         # Fetch only CVs belonging to the current user
         cvs = CV.query.filter_by(user_id=current_user_id).all()
@@ -102,11 +104,12 @@ class CVList(Resource):
 
 @cv_ns.route('/<string:cv_id>')
 class CVItem(Resource):
-    @cv_ns.doc(security='BearerAuth')
-    @jwt_required()
+    # @cv_ns.doc(security='BearerAuth')
+    # @jwt_required()
     def get(self, cv_id):
         """Get CV by ID as blob"""
-        current_user_id = get_jwt_identity()
+        # current_user_id = get_jwt_identity()
+        current_user_id = "f4a5d0f9-4cbc-4430-ae8e-10e657f45c7e"
 
         # Find the CV and ensure it belongs to the current user
         cv = CV.query.filter_by(id=cv_id, user_id=current_user_id).first()
