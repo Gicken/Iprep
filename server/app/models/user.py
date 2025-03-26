@@ -15,6 +15,8 @@ class User(db.Model):
     role = db.Column(db.String(50), default='user')
     createdAt = db.Column(db.DateTime, default=db.func.current_timestamp())
     updatedAt = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    
+    responses = db.relationship("UserResponse", back_populates="user", cascade="all, delete")
 
     @property
     def password(self):
@@ -35,7 +37,7 @@ class User(db.Model):
         self.lastName = lastName
         self.email = email
         self.password = password
-        #self.role = role
+        self.role
 
     def __repr__(self):
         return f'<User {self.firstName} {self.lastName}>'
