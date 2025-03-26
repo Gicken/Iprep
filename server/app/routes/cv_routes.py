@@ -4,7 +4,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from app.exts import db
-from app.models.user import User
 from ..models.CV import CV
 
 # Create the namespace for CV-related routes
