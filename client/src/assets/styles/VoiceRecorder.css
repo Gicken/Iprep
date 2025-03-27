@@ -1,0 +1,88 @@
+/* Voice Recorder Styles */
+.voice-recorder {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .controls button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  .start-btn {
+    background-color: green;
+    color: white;
+  }
+  
+  .pause-btn {
+    background-color: orange;
+    color: white;
+  }
+  
+  .stop-btn {
+    background-color: red;
+    color: white;
+  }
+  
+  .resume-btn {
+    background-color: blue;
+    color: white;
+  }
+  
+  .audio-response-container {
+    margin-top: 20px;
+  }
+  
+  /* Chatbox Styles */
+  .chatbox-container {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .toggle-chat-btn {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .chatbox {
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .messages-container {
+    padding-bottom: 10px;
+  }
+  
+  .message {
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  .message-input {
+    display: flex;
+    align-items: center;
+  }
+  
+  .message-input-field {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .send-btn {
+    background-color: #007bff
+  }  
