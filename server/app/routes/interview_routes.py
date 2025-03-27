@@ -25,10 +25,19 @@ json_schema_model = interview_ns.model("JsonSchemaModel", {
 })
 ##
 
-interview_model = interview_ns.model( "session",{
+interview_session_model = interview_ns.model( "session",{
         "job_id": fields.String(required=True, description="job_id"),
         "cv_id": fields.String(required=True, description="cv_id"),
         "difficulty": fields.String(required=True, description="Difficulty")
+    }
+)
+
+interview_session_model_response = interview_ns.model( "session",{
+        "id": fields.String(required=True, description="session_id"),
+        "job_id": fields.String(required=True, description="job_id"),
+        "cv_id": fields.String(required=True, description="cv_id"),
+        "difficulty": fields.String(required=True, description="Difficulty"),
+        "questions": fields.List(fields.Nested(question_model), required=True, min_items=1)
     }
 )
 
@@ -52,8 +61,11 @@ def serialize_session(session):
 
 
 
-@interview_ns.route('/all')
+@interview_ns.route('/')
 class InterviewAll(Resource):
+    @interview_ns.response(200, "Success",[interview_session_model_response])
+    @interview_ns.response(401,"Unauthorized")
+    @interview_ns.response(500, "Internal Server Error")
     @interview_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self):
@@ -63,7 +75,11 @@ class InterviewAll(Resource):
         return [serialize_session(session) for session in sessions], 200
 
 @interview_ns.route('/<string:session_id>')
-class InterviewAll(Resource):
+class InterviewItem(Resource):
+    @interview_ns.response(200, "Success",[interview_session_model_response])
+    @interview_ns.response(401,"Unauthorized")
+    @interview_ns.response(404,"Session not found")
+    @interview_ns.response(500, "Internal Server Error")
     @interview_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self, session_id):
@@ -77,8 +93,12 @@ class InterviewAll(Resource):
         return serialize_session(session), 200
 @interview_ns.route('/start')
 class InterviewStart(Resource):
+    @interview_ns.response(201, "Success")
+    @interview_ns.response(401,"Unauthorized")
+    @interview_ns.response(404,"CV of Job description not found ")
+    @interview_ns.response(500, "Internal Server Error")
     @interview_ns.doc(security='BearerAuth')
-    @interview_ns.expect(interview_model)
+    @interview_ns.expect(interview_session_model)
     @jwt_required()
     def post(self):
         """Start and interview session, including generating questions"""
@@ -110,7 +130,6 @@ class InterviewStart(Resource):
         return {
                     'message': 'Session created successfully', 
                     'session_id': new_session.id,
-                    # "jobDesc": jobDesc
                 }, 201
 
 

@@ -28,6 +28,11 @@ cv_upload_model = cv_ns.model('CVUpload', {
 
 @cv_ns.route('/upload')
 class CVUpload(Resource):
+    @cv_ns.response(200, "Success")
+    @cv_ns.response(400,"Missing or invalid file")
+    @cv_ns.response(401,"Unauthorized")
+    @cv_ns.response(413,"File too large")
+    @cv_ns.response(500, "Internal Server Error")
     @cv_ns.expect(upload_parser)
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
@@ -81,6 +86,9 @@ class CVUpload(Resource):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @cv_ns.route('')
 class CVList(Resource):
+    @cv_ns.response(200, "Success", [cv_model])
+    @cv_ns.response(401,"Unauthorized")
+    @cv_ns.response(500, "Internal Server Error")
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self):
@@ -102,6 +110,10 @@ class CVList(Resource):
 
 @cv_ns.route('/<string:cv_id>')
 class CVItem(Resource):
+    @cv_ns.response(200, "Success")
+    @cv_ns.response(401,"Unauthorized")
+    @cv_ns.response(404,"CV not found")
+    @cv_ns.response(500, "Internal Server Error")
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self, cv_id):
@@ -121,6 +133,10 @@ class CVItem(Resource):
             return response
         except Exception as e:
             return {'error': str(e)}, 500
+    @cv_ns.response(200, "Success")
+    @cv_ns.response(401,"Unauthorized")
+    @cv_ns.response(404,"CV not found")
+    @cv_ns.response(500, "Internal Server Error")
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
     def delete(self, cv_id):

@@ -15,6 +15,14 @@ user_model = api.model('RegisterUser', {
     'password': fields.String(required=True, description="Password"),
     'confirmPassword': fields.String(required=True, description="Confirm Password"),
 })
+
+response_model = api.model('RegisterResponse',{
+    "message": fields.String(required=True, description="Message"),
+    "user_id": fields.String(required=True, description="User ID"),
+    "email": fields.String(required=True, description="User Email")
+
+})
+
 # name validation function
 def is_valid_name(name):
     return bool(re.match(r"^[A-Za-z]+$", name))
@@ -29,6 +37,9 @@ def is_valid_password(password):
 
 @api.route('/register')
 class RegisterUser(Resource):
+    @api.response(201, "Success",response_model)
+    @api.response(400,"Bad request")
+    @api.response(500, "Internal Server Error")
     @api.expect(user_model)
     def post(self):
         """Register a new user"""
