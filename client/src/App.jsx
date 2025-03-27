@@ -13,18 +13,22 @@ import { JobDescriptionPage } from './features/JobDescriptionFeature'
 import { SpeechToTextPage } from './features/speechToText'
 
 
-function App () {
+function App() {
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route element={<PublicRoute />}>
-          <Route element={<MainLayout />}>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/how-it-works' element={<HowItWorks />} />
-            <Route path='/registration' element={<RegisterPage />} />
-            <Route path='/faqs' element={<FAQs />} />
+        <Route element={<PublicRoute/>}>
+          <Route path='/' element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path='home' element={<Home />} />
+            <Route path='comingsoon' element={<ComingSoon />} />
+            <Route path='recovery' element={<RecoveryPage />} />
+            <Route path='registration' element={<RegistrationForm />} />
+            <Route path='reset' element={<ResetPage />} />
+            <Route path='how-it-works' element={<HowItWorks />} />
+            <Route path='faqs' element={<FAQs />} />
+            <Route path='login' element={<Login />} />
           </Route>
           
         </Route>
@@ -46,7 +50,7 @@ function App () {
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
 export default App

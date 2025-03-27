@@ -1,0 +1,135 @@
+from flask import request
+from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from app.exts import db
+from ..models.InterviewSession import InterviewSession;
+from ..models.InterviewQuestion import InterviewQuestion;
+from ..services.interview_services import InterviewServices;
+from ..services.JobDescriptionService import JobDescriptionService;
+
+interview_ns = Namespace('interview_session', description='Interview operations')
+
+##Schema for incoming questions
+question_model = interview_ns.model("Question", {
+    'question': fields.String(required=True),
+    'questionBasis': fields.String(required=True),
+})
+
+questions_model = interview_ns.model("Questions", {
+    'questions': fields.List(fields.Nested(question_model), required=True, min_items=1),
+})
+
+json_schema_model = interview_ns.model("JsonSchemaModel", {
+    'name': fields.String(required=True),
+    'schema': fields.Nested(questions_model, required=True),
+})
+##
+
+interview_session_model = interview_ns.model( "session",{
+        "job_id": fields.String(required=True, description="job_id"),
+        "cv_id": fields.String(required=True, description="cv_id"),
+        "difficulty": fields.String(required=True, description="Difficulty")
+    }
+)
+
+interview_session_model_response = interview_ns.model( "session",{
+        "id": fields.String(required=True, description="session_id"),
+        "job_id": fields.String(required=True, description="job_id"),
+        "cv_id": fields.String(required=True, description="cv_id"),
+        "difficulty": fields.String(required=True, description="Difficulty"),
+        "questions": fields.List(fields.Nested(question_model), required=True, min_items=1)
+    }
+)
+
+
+def serialize_interview_question(question):
+        return {
+            'id': question.id,
+            'question_text': question.question_text,
+            'category': question.category
+        }
+
+def serialize_session(session):
+    """Helper function to convert datetime to string"""
+    return {
+        'id': session.id,
+        'job_id': session.job_id,
+        'cv_id': session.cv_id,
+        'user_id': session.user_id,
+        'questions': [serialize_interview_question(q) for q in session.questions]
+    }
+
+
+
+@interview_ns.route('/')
+class InterviewAll(Resource):
+    @interview_ns.response(200, "Success",[interview_session_model_response])
+    @interview_ns.response(401,"Unauthorized")
+    @interview_ns.response(500, "Internal Server Error")
+    @interview_ns.doc(security='BearerAuth')
+    @jwt_required()
+    def get(self):
+        """Get all sessions for current user"""
+        current_user_id = get_jwt_identity()
+        sessions = InterviewSession.query.filter_by(user_id=current_user_id).options(db.joinedload(InterviewSession.questions)).all()
+        return [serialize_session(session) for session in sessions], 200
+
+@interview_ns.route('/<string:session_id>')
+class InterviewItem(Resource):
+    @interview_ns.response(200, "Success",[interview_session_model_response])
+    @interview_ns.response(401,"Unauthorized")
+    @interview_ns.response(404,"Session not found")
+    @interview_ns.response(500, "Internal Server Error")
+    @interview_ns.doc(security='BearerAuth')
+    @jwt_required()
+    def get(self, session_id):
+        """Get session by ID"""
+        current_user_id = get_jwt_identity()
+        session = InterviewSession.query.filter_by(user_id=current_user_id, id=session_id).first()
+
+        if not session:
+            return {'error': 'Session not found or you do not have permission to access it'}, 404
+
+        return serialize_session(session), 200
+@interview_ns.route('/start')
+class InterviewStart(Resource):
+    @interview_ns.response(201, "Success")
+    @interview_ns.response(401,"Unauthorized")
+    @interview_ns.response(404,"CV of Job description not found ")
+    @interview_ns.response(500, "Internal Server Error")
+    @interview_ns.doc(security='BearerAuth')
+    @interview_ns.expect(interview_session_model)
+    @jwt_required()
+    def post(self):
+        """Start and interview session, including generating questions"""
+        current_user_id = get_jwt_identity()
+
+        data = request.json
+        new_session = InterviewSession(
+            job_id=data["job_id"],
+            cv_id=data["cv_id"],
+            difficulty = data["difficulty"],
+            user_id=current_user_id
+        )
+        cvString = InterviewServices.read_cv_doc(data["cv_id"])
+        if cvString == "CV not found":
+            return{
+                "error":cvString,
+            }, 404
+        jobDesc = JobDescriptionService.get_job_description_by_id(current_user_id,data["job_id"]).to_dict()
+        if not jobDesc:
+            return{
+                "error":"Job description not found",
+            }, 404
+        db.session.add(new_session)
+        db.session.commit()
+
+        questions = InterviewServices.generate_questions(cvString,jobDesc,data["difficulty"])
+        InterviewServices.add_questions_to_session(questions,new_session.id)
+        
+        return {
+                    'message': 'Session created successfully', 
+                    'session_id': new_session.id,
+                }, 201
+
+

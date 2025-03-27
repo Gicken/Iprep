@@ -34,7 +34,9 @@ def serialize_user(user):
 @api.route('/')
 class UserList(Resource):
     """Handles GET and POST requests for users"""
-
+    @api.response(200, "Success", [user_model])
+    @api.response(401,"Unauthorized")
+    @api.response(500, "Internal Server Error")
     @jwt_required()
     @api.doc(security='BearerAuth')
     def get(self):
@@ -47,7 +49,9 @@ class UserList(Resource):
 @api.route('/me')
 class CurrentUser(Resource):
     """Handles GET request for current user details"""
-
+    @api.response(200, "Success", user_model)
+    @api.response(401,"Unauthorized")
+    @api.response(500, "Internal Server Error")
     @jwt_required()
     @api.doc(security='BearerAuth')
     def get(self):
