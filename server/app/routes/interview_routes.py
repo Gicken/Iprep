@@ -1,12 +1,10 @@
-from flask import request, Response
+from flask import request
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from werkzeug.utils import secure_filename
 from app.exts import db
 from ..models.InterviewSession import InterviewSession;
 from ..models.InterviewQuestion import InterviewQuestion;
 from ..services.interview_services import InterviewServices;
-import json
 
 interview_ns = Namespace('interview_session', description='Interview operations')
 
@@ -33,7 +31,12 @@ interview_model = interview_ns.model( "session",{
 )
 
 
-
+def serialize_interview_question(question):
+        return {
+            'id': question.id,
+            'question_text': question.question_text,
+            'category': question.category
+        }
 
 def serialize_session(session):
     """Helper function to convert datetime to string"""
@@ -42,13 +45,41 @@ def serialize_session(session):
         'job_id': session.job_id,
         'cv_id': session.cv_id,
         'user_id': session.user_id,
+        'questions': [serialize_interview_question(q) for q in session.questions]
     }
+
+
+
+@interview_ns.route('/all')
+class InterviewAll(Resource):
+    @interview_ns.doc(security='BearerAuth')
+    @jwt_required()
+    def get(self):
+        """Get all sessions for current user"""
+        current_user_id = get_jwt_identity()
+        sessions = InterviewSession.query.filter_by(user_id=current_user_id).options(db.joinedload(InterviewSession.questions)).all()
+        return [serialize_session(session) for session in sessions], 200
+
+@interview_ns.route('/<string:session_id>')
+class InterviewAll(Resource):
+    @interview_ns.doc(security='BearerAuth')
+    @jwt_required()
+    def get(self, session_id):
+        """Get session by ID"""
+        current_user_id = get_jwt_identity()
+        session = InterviewSession.query.filter_by(user_id=current_user_id, id=session_id).first()
+
+        if not session:
+            return {'error': 'Session not found or you do not have permission to access it'}, 404
+
+        return serialize_session(session), 200
 @interview_ns.route('/start')
 class InterviewStart(Resource):
     @interview_ns.doc(security='BearerAuth')
     @interview_ns.expect(interview_model)
     @jwt_required()
     def post(self):
+        """Start and interview session, including generating questions"""
         current_user_id = get_jwt_identity()
 
         data = request.json
@@ -58,61 +89,21 @@ class InterviewStart(Resource):
             difficulty = data["difficulty"],
             user_id=current_user_id
         )
+        cvString = InterviewServices.read_cv_doc(data["cv_id"])
+        if cvString == "CV not found":
+            return{
+                "error":cvString,
+            }, 404
+        
         db.session.add(new_session)
         db.session.commit()
 
-        authorization_header = request.headers.get('Authorization')
-        _, token = authorization_header.split()
-        cvString = InterviewServices.read_cv_doc(token,data["cv_id"])
         questions = InterviewServices.generate_questions(cvString,data["difficulty"])
-        InterviewServices.add_questions_to_session(token,questions,new_session.id)
+        InterviewServices.add_questions_to_session(questions,new_session.id)
         
         return {
                     'message': 'Session created successfully', 
-                    'session_id': new_session.id
+                    'session_id': new_session.id,
                 }, 201
 
 
-@interview_ns.route('/all')
-class InterviewAll(Resource):
-    @interview_ns.doc(security='BearerAuth')
-    @jwt_required()
-    def get(self):
-        current_user_id = get_jwt_identity()
-        """Get all sessions"""
-        sessions = InterviewSession.query.all()
-        return [serialize_session(session) for session in sessions], 200
-
-
-@interview_ns.route('/<string:session_id>/questions')
-class InterviewStart(Resource):
-    @interview_ns.doc(security='BearerAuth')
-    @interview_ns.expect(questions_model)
-    @jwt_required()
-    def post(self,session_id):
-        current_user_id = get_jwt_identity()
-        data = json.loads(request.json)
-        session = InterviewSession.query.get(session_id)
-
-        # if True:
-        if not data["questions"]:
-            print(data)
-            return {"error": "No questions provided"}, 400
-        
-        for questionData in data["questions"]:
-            new_question = InterviewQuestion(
-                question_text=questionData["question"],
-                category=questionData["questionBasis"]
-            )
-            
-            db.session.add(new_question)
-            db.session.flush()
-            session.questions.append(new_question)  # This automatically adds to the link table
-
-
-        db.session.commit()
-
-        return {
-                    'message': 'Questions added successfully', 
-                    'session_id': session_id,
-                }, 201

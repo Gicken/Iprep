@@ -1,7 +1,13 @@
 from openai import OpenAI
-import requests
 from docx import Document
+from ..models.CV import CV
+from ..models.InterviewQuestion import InterviewQuestion
+from ..models.InterviewSession import InterviewSession
+
+from io import BytesIO
+from ..exts import db
 import json
+
 
 question_json_schema = {
     "type": "json_schema",
@@ -30,26 +36,19 @@ question_json_schema = {
 
 class InterviewServices:
     @staticmethod
-    def read_cv_doc(token, cv_id):
-        """Authenticate a user by verifying email and password."""
-
-        headers = {
-          'Authorization': 'Bearer {}'.format(token),
-          'Accept': 'application/json'  # Adjust content type as needed
-        }
-
-        response = requests.get("http://127.0.0.1:5000/cv/{}".format(cv_id),headers)
-
-        with open('temp.docx', 'wb') as f:
-            f.write(response.content)
-        
-        all_elements = []
+    def read_cv_doc(cv_id):
+        #Read CV from the DB
+        cv = CV.query.filter_by(id=cv_id).first()
+        if not cv:
+            return "CV not found"
+        file_data = cv.file_data
+        fs = BytesIO(file_data)
+        doc = Document(fs)
         finalString = ""
 
-        doc = Document('temp.docx')
         tablesTrack = 0
         tablesList = doc.tables
-
+        all_elements = []
         for element in doc.element.body:
             if element.tag.endswith('p'):
                 para_text = element.text
@@ -65,7 +64,6 @@ class InterviewServices:
 
         for element in all_elements:
             finalString = finalString + element + "\n"
-      
         return finalString
     
     @staticmethod
@@ -85,16 +83,16 @@ class InterviewServices:
         return response.choices[0].message.content
     
     @staticmethod
-    def add_questions_to_session(token,questions,session_id):
-            
-        headers = {
-          'Authorization': 'Bearer {}'.format(token),
-          'Accept': 'application/json'  # Adjust content type as needed
-        }
-        print(headers)
-        print("WE TRIED______________________________________________________________________")
-
-        requests.post("http://127.0.0.1:5000/interview/{}/questions".format(session_id),headers=headers,json=questions)
+    def add_questions_to_session(questionsJson,session_id):
+        session = InterviewSession.query.get(session_id)
         
-            
-        return
+        for questionData in json.loads(questionsJson)["questions"]:
+            new_question = InterviewQuestion(
+                question_text=questionData["question"],
+                category=questionData["questionBasis"]
+            )
+            db.session.add(new_question)
+            db.session.flush()
+            session.questions.append(new_question)  # This automatically adds to the link table
+        db.session.commit()
+        return 

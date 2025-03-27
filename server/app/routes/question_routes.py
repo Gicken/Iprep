@@ -10,7 +10,7 @@ from ..models.InterviewQuestion import InterviewQuestion;
 
 question_ns = Namespace('questions', description='Question operations')
 
-question_model = question_ns.model( "start",{
+question_model = question_ns.model( "question",{
         "id": fields.String(readOnly=True, description="question ID"),
         "question_text": fields.String(required=True, description="question_text"),
         "category": fields.String(required=True, description="question cat"),
@@ -33,18 +33,7 @@ class QuestionsAll(Resource):
     @question_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self):
-        current_user_id = get_jwt_identity()
         """Get all sessions"""
         sessions = InterviewQuestion.query.all()
         return [serialize_question(question) for question in sessions], 200
     
-@question_ns.route('/add')
-class QuestionsAdd(Resource):
-    @question_ns.doc(security='BearerAuth')
-    @question_ns.expect(question_model)
-    @jwt_required()
-    def get(self):
-        current_user_id = get_jwt_identity()
-        """Add a question sessions"""
-        sessions = InterviewQuestion.query.all()
-        return [serialize_question(question) for question in sessions], 200

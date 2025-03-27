@@ -7,10 +7,9 @@ from app.exts import db
 from ..models.InterviewSessionQuestions import InterviewSessionQuestions;
 
 
-question_link_ns = Namespace('questions', description='Question operations')
+question_link_ns = Namespace('link', description='Question operations')
 
 question_model = question_link_ns.model( "link",{
-        "id": fields.String(readOnly=True, description="question ID"),
         "session_id": fields.String(required=True, description="sess_id"),
         "question_id": fields.String(required=True, description="q id"),
     }
@@ -19,7 +18,6 @@ question_model = question_link_ns.model( "link",{
 def serialize_link(link):
     """Helper function to convert datetime to string"""
     return {
-        'id': link.id,
         'session_id': link.session_id,
         'question_id': link.question_id,
     }
