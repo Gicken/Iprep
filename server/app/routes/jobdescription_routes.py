@@ -20,13 +20,13 @@ create_job_description_model = job_description_ns.model(
 
 update_job_description_model = job_description_ns.model(
     "UpdateJobDescription", {
-        "title": fields.String(required=False, description="Job title"),
-        "description": fields.String(required=False, description="Job description"),
-        "companyName": fields.String(required=False, description="Company Name"),
-        "companyIndustry": fields.String(required=False, description="Company Industry"),
-        "companyInfo": fields.String(required=False, description="Company Info"),
-        "skills": fields.List(fields.String, required=False, description="List of skills"),
-        "experience_level": fields.String(required=False, description="Experience level")
+        "title": fields.String(required=True, description="Job title"),
+        "description": fields.String(required=True, description="Job description"),
+        "companyName": fields.String(required=True, description="Company Name"),
+        "companyIndustry": fields.String(required=True, description="Company Industry"),
+        "companyInfo": fields.String(required=True, description="Company Info"),
+        "skills": fields.List(fields.String, required=True, description="List of skills"),
+        "experience_level": fields.String(required=True, description="Experience level")
     }
 )
 
