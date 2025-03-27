@@ -5,6 +5,7 @@ from app.exts import db
 from ..models.InterviewSession import InterviewSession;
 from ..models.InterviewQuestion import InterviewQuestion;
 from ..services.interview_services import InterviewServices;
+from ..services.JobDescriptionService import JobDescriptionService;
 
 interview_ns = Namespace('interview_session', description='Interview operations')
 
@@ -22,6 +23,7 @@ json_schema_model = interview_ns.model("JsonSchemaModel", {
     'name': fields.String(required=True),
     'schema': fields.Nested(questions_model, required=True),
 })
+##
 
 interview_model = interview_ns.model( "session",{
         "job_id": fields.String(required=True, description="job_id"),
@@ -94,16 +96,21 @@ class InterviewStart(Resource):
             return{
                 "error":cvString,
             }, 404
-        
+        jobDesc = JobDescriptionService.get_job_description_by_id(current_user_id,data["job_id"]).to_dict()
+        if not jobDesc:
+            return{
+                "error":"Job description not found",
+            }, 404
         db.session.add(new_session)
         db.session.commit()
 
-        questions = InterviewServices.generate_questions(cvString,data["difficulty"])
+        questions = InterviewServices.generate_questions(cvString,jobDesc,data["difficulty"])
         InterviewServices.add_questions_to_session(questions,new_session.id)
         
         return {
                     'message': 'Session created successfully', 
                     'session_id': new_session.id,
+                    # "jobDesc": jobDesc
                 }, 201
 
 

@@ -67,14 +67,22 @@ class InterviewServices:
         return finalString
     
     @staticmethod
-    def generate_questions(cv_as_string,difficulty):
+    def generate_questions(cv_as_string,job_description,difficulty):
 
         client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
+        
+        #Get rid of data we dont want to send to the LLM
+        job_description.pop("id")
+        job_description.pop("userid")
+        job_description.pop("created_at")
+        job_description.pop("updated_at")
 
         response = client.chat.completions.create(
         model="qwen2.5-coder-7b-instruct",
         messages=[ 
-            {"role": "system", "content": f"Generate 5 interview questions, some based on the provided CV others looking at soft skills. Make the questions {difficulty}. CV: {cv_as_string}"},
+            {"role": "system", "content": f"Generate 5 interview questions, some based on the provided CV and job description others looking at soft skills. Consider how well the CV matches the job description. Make the questions {difficulty}."},
+            {"role": "user", "content":f"CV: {cv_as_string}"},
+            {"role": "user", "content":f"Job Description: {job_description}"}
             ],
         temperature=0.7, 
         response_format=question_json_schema
