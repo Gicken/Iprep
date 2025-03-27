@@ -45,8 +45,8 @@ export const useInactivityTimer = (
       
       logoutTimerRef.current = setTimeout(() => {
         logout();
-      }, 60000); // 1 minute until actual logout
-    }, 60000); // 1 minute until warning shows
+      }, 1800000); // 30 minute until actual logout
+    }, 300000); // 5 minute until warning shows
   }, [isAuthenticated, logout, setShowLogoutWarning, clearTimers, startCountdown, setCountdown]);
 
   // Cleanup on unmount
