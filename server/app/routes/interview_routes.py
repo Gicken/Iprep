@@ -76,7 +76,7 @@ class InterviewAll(Resource):
 
 @interview_ns.route('/<string:session_id>')
 class InterviewItem(Resource):
-    @interview_ns.response(200, "Success",[interview_session_model_response])
+    @interview_ns.response(200, "Success",interview_session_model_response)
     @interview_ns.response(401,"Unauthorized")
     @interview_ns.response(404,"Session not found")
     @interview_ns.response(500, "Internal Server Error")
