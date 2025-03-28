@@ -19,16 +19,16 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route element={<PublicRoute/>}>
-          <Route path='/' element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path='home' element={<Home />} />
-            <Route path='comingsoon' element={<ComingSoon />} />
-            <Route path='recovery' element={<RecoveryPage />} />
-            <Route path='registration' element={<RegistrationForm />} />
-            <Route path='reset' element={<ResetPage />} />
+          <Route path='/' element={<MainLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path='home' element={<HomePage />} />
+            {/* <Route path='comingsoon' element={<ComingSoon />} /> */}
+            {/* <Route path='recovery' element={<RecoveryPage />} /> */}
+            <Route path='registration' element={<RegisterPage />} />
+            {/* <Route path='reset' element={<ResetPage />} /> */}
             <Route path='how-it-works' element={<HowItWorks />} />
             <Route path='faqs' element={<FAQs />} />
-            <Route path='login' element={<Login />} />
+            <Route path='login' element={<LoginPage />} />
           </Route>
           
         </Route>
