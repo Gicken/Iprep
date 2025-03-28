@@ -55,4 +55,12 @@ api.add_namespace(jobdescription_api, path='/jobdescription')
 
 # # Add the recovery namespace to the API instance
 api.add_namespace(recovery_api, path='/recover')
-# api.add_namespace(recovery_api, path='/recovery')
+
+# # Add the interview namespace to the API instance
+api.add_namespace(interview_api, path='/interview')
+
+# # Add the question namespace to the API instance
+api.add_namespace(question_api, path='/question')
+
+# # Add the link namespace to the API instance (Unused by needed to force generate the table)
+api.add_namespace(link_api, path='/link')

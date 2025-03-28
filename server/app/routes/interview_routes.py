@@ -32,7 +32,7 @@ interview_session_model = interview_ns.model( "session",{
     }
 )
 
-interview_session_model_response = interview_ns.model( "session",{
+interview_session_model_response = interview_ns.model( "sessionResponse",{
         "id": fields.String(required=True, description="session_id"),
         "job_id": fields.String(required=True, description="job_id"),
         "cv_id": fields.String(required=True, description="cv_id"),
