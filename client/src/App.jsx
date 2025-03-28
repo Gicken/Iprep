@@ -16,6 +16,7 @@ import NotFoundPage from "./components/NotFound";
 import CVManager from "./pages/CVManager";
 import ProfilePage from "./pages/ProfilePage";
 import PublicRoute from "./routes/PublicRoute";
+import FeedbackManager from "./pages/FeedbackManager";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="start" element={<StartInterview />} />
             <Route path="cv-manager" element={<CVManager />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="feedback" element={<FeedbackManager />} />
           </Route>
           </Route>
         </Route>

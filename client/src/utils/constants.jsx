@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     All_Jobs:`${BASE_URL}/jobdescription/`,
     RECOVER:`${BASE_URL}/recover/`,
     // USER_PROFILE: '/api/profile',
+    All_feedbacks: `${BASE_URL}/feedback`,
   };
 
 export const apiClient = axios.create({
