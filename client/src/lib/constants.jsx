@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
     ADD_NEWJOBDESCRIPTION:`${BASE_URL}/jobdescription`
 
     // USER_PROFILE: '/api/profile',
+    All_feedbacks: `${BASE_URL}/feedback`,
   };
 
 export const apiClient = axios.create({

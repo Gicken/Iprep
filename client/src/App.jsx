@@ -12,6 +12,7 @@ import { Dashboard } from './features/dashboard'
 import { JobDescriptionPage } from './features/JobDescriptionFeature'
 import { SpeechToTextPage } from './features/speechToText'
 
+import FeedbackManager from "./pages/FeedbackManager";
 
 function App() {
   return (
@@ -40,10 +41,11 @@ function App() {
           </PrivateRoute>}>
           {/* <Route path='dashboard' element={<DashboardLayout />}> */}
             <Route index element={<Dashboard />} />
-            <Route path="job-descriptions" element={<JobDescriptionPage />} />
-            <Route path="speech-to-text" element={<SpeechToTextPage />} />
-            {/* <Route path="jobs" element={<JobListing />} /> */}
-          {/* </Route> */}
+            <Route path="start" element={<StartInterview />} />
+            <Route path="cv-manager" element={<CVManager />} />
+            <Route path="profile" element={<ProfilePage />} />
+          </Route>
+          </Route>
         </Route>
 
         {/* 404 Not Found */}
