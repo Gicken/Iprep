@@ -10,7 +10,6 @@ create_job_description_model = job_description_ns.model(
     "CreateJobDescription", {
         "title": fields.String(required=True, description="Job title"),
         "description": fields.String(required=True, description="Job description"),
-        "userid": fields.String(required=True, description="User ID"),
         "companyName": fields.String(required=True, description="Company Name"),
         "companyIndustry": fields.String(required=True, description="Company Industry"),
         "companyInfo": fields.String(required=True, description="Company Info"),
@@ -51,7 +50,9 @@ job_description_response_model = job_description_ns.model(
 @job_description_ns.route('/')
 class JobDescriptionListResource(Resource):
     @job_description_ns.response(200, "Success", [job_description_response_model])
+    @job_description_ns.response(401,"Unauthorized")
     @job_description_ns.response(500, "Internal Server Error")
+    @job_description_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self):
         """Get all job descriptions for the current user"""
@@ -67,14 +68,16 @@ class JobDescriptionListResource(Resource):
     @job_description_ns.expect(create_job_description_model)
     @job_description_ns.response(201, "Job description created", job_description_response_model)
     @job_description_ns.response(400, "Bad Request")
+    @job_description_ns.response(401,"Unauthorized")
     @job_description_ns.response(500, "Internal Server Error")
+    @job_description_ns.doc(security='BearerAuth')
     @jwt_required()
     def post(self):
         """Create a new job description"""
         data = request.json
         user_id = get_jwt_identity()  
 
-        if not data or "title" not in data or "description" not in data or "userid" not in data:
+        if not data or "title" not in data or "description" not in data:
             return make_response(jsonify({"error": "Missing required fields"}), 400)
 
         try:
@@ -95,8 +98,10 @@ class JobDescriptionListResource(Resource):
 @job_description_ns.route('/<string:id>')
 class JobDescriptionResource(Resource):
     @job_description_ns.response(200, "Success", job_description_response_model)
+    @job_description_ns.response(401,"Unauthorized")
     @job_description_ns.response(404, "Job description not found")
     @job_description_ns.response(500, "Internal Server Error")
+    @job_description_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self, id):
         """Get a job description by ID"""
@@ -111,8 +116,10 @@ class JobDescriptionResource(Resource):
 
     @job_description_ns.expect(update_job_description_model)
     @job_description_ns.response(200, "Job description updated", job_description_response_model)
+    @job_description_ns.response(401,"Unauthorized")
     @job_description_ns.response(404, "Job description not found")
     @job_description_ns.response(500, "Internal Server Error")
+    @job_description_ns.doc(security='BearerAuth')
     @jwt_required()
     def put(self, id):
         """Update an existing job description"""
@@ -141,8 +148,10 @@ class JobDescriptionResource(Resource):
             return make_response(jsonify({"error": str(e)}), 500)
 
     @job_description_ns.response(200, "Job description deleted")
+    @job_description_ns.response(401,"Unauthorized")
     @job_description_ns.response(404, "Job description not found")
     @job_description_ns.response(500, "Internal Server Error")
+    @job_description_ns.doc(security='BearerAuth')
     @jwt_required()
     def delete(self, id):
         """Delete a job description by ID"""

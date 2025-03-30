@@ -17,6 +17,7 @@ import CVManager from "./pages/CVManager";
 import ProfilePage from "./pages/ProfilePage";
 import PublicRoute from "./routes/PublicRoute";
 import FeedbackManager from "./pages/FeedbackManager";
+import InterviewPage from "./pages/InterviewPage";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
             <Route path="cv-manager" element={<CVManager />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="feedback" element={<FeedbackManager />} />
+            <Route path = "interview" element = {<InterviewPage/>}/>
           </Route>
           </Route>
         </Route>

@@ -138,7 +138,7 @@ function StartInterview() {
     }
 
     if (valid) {
-      navigate("/dashboard");
+      navigate("/dashboard/interview");
       var startParams = {
         userId: JSON.parse(sessionStorage.getItem("user")).id,
         cvId: selectedCv.id,
