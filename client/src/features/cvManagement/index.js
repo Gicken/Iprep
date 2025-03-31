@@ -1,4 +1,4 @@
-export { fetchCVs, uploadCV, deleteCV, downloadCV } from './api/API';
+export { fetchCVs, uploadCV, deleteCV, downloadCV } from './api/cvAPI';
 
 // Export reusable components
 export { default as CVList } from './components/CVList';

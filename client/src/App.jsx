@@ -48,7 +48,7 @@ function App() {
             {/* <Route path="start" element={<StartInterview />} /> */}
             <Route path="cv-manager" element={<CVManager />} />
             <Route path = "interview" element = {<InterviewPage/>}/>
-            <Route path = "job-description" element = {<JobDescriptionPage/>}/>
+            <Route path = "job-descriptions" element = {<JobDescriptionPage/>}/>
             <Route path = "job-details" element = {<JobDetailsPage/>}/>
             <Route path = "interview" element = {<InterviewPage/>}/>
             {/* <Route path="profile" element={<ProfilePage />} /> */}

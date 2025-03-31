@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
     REGISTER: `${BASE_URL}/register/register`,
     CURRENT_USER: '/api/me',
     All_CVs: `${BASE_URL}/cv`,
+    Upload_CV: `${BASE_URL}/cv/upload`,
     RECOVER:`${BASE_URL}/recover/`,
     GET_JOBDESCRIPTIONS:`${BASE_URL}/jobdescription/`,
     GET_JOBDESCRIPTIONS_BY_ID:`${BASE_URL}/jobdescription/`,

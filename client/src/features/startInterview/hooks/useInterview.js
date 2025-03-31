@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchCVs, fetchJobs } from "../api/api";
+import { fetchCVs, fetchJobs } from "../api/startAPI";
 
 export const useInterviewSetup = () => {
   const [cvList, setCvList] = useState([]);
