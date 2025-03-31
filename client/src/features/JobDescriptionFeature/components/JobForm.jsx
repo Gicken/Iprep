@@ -9,7 +9,7 @@ const JobForm = ({ onSubmit, initialData = {}, closeModal }) => {
     companyInfo: initialData.companyInfo || "",
     description: initialData.description || "",
     skills: initialData.skills?.join(", ") || "",
-    experienceLevel: initialData.experienceLevel || "",
+    experience_level: initialData.experience_level || "",
   });
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,7 +27,7 @@ const JobForm = ({ onSubmit, initialData = {}, closeModal }) => {
       <input type="text" name="companyIndustry" placeholder="Industry" value={formData.companyIndustry} onChange={handleChange} required />
       <textarea name="description" placeholder="Job Description" value={formData.description} onChange={handleChange} required />
       <input type="text" name="skills" placeholder="Skills (comma-separated)" value={formData.skills} onChange={handleChange} required />
-      <input type="text" name="experienceLevel" placeholder="Experience Level" value={formData.experienceLevel} onChange={handleChange} required />
+      <input type="text" name="experience_level" placeholder="Experience Level" value={formData.experience_level} onChange={handleChange} required />
       <SecondaryButton type="submit">Submit</SecondaryButton>
     </form>
   );
