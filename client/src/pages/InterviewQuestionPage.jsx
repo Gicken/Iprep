@@ -6,7 +6,7 @@ import Transcription from "../components/interview/Transcription";
 import ChatInterface from "../components/interview/ChatInterface";
 import ToggleVisibilityButton from "../components/interview/ToggleVisibilityButton";
 
-const InterviewPage = () => {
+const InterviewQuestionPage = () => {
   const { setTitle } = useOutletContext();
   const [transcript, setTranscript] = useState("");
   const [audioUrl, setAudioUrl] = useState(null);
@@ -86,4 +86,4 @@ const InterviewPage = () => {
   );
 };
 
-export default InterviewPage;
+export default InterviewQuestionPage;
