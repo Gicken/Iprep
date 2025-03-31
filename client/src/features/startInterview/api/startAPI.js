@@ -21,7 +21,7 @@ export const fetchCVs = async () => {
 export const fetchJobs = async () => {
   try {
     const token = sessionStorage.getItem("token");
-    const response = await axios.get(`${API_ENDPOINTS.All_Jobs}`, {
+    const response = await axios.get(`${API_ENDPOINTS.GET_JOBDESCRIPTIONS}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

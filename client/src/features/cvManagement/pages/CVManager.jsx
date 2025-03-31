@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from "react-router-dom";
-import { fetchCVs, uploadCV, deleteCV, downloadCV } from '../api/API';
+import { fetchCVs, uploadCV, deleteCV, downloadCV } from '../api/cvAPI';
 import FileUpload from '../components/FileUpload';
 import CVList from '../components/CVList';
 

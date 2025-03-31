@@ -1,17 +1,50 @@
+import axios from "axios";
 import mockJobData from "../data/mockData";
+import { API_ENDPOINTS } from "../../../lib/constants";
+
+
 
 export const getAllJobs = async () => {
-  return new Promise((resolve) => setTimeout(() => resolve(mockJobData), 500));
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await axios.get(`${API_ENDPOINTS.GET_JOBDESCRIPTIONS}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.error("Job fetch error:", err);
+    return [];
 };
+}
 
-export const getJobById = async (id) => {
-  return new Promise((resolve) =>
-    setTimeout(() => {
-      const job = mockJobData.find((job) => job.id === Number(id));
-      resolve(job || null);
-    }, 500)
-  );
+export const getJobById = async (jobId) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await axios.get(`${API_ENDPOINTS.GET_JOBDESCRIPTIONS_BY_ID}/${jobId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.error("Job fetch error:", err);
+    return [];
 };
+}
+// export const getJobById = async (id) => {
+//   return new Promise((resolve) =>
+//     setTimeout(() => {
+//       const job = mockJobData.find((job) => job.id === Number(id));
+//       resolve(job || null);
+//     }, 500)
+//   );
+// };
 
 export const addJob = async (newJob) => {
   return new Promise((resolve) => {

@@ -11,6 +11,7 @@ from .recovery import api as recovery_api
 from .feedback_routes import feedback_ns as feedback_api
 from .question_routes import question_ns as question_api
 from .question_link_routes import question_link_ns as link_api
+from .speech_to_text_routes import speech_ns as speech_api
 
 
 # Initialize the API instance
@@ -47,9 +48,6 @@ api.add_namespace(registration_api, path='/register')
 # Add the CV namespace to the API instance
 api.add_namespace(cv_api, path='/cv')  # Add this line
 
-# Add the CV namespace to the API instance
-api.add_namespace(cv_api, path='/cv')
-
 # Add the Job description namespace to the API instance
 api.add_namespace(jobdescription_api, path='/jobdescription')
 
@@ -66,4 +64,6 @@ api.add_namespace(question_api, path='/question')
 api.add_namespace(link_api, path='/link')
 
 # Add the feedback namespace to the API instance
-api.add_namespace(feedback_api, path='/feedback')
+api.add_namespace(feedback_api, path='/feedback')#
+
+api.add_namespace(speech_api, path='/response')
