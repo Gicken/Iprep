@@ -35,7 +35,7 @@ def is_valid_fdm_email(email):
 def is_valid_password(password):
     return len(password) >= 8 and bool(re.search(r"[!@#$%^&*(),.?\":{}|<>]", password))
 
-@api.route('/register')
+@api.route('/')
 class RegisterUser(Resource):
     @api.response(201, "Success",response_model)
     @api.response(400,"Bad request")
