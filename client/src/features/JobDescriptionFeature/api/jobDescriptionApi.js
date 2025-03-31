@@ -7,7 +7,7 @@ import { API_ENDPOINTS } from "../../../lib/constants";
 export const getAllJobs = async () => {
   try {
     const token = sessionStorage.getItem("token");
-    const response = await axios.get(`${API_ENDPOINTS.GET_JOBDESCRIPTIONS}`, {
+    const response = await axios.get(`${API_ENDPOINTS.GET_JOBDESCRIPTIONS}/`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export const addJob = async (formData) => {
 
   try {
     const token = sessionStorage.getItem("token");
-    const response = await axios.post(`${API_ENDPOINTS.ADD_NEWJOBDESCRIPTION}`,formData, {
+    const response = await axios.post(`${API_ENDPOINTS.ADD_NEWJOBDESCRIPTION}/`,formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -71,16 +71,20 @@ export const updateJob = async (id, updatedJob) => {
   });
 };
 
+
 export const deleteJob = async (id) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const index = mockJobData.findIndex((job) => job.id === id);
-      if (index !== -1) {
-        mockJobData.splice(index, 1);
-        resolve(true);
-      } else {
-        resolve(false);
-      }
-    }, 500);
-  });
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await axios.delete(`${API_ENDPOINTS.DELETE_JOBDESCRIPTION}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.error("Job delete error:", err);
+    return [];
+  };
 };
