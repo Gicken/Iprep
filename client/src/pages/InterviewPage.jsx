@@ -1,4 +1,4 @@
-// InterviewPage.js
+
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import VoiceRecorder from "../components/interview/VoiceRecorder";
