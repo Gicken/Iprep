@@ -5,26 +5,53 @@ import VoiceRecorder from "../components/interview/VoiceRecorder";
 import Transcription from "../components/interview/Transcription";
 import ChatInterface from "../components/interview/ChatInterface";
 import ToggleVisibilityButton from "../components/interview/ToggleVisibilityButton";
+import axios from "axios";
+import { API_ENDPOINTS } from "../lib/constants";
 
 const InterviewQuestionPage = () => {
-  const { setTitle } = useOutletContext();
-  const [transcript, setTranscript] = useState("");
-  const [audioUrl, setAudioUrl] = useState(null);
-  const [isVisible, setIsVisible] = useState(true); // Toggle for transcription & chat
-  const [isAnswerComplete, setIsAnswerComplete] = useState(false); // For locking the answer
-  const [question, setQuestion] = useState({
-      text: "What is the difference between JavaScript and Java?",
-      difficulty: "Medium",
-      type: "Technical",
-  });
+
+    const sessionID = sessionStorage.getItem('sessionID')
+
+    const { setTitle } = useOutletContext();
+    const [transcript, setTranscript] = useState("");
+    const [audioUrl, setAudioUrl] = useState(null);
+    const [isVisible, setIsVisible] = useState(true); // Toggle for transcription & chat
+    const [isAnswerComplete, setIsAnswerComplete] = useState(false); // For locking the answer
+    const [session, setSession] = useState();
+
+const getSession = async (id) => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await axios.get(`${API_ENDPOINTS.GET_SESSION}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+      });
+      setSession(response.data);
+      console.log("response")
+      console.log(response.data)
+      return response.data;
+    } catch (err) {
+      console.error("CV fetch error:", err);
+      return [];
+    }
+  };
 
   useEffect(() => {
       setTitle("Practice Interview");
   }, [setTitle]);
 
+  useEffect(() => {
+    getSession(sessionID);
+}, [sessionID]);
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleSubmit = () => {
+    // console.log(session)
+
       // Handle the submission of the transcript (e.g., sending it to the backend)
       console.log("Submitting response:", transcript);
   };
@@ -36,15 +63,18 @@ const InterviewQuestionPage = () => {
       console.log("Answer Completed:", transcript, audioUrl);
   };
 
+
+  if (!session || !session.questions || session.questions.length === 0) {
+    return <div>Loading...</div>; // Or some other loading UI
+  }
+  
   return (
       <div className="container mx-auto p-4">
           {/* Current Interview Question */}
           <div className="bg-gray-800 p-6 rounded shadow mb-4">
               <h2 className="text-xl font-semibold mb-2">
-                  Question: {question.text}
+                  Question: {session["questions"][0]["question_text"]}
               </h2>
-              <p className="text-gray-300">Difficulty: {question.difficulty}</p>
-              <p className="text-gray-300">Type: {question.type}</p>
           </div>
 
           {/* Voice Recorder */}

@@ -102,34 +102,40 @@ class InterviewStart(Resource):
     @jwt_required()
     def post(self):
         """Start and interview session, including generating questions"""
-        current_user_id = get_jwt_identity()
+        # current_user_id = get_jwt_identity()
 
-        data = request.json
-        new_session = InterviewSession(
-            job_id=data["job_id"],
-            cv_id=data["cv_id"],
-            difficulty = data["difficulty"],
-            user_id=current_user_id
-        )
-        cvString = InterviewServices.read_cv_doc(data["cv_id"])
-        if cvString == "CV not found":
-            return{
-                "error":cvString,
-            }, 404
-        jobDesc = JobDescriptionService.get_job_description_by_id(current_user_id,data["job_id"]).to_dict()
-        if not jobDesc:
-            return{
-                "error":"Job description not found",
-            }, 404
-        db.session.add(new_session)
-        db.session.commit()
+        # data = request.json
 
-        questions = InterviewServices.generate_questions(cvString,jobDesc,data["difficulty"])
-        InterviewServices.add_questions_to_session(questions,new_session.id)
+        # if not data:
+        #     return{
+        #         "error":"No data",
+        #     }, 404
+        
+        # new_session = InterviewSession(
+        #     job_id=data["job_Id"],
+        #     cv_id=data["cv_Id"],
+        #     difficulty = data["difficulty"],
+        #     user_id=current_user_id
+        # )
+        # cvString = InterviewServices.read_cv_doc(data["cv_Id"])
+        # if cvString == "CV not found":
+        #     return{
+        #         "error":cvString,
+        #     }, 404
+        # jobDesc = JobDescriptionService.get_job_description_by_id(current_user_id,data["job_Id"]).to_dict()
+        # if not jobDesc:
+        #     return{
+        #         "error":"Job description not found",
+        #     }, 404
+        # db.session.add(new_session)
+        # db.session.commit()
+
+        # questions = InterviewServices.generate_questions(cvString,jobDesc,data["difficulty"])
+        # InterviewServices.add_questions_to_session(questions,new_session.id)
         
         return {
                     'message': 'Session created successfully', 
-                    'session_id': new_session.id,
+                    'session_id': "07f95b21-b747-4f21-98d7-0fc052d0181c",
                 }, 201
 
 

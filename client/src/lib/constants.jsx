@@ -15,6 +15,8 @@ export const API_ENDPOINTS = {
     UPDATE_JOBDESCRIPTION:`${BASE_URL}/jobdescription`,
     DELETE_JOBDESCRIPTION:`${BASE_URL}/jobdescription`,
     ADD_NEWJOBDESCRIPTION:`${BASE_URL}/jobdescription`,
+    START_INTERVIEW:`${BASE_URL}/interview/start`,
+    GET_SESSION: `${BASE_URL}/interview`,
 
     // USER_PROFILE: '/api/profile',
     // All_feedbacks: `${BASE_URL}/feedback`,
