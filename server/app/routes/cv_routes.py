@@ -4,7 +4,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from app.exts import db
-from app.models.user import User
 from ..models.CV import CV
 
 # Create the namespace for CV-related routes
@@ -29,6 +28,11 @@ cv_upload_model = cv_ns.model('CVUpload', {
 
 @cv_ns.route('/upload')
 class CVUpload(Resource):
+    @cv_ns.response(200, "Success")
+    @cv_ns.response(400,"Missing or invalid file")
+    @cv_ns.response(401,"Unauthorized")
+    @cv_ns.response(413,"File too large")
+    @cv_ns.response(500, "Internal Server Error")
     @cv_ns.expect(upload_parser)
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
@@ -82,11 +86,15 @@ class CVUpload(Resource):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @cv_ns.route('')
 class CVList(Resource):
+    @cv_ns.response(200, "Success", [cv_model])
+    @cv_ns.response(401,"Unauthorized")
+    @cv_ns.response(500, "Internal Server Error")
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self):
         """Get all CVs for the current user"""
         current_user_id = get_jwt_identity()
+
         
         # Fetch only CVs belonging to the current user
         cvs = CV.query.filter_by(user_id=current_user_id).all()
@@ -102,6 +110,10 @@ class CVList(Resource):
 
 @cv_ns.route('/<string:cv_id>')
 class CVItem(Resource):
+    @cv_ns.response(200, "Success")
+    @cv_ns.response(401,"Unauthorized")
+    @cv_ns.response(404,"CV not found")
+    @cv_ns.response(500, "Internal Server Error")
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
     def get(self, cv_id):
@@ -121,6 +133,10 @@ class CVItem(Resource):
             return response
         except Exception as e:
             return {'error': str(e)}, 500
+    @cv_ns.response(200, "Success")
+    @cv_ns.response(401,"Unauthorized")
+    @cv_ns.response(404,"CV not found")
+    @cv_ns.response(500, "Internal Server Error")
     @cv_ns.doc(security='BearerAuth')
     @jwt_required()
     def delete(self, cv_id):

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { API_ENDPOINTS } from '../utils/constants';
-import AuthService from './AuthService';
 
 const UserService = {
   getProfile: async () => {

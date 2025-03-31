@@ -4,22 +4,26 @@ from .exts import db, migrate, jwt, mail
 from .config import config_dict
 from .commands import seed_db
 from flask_cors import CORS
-# from .config import MAIL_SERVER, MAIL_PORT, MAIL_USE_TLS, MAIL_USERNAME, MAIL_PASSWORD
 from .config import Config
-# from .utils import mail
-# from utils import mail
+from datetime import datetime, date
 import os
+
+# custom json encoder function to format date time
+def custom_json_encoder(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+        # return obj.strftime('%Y-%m-%d %H:%M:%S')
+    raise TypeError(f"Type {type(obj)} not serializable")
 
 def create_app(config_name="development"):
     app = Flask(__name__)
     
+    # Auto convert datetime object in Flask Globally
+    app.json_encoder = custom_json_encoder
+    
     # Load the correct config
     config_class = config_dict.get(config_name, "development")
     app.config.from_object(config_class)
-
-    # # Ensure the required database URI is set
-    # if not app.config.get("SQLALCHEMY_DATABASE_URI"):
-    #     raise RuntimeError("Missing SQLALCHEMY_DATABASE_URI configuration!")
 
     # Debugging: Print current config mode
     print(f"⚡ Running in {config_name} mode")

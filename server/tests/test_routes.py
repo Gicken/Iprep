@@ -7,7 +7,6 @@ def test_home_route(client):
     """Test if the home route returns a 200 response"""
     response = client.get("/")
     assert response.status_code == 200
-    # assert b"Welcome to Flask API" in response.data  # Example response
     
 @pytest.fixture
 def test_user(app):
