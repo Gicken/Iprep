@@ -57,7 +57,7 @@ class JobDescriptionListResource(Resource):
     def get(self):
         """Get all job descriptions for the current user"""
         user_id = get_jwt_identity()  
-        print("Request headers:", request.headers)
+        # print("Request headers:", request.headers)
 
         try:
             job_descriptions = JobDescriptionService.get_all_job_descriptions(user_id)

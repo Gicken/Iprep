@@ -18,7 +18,7 @@ export const getAllJobs = async () => {
   } catch (err) {
     console.error("Job fetch error:", err);
     return [];
-};
+  };
 }
 
 export const getJobById = async (jobId) => {
@@ -35,24 +35,26 @@ export const getJobById = async (jobId) => {
   } catch (err) {
     console.error("Job fetch error:", err);
     return [];
+  };
 };
-}
-// export const getJobById = async (id) => {
-//   return new Promise((resolve) =>
-//     setTimeout(() => {
-//       const job = mockJobData.find((job) => job.id === Number(id));
-//       resolve(job || null);
-//     }, 500)
-//   );
-// };
 
-export const addJob = async (newJob) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      mockJobData.push({ id: mockJobData.length + 1, ...newJob });
-      resolve(newJob);
-    }, 500);
-  });
+export const addJob = async (formData) => {
+  console.log("data:",formData)
+
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await axios.post(`${API_ENDPOINTS.ADD_NEWJOBDESCRIPTION}`,formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.error("Job add error:", err);
+    return [];
+  };
 };
 
 export const updateJob = async (id, updatedJob) => {
