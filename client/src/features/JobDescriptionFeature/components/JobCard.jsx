@@ -9,7 +9,7 @@ const JobCard = ({ job, onView, onDelete }) => {
       <p className="text-sm text-gray-400">{job.companyName} - {job.companyIndustry}</p>
       <p className="text-gray-300 mt-2">{job.description}</p>
       <div className="flex justify-end mt-4 space-x-2">
-        <ViewButton onClick={() => onView(job)} />
+        <ViewButton onClick={() => onView(job)}/>
         <DeleteButton onClick={() => onDelete(job.id)} />
       </div>
     </div>
