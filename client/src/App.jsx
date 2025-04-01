@@ -1,21 +1,22 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { MainLayout } from './layouts/MainLayout'
-import PublicRoute from './routes/PublicRoute'
-import HomePage from './pages/Home'
-import HowItWorks from './pages/HowItWorks'
-import FAQs from './pages/FAQs'
-import NotFoundPage from './shared/components/NotFound'
-import { RegisterPage, LoginPage } from './features/authentication'
-import PrivateRoute from './routes/PrivateRoute'
-import DashboardLayout from './layouts/DashboardLayout'
-import { Dashboard } from './features/dashboard'
-import { CVManager } from './features/cvManagement'
-import { InterviewPage } from './features/interview'
-import { StartInterview } from './features/startInterview'
-import { JobDescriptionPage, JobDetailsPage } from './features/JobDescriptionFeature'
-import { SpeechToTextPage } from './features/speechToText'
-
-// import FeedbackManager from "./pages/FeedbackManager";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./layouts/Layout";
+import Login from "./pages/LoginPage";
+import Home from "./pages/Home";
+import StartInterview from "./pages/StartInterview";
+import Dashboard from "./pages/Dashboard";
+import RecoveryPage from "./pages/RecoveryPage";
+import ResetPage from "./pages/ResetPage";
+import RegistrationForm from "./components/RegistrationForm";
+import ComingSoon from "./components/coming_soon";
+import FAQs from "./pages/FAQs";
+import HowItWorks from "./pages/HowItWorks";
+import DashboardLayout from "./layouts/DashboardLayout";
+import PrivateRoute from "./routes/PrivateRoute";
+import NotFoundPage from "./components/NotFound";
+import CVManager from "./pages/CVManager";
+import ProfilePage from "./pages/ProfilePage";
+import PublicRoute from "./routes/PublicRoute";
+import InterviewQuestionPage from "./features/startQuestion/Pages/InterviewQuestionPage";
 
 function App() {
   return (
@@ -45,7 +46,7 @@ function App() {
           {/* <Route path='dashboard' element={<DashboardLayout />}> */}
             <Route index element={<Dashboard />} />
             <Route path="start" element={<StartInterview />} />
-            {/* <Route path="start" element={<StartInterview />} /> */}
+            <Route path="interview" element={<InterviewQuestionPage />} />
             <Route path="cv-manager" element={<CVManager />} />
             <Route path = "interview" element = {<InterviewPage/>}/>
             <Route path = "job-descriptions" element = {<JobDescriptionPage/>}/>
