@@ -12,6 +12,7 @@ def generate_jwt_token(user):
         "firstName": user.firstName,
         "lastName": user.lastName
     }
+    
     token=create_access_token(
         identity=user.id, 
         additional_claims=additional_claims,

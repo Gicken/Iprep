@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import DashboardNavbar from "../components/dashboard/DashboardNavbar";
-import DashboardHeader from "../components/dashboard/DashboardHeader";
+import DashboardNavbar from "../shared/components/dashboard/DashboardNavbar";
+import DashboardHeader from "../shared/components/dashboard/DashboardHeader";
+import { Footer, Navbar } from "../shared/components";
 
 const DashboardLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -13,12 +14,16 @@ const DashboardLayout = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-[#1A1C1B] text-white">
+        <div>
+        <Navbar/>
+        <div className="flex bg-[#1A1C1B] text-white">
             <DashboardNavbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
             <main className={`flex-1 flex flex-col p-8 ${isSidebarOpen ? 'ml-64' : 'ml-20'}`}>
                 <DashboardHeader title={title} />
                 <Outlet context={{setTitle}} />
             </main>
+        </div>
+        <Footer/>
         </div>
     );
 };

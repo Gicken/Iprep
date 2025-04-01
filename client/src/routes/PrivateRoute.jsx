@@ -4,7 +4,8 @@ import { AuthContext } from "../context/AuthContext";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
-  // console.log("✅ PRIVATE ROUTE:", isAuthenticated);
+
+  console.log("PrivateRoute re-rendered", { isAuthenticated, loading });
 
   if (loading) {
     return (
@@ -15,14 +16,10 @@ const PrivateRoute = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    console.log("✅ PRIVATE ROUTE: IF", isAuthenticated);
     return <Navigate to="/login" replace />;
-  }else{
-    console.log("✅ PRIVATE ROUTE: ELSE", isAuthenticated);
+  } else {
     return children ? children : <Outlet />;
   }
-
-  
 };
 
 export default PrivateRoute;

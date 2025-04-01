@@ -1,0 +1,65 @@
+.login-form-container {
+    background-color: var(--color-dark);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    max-width: 48rem;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 0;
+  }
+  
+  .login-form-left {
+    padding: 2rem;
+    width: 50%;
+    background: var(--color-card);
+  }
+  
+  .login-form-right {
+    width: 50%;
+    background-image: linear-gradient(to right, var(--color-primary), var(--color-accent));
+    color: var(--color-dark);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    background-color: var(--color-input-bg);
+    color: var(--color-white);
+    border: 1px solid transparent;
+  }
+  
+  .input-field:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    border-color: var(--color-accent);
+  }
+  
+  .forgot-password {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--color-accent);
+    text-decoration-line: underline;
+  }
+  
+  .forgot-password:hover {
+    cursor: pointer;
+  }
+  
+  .primary-button {
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .primary-button:hover {
+    background-color: var(--color-accent);
+    cursor: pointer;
+  }

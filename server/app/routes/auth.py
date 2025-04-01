@@ -27,11 +27,11 @@ response_model = auth_ns.model(
 @auth_ns.route('/login')
 class LoginResource(Resource):
     @auth_ns.expect(login_model)
-    @auth_ns.response(200, "Success", response_model)
-    @auth_ns.response(400, "Bad Request")
-    @auth_ns.response(401, "Unauthorized")
-    @auth_ns.response(404, "Not Found")
-    @auth_ns.response(500, "Internal Server Error")
+    # @auth_ns.response(200, "Success", response_model)
+    # @auth_ns.response(400, "Bad Request")
+    # @auth_ns.response(401, "Unauthorized")
+    # @auth_ns.response(404, "Not Found")
+    # @auth_ns.response(500, "Internal Server Error")
     def post(self):
         """Handles user authentication and return a JWT token"""
         try:
