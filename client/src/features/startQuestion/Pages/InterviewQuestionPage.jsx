@@ -1,50 +1,83 @@
 
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import VoiceRecorder from "../../../components/interviewQuestion/VoiceRecorder";
-import Transcription from "../../../components/interviewQuestion/Transcription";
-import ChatInterface from "../../../components/interviewQuestion/ChatInterface";
-import ToggleVisibilityButton from "../../../components/interviewQuestion/ToggleVisibilityButton";
+import VoiceRecorder from "../components/VoiceRecorder";
+import Transcription from "../components/Transcription";
+import ChatInterface from "../components/ChatInterface";
+import ToggleVisibilityButton from "../components/ToggleVisibilityButton";
+import { uploadResponse } from '../api/InterviewApi';
+import axios from "axios";
+import { API_ENDPOINTS } from "../../../lib/constants";
+
 
 const InterviewQuestionPage = () => {
-  const { setTitle } = useOutletContext();
-  const [transcript, setTranscript] = useState("");
-  const [audioUrl, setAudioUrl] = useState(null);
-  const [isVisible, setIsVisible] = useState(true); // Toggle for transcription & chat
-  const [isAnswerComplete, setIsAnswerComplete] = useState(false); // For locking the answer
-  const [question, setQuestion] = useState({
-      text: "What is the difference between JavaScript and Java?",
-      difficulty: "Medium",
-      type: "Technical",
-  });
+
+    const sessionID = sessionStorage.getItem('sessionID')
+    const { setTitle } = useOutletContext();
+    const [transcript, setTranscript] = useState("");
+    const [audioUrl, setAudioUrl] = useState(null);
+    const [isVisible, setIsVisible] = useState(true); // Toggle for transcription & chat
+    const [isAnswerComplete, setIsAnswerComplete] = useState(false); // For locking the answer
+    const [session, setSession] = useState();
+
+const getSession = async (id) => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await axios.get(`${API_ENDPOINTS.GET_SESSION}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+      });
+      setSession(response.data);
+      console.log("response")
+      console.log(response.data)
+      return response.data;
+    } catch (err) {
+      console.error("CV fetch error:", err);
+      return [];
+    }
+  };
 
   useEffect(() => {
       setTitle("Practice Interview");
   }, [setTitle]);
 
+  useEffect(() => {
+    setSession(getSession(sessionID))
+}, [sessionID]);
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleSubmit = () => {
+
       // Handle the submission of the transcript (e.g., sending it to the backend)
       console.log("Submitting response:", transcript);
   };
 
-  const handleCompleteAnswer = () => {
-      // Lock the answer and mark it as complete
-      setIsAnswerComplete(true);
-      // Send the response (text + audio) to backend for evaluation
-      console.log("Answer Completed:", transcript, audioUrl);
+  const handleCompleteAnswer = async () => {
+        // Lock the answer and mark it as complete
+        setIsAnswerComplete(true);
+        const blob = await fetch(audioUrl).then(r => r.blob());
+        const id = sessionStorage.getItem("question_id")
+        uploadResponse(blob,id)
+        // Send the response (text + audio) to backend for evaluation
+        console.log("Answer Completed:", transcript, audioUrl);
   };
 
+
+  if (!session || !session.questions || session.questions.length === 0) {
+    return <div>Loading...</div>; // Or some other loading UI
+  }
+  sessionStorage.setItem("question_id",session["questions"][0]["id"])
   return (
       <div className="container mx-auto p-4">
           {/* Current Interview Question */}
           <div className="bg-gray-800 p-6 rounded shadow mb-4">
               <h2 className="text-xl font-semibold mb-2">
-                  Question: {question.text}
+                  Question: {session["questions"][0]["question_text"]}
               </h2>
-              <p className="text-gray-300">Difficulty: {question.difficulty}</p>
-              <p className="text-gray-300">Type: {question.type}</p>
           </div>
 
           {/* Voice Recorder */}
@@ -74,7 +107,7 @@ const InterviewQuestionPage = () => {
           <div className="flex justify-center space-x-4 mt-6">
               <button
                   onClick={handleCompleteAnswer}
-                  disabled={isAnswerComplete}
+                //   disabled={isAnswerComplete}
                   className={`bg-green-500 text-white px-4 py-2 rounded flex items-center space-x-2 ${
                       isAnswerComplete ? "cursor-not-allowed opacity-50" : ""
                   }`}

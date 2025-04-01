@@ -1,7 +1,5 @@
 //import axios from "axios";
 
-// const API_URL = "http://localhost:5000/interviews";
-
 // // Fetch questions
 // export const getInterviewQuestions = async () => {
 //   const response = await axios.get(`${API_URL}/questions`);
@@ -35,16 +33,38 @@
 //   const response = await axios.put(`${API_URL}/responses/${responseId}/confirm`);
 //   return response.data;
 // };
+import axios from 'axios';
+import { API_ENDPOINTS } from '../../../lib/constants';
 
-export const getInterviewQuestions = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        { id: 1, text: "What are the key features of JavaScript?", duration: 60 },
-        { id: 2, text: "Explain React Hooks and their use cases.", duration: 90 },
-        { id: 3, text: "What is the difference between HTTP and HTTPS?", duration: 60 },
-      ]);
-    }, 1000);
-  });
+export const getSession = async (id) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await axios.get(`${API_ENDPOINTS.GET_SESSION}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.error("CV fetch error:", err);
+    return [];
+  }
 };
 
+
+export const uploadResponse = async (audioBlob, question_id) => {
+  try {
+    const token = sessionStorage.getItem('token');
+    const formData = new FormData();
+    formData.append("file", audioBlob, "recording.wav");
+
+    const response = await axios.post(`${API_ENDPOINTS.UPLOAD_RESPONSE}/${question_id}`, formData, {
+      headers: { Authorization: `Bearer ${token}`}
+    });
+    return response.data
+  } catch (error) {
+    console.error("Upload failed:", error);
+  }
+};

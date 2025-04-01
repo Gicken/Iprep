@@ -16,8 +16,6 @@ class User(db.Model):
     createdAt = db.Column(db.DateTime, default=db.func.current_timestamp())
     updatedAt = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     
-    responses = db.relationship("UserResponse", back_populates="user", cascade="all, delete")
-
     @property
     def password(self):
         """To prevent reading the password directly"""

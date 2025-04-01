@@ -1,5 +1,5 @@
 // VoiceRecorder.js
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { FaMicrophone, FaStop, FaPlay } from "react-icons/fa";
 
 const VoiceRecorder = ({ setTranscript, setAudioUrl }) => {
@@ -19,7 +19,7 @@ const VoiceRecorder = ({ setTranscript, setAudioUrl }) => {
             setIsRecording(true);
 
             // 🎙️ Speech Recognition Setup
-            const recognition = new window.webkitSpeechRecognition() || new window.SpeechRecognition();
+            const recognition = new window.webkitSpeechRecognition(); //|| new window.SpeechRecognition();
             recognition.continuous = true; // Keep listening
             recognition.interimResults = true; // Show results while speaking
             recognition.lang = "en-US";
