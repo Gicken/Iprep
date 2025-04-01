@@ -11,7 +11,6 @@ import { API_ENDPOINTS } from "../lib/constants";
 const InterviewQuestionPage = () => {
 
     const sessionID = sessionStorage.getItem('sessionID')
-
     const { setTitle } = useOutletContext();
     const [transcript, setTranscript] = useState("");
     const [audioUrl, setAudioUrl] = useState(null);
@@ -67,7 +66,7 @@ const getSession = async (id) => {
   if (!session || !session.questions || session.questions.length === 0) {
     return <div>Loading...</div>; // Or some other loading UI
   }
-  
+
   return (
       <div className="container mx-auto p-4">
           {/* Current Interview Question */}
