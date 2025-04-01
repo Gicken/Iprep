@@ -39,8 +39,8 @@ export const startInterview = async (cvId,jobId,difficulty) => {
   try {
     const token = sessionStorage.getItem("token");
     const params = {
-      "cv_Id": cvId,
-      "job_Id": jobId,
+      "cv_id": cvId,
+      "job_id": jobId,
       "difficulty": difficulty,
     }
     const response = await axios.post(`${API_ENDPOINTS.START_INTERVIEW}`,params, {

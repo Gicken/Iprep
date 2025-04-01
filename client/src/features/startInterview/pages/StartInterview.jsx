@@ -29,6 +29,7 @@ function StartInterview() {
     try {
       if (validateForm()) {
         const response = await startInterview(selectedCv.id,selectedJob.id,difficulty)
+        console.log("response",response)
         sessionStorage.setItem("sessionID",response["session_id"]);
         navigate("/dashboard/interviewQuestions");
     }

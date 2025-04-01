@@ -17,7 +17,6 @@ function InterviewPage() {
   const fetchCV = async () => {
     try {
         const token = sessionStorage.getItem('token');
-        console.log("HELLO:")
         const startParams = JSON.parse(sessionStorage.getItem('startParams'));
 
         console.log(startParams.cvId)
@@ -29,7 +28,6 @@ function InterviewPage() {
           accept: "application/msword",
         },
       });
-      // console.log("FETCH CVs", response.data);
       setCv(response.data);
       
       console.log(cv)

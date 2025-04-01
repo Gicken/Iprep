@@ -10,12 +10,17 @@ from io import BytesIO
 
 whisper_model = whisper.load_model("small")
 
-def transcribe_audio(file):
+def transcribe_audio(file,question_id):
     """ Handles the transcription process """
     user_id = get_jwt_identity()
     if not user_id:
         return {"message":"Unauthorized: User ID not found"}, 401
-
+    
+    existingRecord = UserResponse.query.filter_by(question_id=question_id).first()
+    if existingRecord:
+        db.session.delete(existingRecord)
+        db.session.commit()
+    
     filepath = save_audio_file(file)
     
     with open(filepath, "rb") as f:
@@ -24,7 +29,8 @@ def transcribe_audio(file):
     result = whisper_model.transcribe(filepath)
     text = result["text"]
 
-    transcription = UserResponse(user_id=user_id, filename=file.filename, text=text, audio_blob=audio_blob, file_path=filepath)
+    
+    transcription = UserResponse(user_id=user_id, filename=file.filename, text=text, audio_blob=audio_blob, file_path=filepath,question_id=question_id)
     
     db.session.add(transcription)
     db.session.commit()
@@ -33,7 +39,8 @@ def transcribe_audio(file):
         "id": transcription.id,
         "user_id": transcription.user_id,
         "text": transcription.text,
-        "filename": transcription.filename
+        "filename": transcription.filename,
+        "question_id": transcription.question_id
     }, 201
 
 def get_user_transcriptions(user_id):

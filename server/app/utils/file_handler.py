@@ -20,15 +20,18 @@ def save_audio_file(file):
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     file.save(filepath)
 
+    print(filename)
     # Convert to WAV if not already in that format
     if not filename.endswith(".wav"):
+        print("no wav")
         wav_path = os.path.join(UPLOAD_FOLDER, f"{os.path.splitext(filename)[0]}.wav")
         ffmpeg.input(filepath).output(wav_path).run(overwrite_output=True)
         os.remove(filepath)
         return wav_path
 
-    # Now we can store the file as a binary just incase it's deleted
-    with open(filepath, "rb") as f:
-        audio_blob = f.read()
+    # # Now we can store the file as a binary just incase it's deleted
+    # with open(filepath, "rb") as f:
+    #     audio_blob = f.read()
         
-    return filepath, audio_blob
+    return filepath
+# , audio_blob
