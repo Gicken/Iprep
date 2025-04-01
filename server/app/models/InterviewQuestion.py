@@ -10,4 +10,9 @@ class InterviewQuestion(db.Model):
     category = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, nullable=False)
 
+    session_id = db.Column(db.String(36), db.ForeignKey("interview_session.id"), nullable=False)
+    session = db.relationship("InterviewSession", back_populates="questions")
+
+    user_response = db.relationship("UserResponse", back_populates="question", cascade="all, delete")
+
 

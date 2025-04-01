@@ -13,6 +13,7 @@ class InterviewSession(db.Model):
     difficulty = db.Column(db.String(50), nullable=False)
 
 
-    questions = db.relationship('InterviewQuestion', secondary='interview_session_questions', backref='sessions')
+    # questions = db.relationship('InterviewQuestion', secondary='interview_session_questions', backref='sessions')
+    questions = db.relationship('InterviewQuestion', back_populates="session", cascade="all, delete")
 
-    # user_responses = db.relationship("UserResponse", back_populates="interview_questions", cascade="all, delete")
+    # user_responses = db.relationship("UserResponse", back_populates="session", cascade="all, delete")

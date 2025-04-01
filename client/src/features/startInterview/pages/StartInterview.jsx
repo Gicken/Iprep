@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useInterviewSetup } from "../hooks/useInterview";
 import InterviewForm from "../components/InterviewForm";
+import { startInterview } from "../api/startAPI";
 
 function StartInterview() {
   const navigate = useNavigate();
@@ -23,17 +24,17 @@ function StartInterview() {
     setTitle("Start Interview");
   }, [setTitle]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (validateForm()) {
-      const startParams = {
-        userId: JSON.parse(sessionStorage.getItem("user")).id,
-        cvId: selectedCv.id,
-        jobDescId: selectedJob.id,
-        difficulty,
-      };
-      sessionStorage.setItem("startParams", JSON.stringify(startParams));
-      navigate("/dashboard/interview");
+    try {
+      if (validateForm()) {
+        const response = await startInterview(selectedCv.id,selectedJob.id,difficulty)
+        console.log("response",response)
+        sessionStorage.setItem("sessionID",response["session_id"]);
+        navigate("/dashboard/interviewQuestions");
+    }
+    } catch (error) {
+      console.error(error);
     }
   };
 

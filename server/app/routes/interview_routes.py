@@ -6,6 +6,7 @@ from ..models.InterviewSession import InterviewSession;
 from ..models.InterviewQuestion import InterviewQuestion;
 from ..services.interview_services import InterviewServices;
 from ..services.JobDescriptionService import JobDescriptionService;
+from flask import jsonify
 
 interview_ns = Namespace('interview_session', description='Interview operations')
 
@@ -42,13 +43,26 @@ interview_session_model_response = interview_ns.model( "session_response",{
 )
 
 
+
+def serialize_response(response):
+        return {
+            'id': response.id,
+            'text': response.text
+
+        }
+
 def serialize_interview_question(question):
         return {
             'id': question.id,
             'question_text': question.question_text,
-            'category': question.category
+            'category': question.category,
+            'response':[serialize_response(q) for q in question.user_response]
+            # 'response': serialize_response(question.user_response)
+            # 'response': question.user_response.__dict__
+
         }
 
+# JobDescriptionService.get_job_description_by_id(current_user_id,data["job_id"]).to_dict()
 def serialize_session(session):
     """Helper function to convert datetime to string"""
     return {
@@ -102,34 +116,42 @@ class InterviewStart(Resource):
     @jwt_required()
     def post(self):
         """Start and interview session, including generating questions"""
-        current_user_id = get_jwt_identity()
+        # current_user_id = get_jwt_identity()
 
-        data = request.json
-        new_session = InterviewSession(
-            job_id=data["job_id"],
-            cv_id=data["cv_id"],
-            difficulty = data["difficulty"],
-            user_id=current_user_id
-        )
-        cvString = InterviewServices.read_cv_doc(data["cv_id"])
-        if cvString == "CV not found":
-            return{
-                "error":cvString,
-            }, 404
-        jobDesc = JobDescriptionService.get_job_description_by_id(current_user_id,data["job_id"]).to_dict()
-        if not jobDesc:
-            return{
-                "error":"Job description not found",
-            }, 404
-        db.session.add(new_session)
-        db.session.commit()
+        # data = request.json
+        
+        # print(data)   
+        # if not data:
+        #     return{
+        #         "error":"No data",
+        #     }, 404
+        
+        # new_session = InterviewSession(
+        #     job_id=data["job_id"],
+        #     cv_id=data["cv_id"],
+        #     difficulty = data["difficulty"],
+        #     user_id=current_user_id
+        # )
+        # cvString = InterviewServices.read_cv_doc(data["cv_id"])
+        # if cvString == "CV not found":
+        #     return{
+        #         "error":cvString,
+        #     }, 404
+        # jobDesc = JobDescriptionService.get_job_description_by_id(current_user_id,data["job_id"]).to_dict()
+        # if not jobDesc:
+        #     return{
+        #         "error":"Job description not found",
+        #     }, 404
+        # db.session.add(new_session)
+        # db.session.commit()
 
-        questions = InterviewServices.generate_questions(cvString,jobDesc,data["difficulty"])
-        InterviewServices.add_questions_to_session(questions,new_session.id)
+        # questions = InterviewServices.generate_questions(cvString,jobDesc,data["difficulty"])
+        # InterviewServices.add_questions_to_session(questions,new_session.id)
         
         return {
                     'message': 'Session created successfully', 
-                    'session_id': new_session.id,
+                    # 'session_id': new_session.id,
+                    'session_id':'847893ca-997e-4711-bbd9-90e767408786',
                 }, 201
 
 

@@ -99,8 +99,8 @@ class InterviewServices:
                 question_text=questionData["question"],
                 category=questionData["questionBasis"]
             )
+            new_question.session_id = session_id
             db.session.add(new_question)
-            db.session.flush()
-            session.questions.append(new_question)  # This automatically adds to the link table
+            
         db.session.commit()
         return 
