@@ -16,7 +16,7 @@ import NotFoundPage from "./components/NotFound";
 import CVManager from "./pages/CVManager";
 import ProfilePage from "./pages/ProfilePage";
 import PublicRoute from "./routes/PublicRoute";
-import InterviewQuestionPage from "./pages/InterviewQuestionPage";
+import InterviewQuestionPage from "./features/startQuestion/Pages/InterviewQuestionPage";
 
 function App() {
   return (

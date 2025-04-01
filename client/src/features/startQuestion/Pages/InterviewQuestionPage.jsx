@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import VoiceRecorder from "../components/interview/VoiceRecorder";
-import Transcription from "../components/interview/Transcription";
-import ChatInterface from "../components/interview/ChatInterface";
-import ToggleVisibilityButton from "../components/interview/ToggleVisibilityButton";
+import VoiceRecorder from "../../../components/interviewQuestion/VoiceRecorder";
+import Transcription from "../../../components/interviewQuestion/Transcription";
+import ChatInterface from "../../../components/interviewQuestion/ChatInterface";
+import ToggleVisibilityButton from "../../../components/interviewQuestion/ToggleVisibilityButton";
 
 const InterviewQuestionPage = () => {
   const { setTitle } = useOutletContext();
