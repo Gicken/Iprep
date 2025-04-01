@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import VoiceRecorder from "../components/interview/VoiceRecorder";
-import Transcription from "../components/interview/Transcription";
-import ChatInterface from "../components/interview/ChatInterface";
-import ToggleVisibilityButton from "../components/interview/ToggleVisibilityButton";
+import VoiceRecorder from "../components/VoiceRecorder";
+import Transcription from "../components/Transcription";
+import ChatInterface from "../components/ChatInterface";
+import ToggleVisibilityButton from "../components/ToggleVisibilityButton";
 import axios from "axios";
-import { API_ENDPOINTS } from "../lib/constants";
+import { API_ENDPOINTS } from "../../../lib/constants";
 
 
 const InterviewQuestionPage = () => {
