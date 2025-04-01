@@ -13,7 +13,7 @@ import { CVManager } from './features/cvManagement'
 import { InterviewPage } from './features/interview'
 import { StartInterview } from './features/startInterview'
 import { JobDescriptionPage, JobDetailsPage } from './features/JobDescriptionFeature'
-import InterviewQuestionPage from "./pages/InterviewQuestionPage"
+import { InterviewQuestionPage } from "./features/startQuestion"
 import { SpeechToTextPage } from './features/speechToText'
 
 // import FeedbackManager from "./pages/FeedbackManager";
