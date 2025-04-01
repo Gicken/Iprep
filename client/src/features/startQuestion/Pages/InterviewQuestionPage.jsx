@@ -8,6 +8,7 @@ import ToggleVisibilityButton from "../components/interview/ToggleVisibilityButt
 import axios from "axios";
 import { API_ENDPOINTS } from "../lib/constants";
 
+
 const InterviewQuestionPage = () => {
 
     const sessionID = sessionStorage.getItem('sessionID')
@@ -66,6 +67,7 @@ const getSession = async (id) => {
   if (!session || !session.questions || session.questions.length === 0) {
     return <div>Loading...</div>; // Or some other loading UI
   }
+  sessionStorage.setItem("question_id",session["questions"][0]["id"])
 
   return (
       <div className="container mx-auto p-4">
