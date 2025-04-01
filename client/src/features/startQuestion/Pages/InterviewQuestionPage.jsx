@@ -5,6 +5,7 @@ import VoiceRecorder from "../components/VoiceRecorder";
 import Transcription from "../components/Transcription";
 import ChatInterface from "../components/ChatInterface";
 import ToggleVisibilityButton from "../components/ToggleVisibilityButton";
+import { uploadResponse } from '../api/InterviewApi';
 import axios from "axios";
 import { API_ENDPOINTS } from "../../../lib/constants";
 
@@ -44,23 +45,25 @@ const getSession = async (id) => {
   }, [setTitle]);
 
   useEffect(() => {
-    getSession(sessionID);
+    setSession(getSession(sessionID))
 }, [sessionID]);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleSubmit = () => {
-    // console.log(session)
 
       // Handle the submission of the transcript (e.g., sending it to the backend)
       console.log("Submitting response:", transcript);
   };
 
-  const handleCompleteAnswer = () => {
-      // Lock the answer and mark it as complete
-      setIsAnswerComplete(true);
-      // Send the response (text + audio) to backend for evaluation
-      console.log("Answer Completed:", transcript, audioUrl);
+  const handleCompleteAnswer = async () => {
+        // Lock the answer and mark it as complete
+        setIsAnswerComplete(true);
+        const blob = await fetch(audioUrl).then(r => r.blob());
+        const id = sessionStorage.getItem("question_id")
+        uploadResponse(blob,id)
+        // Send the response (text + audio) to backend for evaluation
+        console.log("Answer Completed:", transcript, audioUrl);
   };
 
 
@@ -68,10 +71,6 @@ const getSession = async (id) => {
     return <div>Loading...</div>; // Or some other loading UI
   }
   sessionStorage.setItem("question_id",session["questions"][0]["id"])
-<<<<<<< HEAD:client/src/pages/InterviewQuestionPage.jsx
-=======
-
->>>>>>> feature-interviewQuestionDisplay:client/src/features/startQuestion/Pages/InterviewQuestionPage.jsx
   return (
       <div className="container mx-auto p-4">
           {/* Current Interview Question */}
@@ -108,7 +107,7 @@ const getSession = async (id) => {
           <div className="flex justify-center space-x-4 mt-6">
               <button
                   onClick={handleCompleteAnswer}
-                  disabled={isAnswerComplete}
+                //   disabled={isAnswerComplete}
                   className={`bg-green-500 text-white px-4 py-2 rounded flex items-center space-x-2 ${
                       isAnswerComplete ? "cursor-not-allowed opacity-50" : ""
                   }`}

@@ -42,14 +42,14 @@ response_model = speech_ns.model("Transcription", {
 #         except Exception as e:
 #             return {"message": f"Internal Server Error: {str(e)}"}
 
-@speech_ns.route("/transcribe/<string:session_id>')")
+@speech_ns.route("/transcribe/<string:question_id>")
 class SpeechToText(Resource):
     @jwt_required()
     @speech_ns.expect(speech_ns.parser().add_argument("file", location="files", type="file", required=True))
     # @speech_ns.response(201, "Success", response_model)
     # @speech_ns.response(400, "Invalid file format or missing file")
     # @speech_ns.response(500, "Internal Server Error")
-    def post(self,session_id):
+    def post(self,question_id):
         """ Upload an audio file and transcribe it using Whisper (Requires Authentication) """
         file = request.files.get("file")
 
@@ -57,7 +57,7 @@ class SpeechToText(Resource):
             return {"message": "No file uploaded"}
 
         try:
-            response_data = transcribe_audio(file,session_id)
+            response_data = transcribe_audio(file,question_id)
             return response_data
         except ValueError as e:
             return {"message": str(e)}, 404
