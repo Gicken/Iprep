@@ -23,6 +23,7 @@ export const useJobDescription = () => {
   }
 
   const fetchJobById = async id => {
+    console.log("fetching jon")
     return await getJobById(id)
   }
 

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { SecondaryButton } from "../../../shared/components/Buttons";
 
-const JobForm = ({ onSubmit, initialData = {}, closeModal }) => {
+const JobEditForm = ({ onSubmit, initialData = {}, closeModal }) => {
   const [formData, setFormData] = useState({
     companyName: initialData.companyName || "",
     title: initialData.title || "",
-    companyIndustry: initialData.companyIndustry || "",
+    companyIndustry: initialData.company_industry || "",
     companyInfo: initialData.companyInfo || "",
     description: initialData.description || "",
     skills: initialData.skills?.join(", ") || "",
@@ -87,4 +87,5 @@ const JobForm = ({ onSubmit, initialData = {}, closeModal }) => {
   );
 };
 
-export default JobForm;
+
+export default JobEditForm;
