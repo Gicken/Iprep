@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import JobEditForm from "./JobEditForm"; // Ensure this path is correct
+import JobEditForm from "./JobEditForm"; 
+import EditButton from "./Buttons/EditButton";
 
-const JobDetailsModal = ({ job, closeModal }) => {
+const JobDetailsModal = ({ job, closeModal, isOpen, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  if (!job) return null;
+  if (!isOpen) return null;
 
   const handleFormClose = () => setIsEditing(false);
 
   return (
-    <Transition appear show={!!job} as={Fragment}>
+    <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
@@ -31,7 +32,7 @@ const JobDetailsModal = ({ job, closeModal }) => {
               <JobEditForm
                 initialData={job}
                 onSubmit={() => {
-                  setIsEditing(false); // Ensure modal updates when edit is done
+                  setIsEditing(false); 
                 }}
                 closeModal={handleFormClose}
               />
@@ -55,20 +56,14 @@ const JobDetailsModal = ({ job, closeModal }) => {
                     <strong>Updated:</strong> {new Date(job.updated_at).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="mt-4 flex justify-end space-x-2">
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-800 rounded"
-                  >
-                    Edit
-                  </button>
+                  <EditButton onClick={() => {onEdit(job); closeModal();}} />
                   <button
                     onClick={closeModal}
                     className="px-4 py-2 bg-gray-700 hover:bg-gray-900 rounded"
                   >
                     Close
                   </button>
-                </div>
+                  
               </>
             )}
           </div>

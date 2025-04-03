@@ -1,3 +1,4 @@
+// JobDescriptionPage.js
 import { useState, useEffect } from 'react';
 import { useJobDescription } from '../hooks/useJobDescription';
 import JobList from '../components/JobList';
@@ -6,12 +7,14 @@ import JobModal from '../components/JobModal';
 import JobForm from '../components/JobForm';
 import JobEditModal from '../components/JobEditModal';
 import JobEditForm from '../components/JobEditForm';
+import JobDetailsModal from '../components/JobDetailsModal';
 import { useOutletContext } from "react-router-dom";
 
 const JobDescriptionPage = () => {
   const { jobs, createJob, editJob, removeJob } = useJobDescription();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const { setTitle } = useOutletContext();
 
@@ -25,10 +28,16 @@ const JobDescriptionPage = () => {
     setEditModalOpen(true);
   };
 
+  // Open the details modal
+  const handleView = (job) => {
+    setSelectedJob(job);
+    setDetailsModalOpen(true);
+  };
+
   return (
     <div>
       <AddButton onClick={() => setModalOpen(true)} />
-      <JobList jobs={jobs} onView={() => {}} onDelete={removeJob} onEdit={handleEdit} />
+      <JobList jobs={jobs} onView={handleView} onDelete={removeJob} onEdit={handleEdit} />
 
       <JobModal
         isOpen={isModalOpen}
@@ -54,6 +63,14 @@ const JobDescriptionPage = () => {
           />
         )}
       </JobEditModal>
+
+      {/* Pass handleEdit as onEdit to the JobDetailsModal */}
+      <JobDetailsModal 
+        job={selectedJob} 
+        closeModal={() => setDetailsModalOpen(false)} 
+        isOpen={isDetailsModalOpen}
+        onEdit={handleEdit}  
+      />
     </div>
   );
 };
