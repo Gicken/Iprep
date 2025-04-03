@@ -108,50 +108,63 @@ class InterviewItem(Resource):
 @interview_ns.route('/start')
 class InterviewStart(Resource):
     @interview_ns.response(201, "Success")
-    @interview_ns.response(401,"Unauthorized")
-    @interview_ns.response(404,"CV of Job description not found ")
+    @interview_ns.response(400, "Bad Request")
+    @interview_ns.response(401, "Unauthorized")
+    @interview_ns.response(404, "CV or Job description not found")
     @interview_ns.response(500, "Internal Server Error")
     @interview_ns.doc(security='BearerAuth')
     @interview_ns.expect(interview_session_model)
     @jwt_required()
     def post(self):
-        """Start and interview session, including generating questions"""
-        # current_user_id = get_jwt_identity()
+        """Start an interview session, including generating questions"""
+        try:
+            current_user_id = get_jwt_identity()
+            data = request.get_json()
 
-        # data = request.json
-        
-        # print(data)   
-        # if not data:
-        #     return{
-        #         "error":"No data",
-        #     }, 404
-        
-        # new_session = InterviewSession(
-        #     job_id=data["job_id"],
-        #     cv_id=data["cv_id"],
-        #     difficulty = data["difficulty"],
-        #     user_id=current_user_id
-        # )
-        # cvString = InterviewServices.read_cv_doc(data["cv_id"])
-        # if cvString == "CV not found":
-        #     return{
-        #         "error":cvString,
-        #     }, 404
-        # jobDesc = JobDescriptionService.get_job_description_by_id(current_user_id,data["job_id"]).to_dict()
-        # if not jobDesc:
-        #     return{
-        #         "error":"Job description not found",
-        #     }, 404
-        # db.session.add(new_session)
-        # db.session.commit()
+            if not data:
+                return {"error": "No data provided"}, 400
+            
+            job_id = data.get("job_id")
+            cv_id = data.get("cv_id")
+            difficulty = data.get("difficulty")
 
-        # questions = InterviewServices.generate_questions(cvString,jobDesc,data["difficulty"])
-        # InterviewServices.add_questions_to_session(questions,new_session.id)
-        
-        return {
-                    'message': 'Session created successfully', 
-                    # 'session_id': new_session.id,
-                    'session_id':'847893ca-997e-4711-bbd9-90e767408786',
-                }, 201
+            if not all([job_id, cv_id, difficulty]):
+                return {"error": "Missing required fields"}, 400
+            
+            # Validate CV existence
+            cv_string = InterviewServices.read_cv_doc(cv_id)
+            if cv_string == "CV not found":
+                return {"error": "CV not found"}, 404
+
+            # Validate Job Description existence
+            job_desc_obj = JobDescriptionService.get_job_description_by_id(current_user_id, job_id)
+            if not job_desc_obj:
+                return {"error": "Job description not found"}, 404
+            
+            job_desc = job_desc_obj.to_dict()
+            
+            # Create interview session
+            new_session = InterviewSession(
+                job_id=job_id,
+                cv_id=cv_id,
+                difficulty=difficulty,
+                user_id=current_user_id
+            )
+            db.session.add(new_session)
+            db.session.commit()
+
+            # Generate questions
+            questions = InterviewServices.generate_questions(cv_string, job_desc, difficulty)
+            InterviewServices.add_questions_to_session(questions, new_session.id)
+            
+            return {
+                'message': 'Session created successfully',
+                'session_id': new_session.id
+            }, 201
+
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 500
+
 
 

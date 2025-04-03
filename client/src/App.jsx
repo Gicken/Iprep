@@ -12,7 +12,8 @@ import { Dashboard } from './features/dashboard'
 import { CVManager } from './features/cvManagement'
 import { StartInterview } from './features/startInterview'
 import { JobDescriptionPage, JobDetailsPage } from './features/JobDescriptionFeature'
-import { InterviewQuestionPage } from "./features/startQuestion"
+import { InterviewQuestionPage, InterviewSummaryPage } from "./features/startQuestion"
+import {ComingSoon} from './features/dashboard'
 import { SpeechToTextPage } from './features/speechToText'
 
 
@@ -47,6 +48,9 @@ function App() {
             <Route path = "job-descriptions" element = {<JobDescriptionPage/>}/>
             <Route path = "job-details" element = {<JobDetailsPage/>}/>
             <Route path = "interviewQuestions" element = {<InterviewQuestionPage/>}/>
+            <Route path = "interview-summary" element = {<InterviewSummaryPage/>}/>
+            <Route path = "*" element = {<ComingSoon/>}/>
+            {/* <Route path='*' element={<NotFoundPage />} /> */}
             {/* <Route path="profile" element={<ProfilePage />} /> */}
           </Route>
 

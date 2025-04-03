@@ -16,7 +16,7 @@ class UserResponse(db.Model):
     response_score = db.Column(db.Float, nullable=True)
     response_time = db.Column(db.Integer, nullable=True)
 
-    user_id = db.Column(db.String(36), db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False, index=True)
     
     # session_id = db.Column(db.String(36), db.ForeignKey("interview_session.id"), nullable=False)
     # session = db.relationship("InterviewSession", back_populates="user_responses")

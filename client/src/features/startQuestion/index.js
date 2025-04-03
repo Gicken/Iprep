@@ -1,1 +1,3 @@
-export { default as InterviewQuestionPage } from './pages/InterviewQuestionPage'
+export { default as InterviewQuestionPage } from './Pages/InterviewQuestionPage'
+
+export { default as InterviewSummaryPage } from './Pages/InterviewSummaryPage'

@@ -69,7 +69,7 @@ class InterviewServices:
     @staticmethod
     def generate_questions(cv_as_string,job_description,difficulty):
 
-        client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
+        client = OpenAI(base_url="http://127.0.0.1:1234/v1", api_key="lm-studio")
         
         #Get rid of data we dont want to send to the LLM
         job_description.pop("id")

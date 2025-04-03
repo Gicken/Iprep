@@ -1,18 +1,18 @@
-import React, { useContext } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../features/auth/context/AuthContext';
+import React, { useContext } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../context/AuthContext";
+import { FaChalkboardUser, FaClipboardQuestion } from "react-icons/fa6";
 import {
   FaHome,
   FaUserShield,
   FaHistory,
   FaFileAlt,
   FaCommentAlt,
-  FaUserCircle,
   FaSignOutAlt,
   FaUsersCog,
   FaTimes,
-  FaBars
-} from 'react-icons/fa';
+  FaBars,
+} from "react-icons/fa";
 
 const DashboardNavbar = ({ isSidebarOpen, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -21,87 +21,54 @@ const DashboardNavbar = ({ isSidebarOpen, toggleSidebar }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   const getLinkClass = (path) =>
-    location.pathname === path ? 'text-[#59FF00] font-bold' : 'text-gray-400';
+    location.pathname === path ? "text-[#59FF00] font-bold" : "text-gray-400";
 
   const navLinks = [
-    {
-      path: '/dashboard',
-      icon: <FaHome className="h-6 w-6 mr-2" />,
-      label: 'Dashboard',
-    },
-    {
-      path: '/dashboard/start',
-      icon: <FaUserShield className="h-6 w-6 mr-2" />,
-      label: 'Practice Interviews',
-    },
-    {
-      path: '/dashboard/history',
-      icon: <FaHistory className="h-6 w-6 mr-2" />,
-      label: 'Interview History',
-    },
-    {
-      path: '/dashboard/cv-manager',
-      icon: <FaFileAlt className="h-6 w-6 mr-2" />,
-      label: 'CV Manager',
-    },
-    {
-      path: '/dashboard/feedback',
-      icon: <FaCommentAlt className="h-6 w-6 mr-2" />,
-      label: 'Feedback',
-    },
-    {
-      path: '/dashboard/profile',
-      icon: <FaUsersCog className="h-6 w-6 mr-2" />,
-      label: 'Profile',
-    },
+    { path: "/dashboard", icon: <FaHome className="h-6 w-6 mr-2" />, label: "Dashboard" },
+    { path: "/dashboard/start", icon: <FaChalkboardUser className="h-6 w-6 mr-2" />, label: "Practice Interviews" },
+    { path: "/dashboard/job-descriptions", icon: <FaClipboardQuestion className="h-6 w-6 mr-2" />, label: "Job-Description" },
+    { path: "/dashboard/history", icon: <FaHistory className="h-6 w-6 mr-2" />, label: "Interview History" },
+    { path: "/dashboard/cv-manager", icon: <FaFileAlt className="h-6 w-6 mr-2" />, label: "CV Manager" },
+    { path: "/dashboard/feedback", icon: <FaCommentAlt className="h-6 w-6 mr-2" />, label: "Feedback" },
+    { path: "/dashboard/profile", icon: <FaUsersCog className="h-6 w-6 mr-2" />, label: "Profile" },
   ];
 
   return (
     <aside
-      className={`transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'w-64 p-4' : 'w-20 p-2'
-      } bg-gray-900 rounded-3xl m-4 mt-0 mb-0 h-120 fixed flex flex-col justify-between shadow-lg`}
+      className={`h-full p-2 mb-8 w-${isSidebarOpen ? "64" : "20"} bg-gray-900 shadow-lg flex flex-col transition-all duration-300 ease-in-out`}
     >
-      <div className="flex justify-center items-center mb-4">
-        <button 
-          onClick={toggleSidebar} 
-          className="text-gray-400 hover:text-white focus:outline-none"
-          aria-label={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-        >
-          {isSidebarOpen ? (
-            <FaTimes className="h-6 w-6" />
-          ) : (
-            <FaBars className="h-6 w-6" />
-          )}
+      {/* Sidebar Toggle Button */}
+      <div className="flex justify-center items-center py-4">
+        <button onClick={toggleSidebar} className="text-gray-400 hover:text-white focus:outline-none">
+          {isSidebarOpen ? <FaTimes className="h-6 w-6" /> : <FaBars className="h-6 w-6" />}
         </button>
       </div>
 
-      <nav>
+      {/* Navigation Links */}
+      <nav className="flex flex-col flex-grow">
         {navLinks.map((link) => (
           <Link
             key={link.path}
             to={link.path}
-            className={`flex items-center p-2 hover:bg-gray-800 rounded mb-2 ${getLinkClass(link.path)}`}
-            aria-current={location.pathname === link.path ? 'page' : undefined}
+            className={`flex items-center p-3 hover:bg-gray-800 rounded mb-2 ${getLinkClass(link.path)}`}
           >
             {link.icon}
-            {isSidebarOpen && link.label}
+            {isSidebarOpen && <span className="ml-2">{link.label}</span>}
           </Link>
         ))}
       </nav>
 
-      <div className="mt-4">
-        <button 
-          onClick={handleLogout} 
-          className="flex items-center p-2 hover:bg-gray-800 rounded w-full text-red-500"
-          aria-label="Logout"
-        >
+      
+
+      {/* Logout Button */}
+      <div className="py-4">
+        <button onClick={handleLogout} className="flex items-center p-3 hover:bg-gray-800 rounded w-full text-red-500">
           <FaSignOutAlt className="h-6 w-6 mr-2" />
-          {isSidebarOpen && 'Logout'}
+          {isSidebarOpen && "Logout"}
         </button>
       </div>
     </aside>

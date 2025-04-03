@@ -10,9 +10,9 @@ class CV(db.Model):
     file_name = db.Column(db.String(255), nullable=False)
     file_data = db.Column(MEDIUMBLOB, nullable=False)
     upload_date = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('cvs', lazy=True))
+    user_id = db.Column(db.String(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False, index=True)
 
-     
 
+    user = db.relationship("User", backref=db.backref("cvs", lazy=True, cascade="all,delete-orphan"))
+    user = db.relationship("User", backref=db.backref("feedbacks", lazy=True, cascade="all, delete-orphan"))
 
