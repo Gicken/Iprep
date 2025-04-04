@@ -58,7 +58,7 @@ const JobEditForm = ({ onSubmit, initialData = {}, closeModal }) => {
         value={formData.description} 
         onChange={handleChange} 
         required 
-        className="w-full p-3 border border-gray-300 rounded-lg bg-secondary text-white focus:ring-2 focus:ring-accent h-60 resize-none"
+        className="w-full p-3 border border-gray-300 rounded-lg bg-secondary text-white focus:ring-2 focus:ring-accent h-30 resize-none"
       />
       <input 
         type="text" 
