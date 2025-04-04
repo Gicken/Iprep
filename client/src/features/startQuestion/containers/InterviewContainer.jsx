@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { interviewApi } from '../api/InterviewApi'
 import {
   QuestionCard,
@@ -23,7 +23,14 @@ export const InterviewContainer = ({ session }) => {
   const navigate = useNavigate();
   const currentQuestion = session.questions[currentQuestionIndex]
   const isLastQuestion = currentQuestionIndex === session.questions.length - 1
+  const childRef = useRef(null)
 
+  const clearAudio = () => {
+    if(childRef.current){
+      childRef.current.clearPreviousAudio()
+    }
+  }
+  
   const handleCloseModal = () => {
     sessionStorage.removeItem('interviewResponses');
     setIsModalOpen(false)
@@ -45,7 +52,6 @@ export const InterviewContainer = ({ session }) => {
         currentQuestion.id
       )
       setTranscript(response.text || 'Transcription unavailable')
-      // console.log("Response: ", response.text)
 
       const questionText =
         currentQuestion?.question_text || `Question ${currentQuestionIndex + 1}`
@@ -78,6 +84,10 @@ export const InterviewContainer = ({ session }) => {
         await fetch(audioUrl).then(r => r.blob()),
         currentQuestion.id
       )
+      //clear values after a submit
+      setTranscript("")
+      clearAudio()
+      setAudioUrl(null)
 
       if (!isLastQuestion) {
         setCurrentQuestionIndex(prevIndex => prevIndex + 1)
@@ -104,12 +114,11 @@ export const InterviewContainer = ({ session }) => {
   return (
     <div className='container mx-auto p-4'>
       <QuestionCard question={currentQuestion} index={currentQuestionIndex} />
-
-      <RecordingSection onRecordingComplete={handleRecordingComplete} />
+      <RecordingSection ref={childRef} onRecordingComplete={handleRecordingComplete} />
 
       <ToggleVisibilityButton
         isVisible={isVisible}
-        toggle={() => setIsVisible(!isVisible)}
+        onClick={() => setIsVisible(!isVisible)}
       />
 
       {isVisible && (

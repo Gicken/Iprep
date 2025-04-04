@@ -17,10 +17,10 @@ export const API_ENDPOINTS = {
     ADD_NEWJOBDESCRIPTION:`${BASE_URL}/jobdescription`,
     START_INTERVIEW:`${BASE_URL}/interview/start`,
     GET_SESSION: `${BASE_URL}/interview`,
-    UPLOAD_RESPONSE: `${BASE_URL}/response/transcribe`
+    UPLOAD_RESPONSE: `${BASE_URL}/response/transcribe`,
 
     // USER_PROFILE: '/api/profile',
-    // All_feedbacks: `${BASE_URL}/feedback`,
+    All_feedbacks: `${BASE_URL}/feedback`
   };
 
 export const apiClient = axios.create({

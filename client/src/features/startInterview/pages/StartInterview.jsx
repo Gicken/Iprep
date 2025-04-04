@@ -28,6 +28,7 @@ function StartInterview() {
     event.preventDefault();
     try {
       if (validateForm()) {
+        alert('Your interview is being prepared!')
         const response = await startInterview(selectedCv.id,selectedJob.id,difficulty)
         console.log("response",response)
         sessionStorage.setItem("sessionID",response["session_id"]);

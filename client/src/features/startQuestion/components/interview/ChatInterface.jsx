@@ -1,11 +1,11 @@
 import React from 'react';
 
-const ChatInterface = ({ transcript, setTranscript, onSubmit }) => {
-  const handleKeyDown = (e) => {
-    if (e.ctrlKey && e.key === 'Enter') {
-      onSubmit();
-    }
-  };
+const ChatInterface = ({ transcript, setTranscript }) => {
+  // const handleKeyDown = (e) => {
+  //   if (e.ctrlKey && e.key === 'Enter') {
+  //     onSubmit();
+  //   }
+  // };
 
   return (
     <div className="bg-gray-800 p-6 rounded-lg shadow-md mt-4">
@@ -18,15 +18,15 @@ const ChatInterface = ({ transcript, setTranscript, onSubmit }) => {
         placeholder="Type your response or use voice input..."
         value={transcript}
         onChange={(e) => setTranscript(e.target.value)}
-        onKeyDown={handleKeyDown}
+        // onKeyDown={handleKeyDown}
       />
-      <button
+      {/* <button
         onClick={onSubmit}
         className="mt-3 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full transition-colors disabled:opacity-50"
         disabled={!transcript.trim()}
       >
         Submit Response
-      </button>
+      </button> */}
     </div>
   );
 };

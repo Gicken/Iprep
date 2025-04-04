@@ -10,7 +10,7 @@ export { default as Transcription } from './interview/Transcription';
 export { default as ChatInterface } from './interview/ChatInterface';
 export { default as ToggleVisibilityButton } from './interview/ToggleVisibilityButton';
 export { QuestionCard } from './interview/QuestionCard';
-export { RecordingSection } from './interview/RecordingSection';
+export { default as RecordingSection } from './interview/RecordingSection';
 export { SubmissionControls } from './interview/SubmissionControls';
 
 // Layout Components

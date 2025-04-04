@@ -15,6 +15,7 @@ import { JobDescriptionPage, JobDetailsPage } from './features/JobDescriptionFea
 import { InterviewQuestionPage, InterviewSummaryPage } from "./features/startQuestion"
 import {ComingSoon} from './features/dashboard'
 import { SpeechToTextPage } from './features/speechToText'
+import FeedbackManager from './pages/FeedbackManager'
 
 
 function App() {
@@ -49,6 +50,8 @@ function App() {
             <Route path = "job-details" element = {<JobDetailsPage/>}/>
             <Route path = "interviewQuestions" element = {<InterviewQuestionPage/>}/>
             <Route path = "interview-summary" element = {<InterviewSummaryPage/>}/>
+            <Route path = "feedback" element = {<FeedbackManager/>}/>
+
             <Route path = "*" element = {<ComingSoon/>}/>
             {/* <Route path='*' element={<NotFoundPage />} /> */}
             {/* <Route path="profile" element={<ProfilePage />} /> */}

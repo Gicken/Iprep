@@ -160,6 +160,7 @@ class InterviewStart(Resource):
             return {
                 'message': 'Session created successfully',
                 'session_id': new_session.id
+                # 'session_id': '0d17e3c0-f872-484c-af1f-088b0bcabefd'
             }, 201
 
         except Exception as e:
