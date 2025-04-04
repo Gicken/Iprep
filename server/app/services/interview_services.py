@@ -88,13 +88,12 @@ class InterviewServices:
         response_format=question_json_schema
         )
 
-        return response.choices[0].message.content
+        return json.loads(response.choices[0].message.content)
     
     @staticmethod
     def add_questions_to_session(questionsJson,session_id):
-        session = InterviewSession.query.get(session_id)
         
-        for questionData in json.loads(questionsJson)["questions"]:
+        for questionData in questionsJson["questions"]:
             new_question = InterviewQuestion(
                 question_text=questionData["question"],
                 category=questionData["questionBasis"]

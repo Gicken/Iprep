@@ -1,6 +1,9 @@
 from openai import OpenAI
 import json
-from typing import List, Dict
+from ..models.UserResponse import UserResponse
+from ..models.Feedback import Feedback
+
+from app.exts import db
 
 class FeedbackProcessor:
     """
@@ -36,33 +39,37 @@ class FeedbackProcessor:
     }
     
     @classmethod
-    def process_feedback(cls, feedback_text: str, question: str = None, answer: str = None) -> str:
+    def generate_feedback(cls, response_id) -> str:
         """
-        Process feedback using AI to generate structured feedback in three categories.
+        Generate feedback using AI to generate structured feedback in three categories.
         
         Args:
-            feedback_text (str): Raw feedback text
-            question (str, optional): The interview question that was asked
-            answer (str, optional): The user's answer to the question
-        
+            response_id (str): the response object we are making feeback for
         Returns:
-            str: Structured and formatted feedback
+            dict: Structured and formatted feedback
         """
+        #overwrite old feedback if somehow called twice
+        existingFeedback = Feedback.query.filter_by(response_id=response_id).first()
+        if existingFeedback:
+            db.session.delete(existingFeedback)
+            db.session.commit()
+
+
+        user_response = UserResponse.query.filter_by(id=response_id).options(db.joinedload(UserResponse.question)).first()
+
+        question = user_response.question.question_text
+        answer = user_response.text
+        context = "Nothing to add"
+
+        
         # Initialize OpenAI client
         client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
-        
-        # Prepare the prompt with context if available
-        prompt_content = f"Analyze the following feedback and structure it into three categories - strengths, areas for improvement, and recommendations:"
-        
-        if question and answer:
-            prompt_content = (
-                f"For the interview question: \"{question}\"\n"
-                f"The candidate answered: \"{answer}\"\n"
-                f"Based on the following feedback: \"{feedback_text}\"\n"
-                f"Provide a structured analysis of the response with specific strengths, areas for improvement, and actionable recommendations."
-            )
-        else:
-            prompt_content = f"Analyze the following feedback and structure it into three categories:\n\"{feedback_text}\""
+                 
+        prompt_content = (
+            f"Question: \"{question}\"\n"
+            f"Answer: \"{answer}\"\n"
+            f"Additional context:{context}\n"
+        )
         
         # Generate structured feedback using AI
         response = client.chat.completions.create(
@@ -74,18 +81,5 @@ class FeedbackProcessor:
             temperature=0.5,
             response_format=cls.feedback_json_schema
         )
-        
-        # Parse the AI response
-        feedback_data = json.loads(response.choices[0].message.content)
-        
-        # Format feedback with consistent structure
-        formatted_feedback = (
-            f"**Strengths:**\n" + 
-            "\n".join(f"- {strength}" for strength in feedback_data["strengths"]) + "\n\n" +
-            f"**Areas for Improvement:**\n" + 
-            "\n".join(f"- {improvement}" for improvement in feedback_data["improvements"]) + "\n\n" +
-            f"**Recommendations:**\n" + 
-            "\n".join(f"- {recommendation}" for recommendation in feedback_data["recommendations"])
-        )
-        
-        return formatted_feedback
+
+        return json.loads(response.choices[0].message.content)

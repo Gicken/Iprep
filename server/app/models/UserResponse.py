@@ -17,13 +17,14 @@ class UserResponse(db.Model):
     response_time = db.Column(db.Integer, nullable=True)
 
     user_id = db.Column(db.String(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False, index=True)
-    
-    # session_id = db.Column(db.String(36), db.ForeignKey("interview_session.id"), nullable=False)
-    # session = db.relationship("InterviewSession", back_populates="user_responses")
 
+    feedback = db.relationship("Feedback", back_populates="response", cascade="all, delete")
 
     question_id = db.Column(db.String(36), db.ForeignKey("interview_questions.id"), nullable=False)
     question = db.relationship("InterviewQuestion", back_populates="user_response")
+
+    # session_id = db.Column(db.String(36), db.ForeignKey("interview_session.id"), nullable=False)
+    # session = db.relationship("InterviewSession", back_populates="user_responses")
 
 
     # def __init__(self, id, text):

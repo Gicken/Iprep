@@ -10,26 +10,16 @@ from flask import jsonify
 
 interview_ns = Namespace('interview_session', description='Interview operations')
 
-##Schema for incoming questions
 question_model = interview_ns.model("Question", {
     'question': fields.String(required=True),
     'questionBasis': fields.String(required=True),
 })
 
-questions_model = interview_ns.model("Questions", {
-    'questions': fields.List(fields.Nested(question_model), required=True, min_items=1),
-})
-
-json_schema_model = interview_ns.model("JsonSchemaModel", {
-    'name': fields.String(required=True),
-    'schema': fields.Nested(questions_model, required=True),
-})
-##
-
 interview_session_model = interview_ns.model( "session",{
         "job_id": fields.String(required=True, description="job_id"),
         "cv_id": fields.String(required=True, description="cv_id"),
-        "difficulty": fields.String(required=True, description="Difficulty")
+        "difficulty": fields.String(required=True, description="Difficulty"),
+        "length": fields.Integer(required=True, description="number of questions")
     }
 )
 
@@ -38,6 +28,7 @@ interview_session_model_response = interview_ns.model( "session_response",{
         "job_id": fields.String(required=True, description="job_id"),
         "cv_id": fields.String(required=True, description="cv_id"),
         "difficulty": fields.String(required=True, description="Difficulty"),
+        "length": fields.Integer(required=True, description="number of questions"),
         "questions": fields.List(fields.Nested(question_model), required=True, min_items=1)
     }
 )
@@ -70,6 +61,7 @@ def serialize_session(session):
         'job_id': session.job_id,
         'cv_id': session.cv_id,
         'user_id': session.user_id,
+        'length': session.length,
         'questions': [serialize_interview_question(q) for q in session.questions]
     }
 

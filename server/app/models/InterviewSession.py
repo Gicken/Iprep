@@ -6,12 +6,12 @@ class InterviewSession(db.Model):
     __tablename__ = "interview_session"
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = db.Column(db.String(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False, index=True)
     job_id = db.Column(db.String(36), db.ForeignKey('job_description.id'), nullable=False)
     cv_id = db.Column(db.String(36), db.ForeignKey('cv.id'), nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False, index=True)
-
-    created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, nullable=False)
     difficulty = db.Column(db.String(50), nullable=False)
+    length = db.Column(db.IntInteger,nullable=False)
+    created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, nullable=False)
 
 
     # questions = db.relationship('InterviewQuestion', secondary='interview_session_questions', backref='sessions')
