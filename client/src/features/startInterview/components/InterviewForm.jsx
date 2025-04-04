@@ -6,10 +6,12 @@ const InterviewForm = ({
   selectedCv,
   selectedJob,
   difficulty,
+  length,
   errors,
   handleChangeCV,
   handleChangeJob,
   handleDifficultyChange,
+  handleLengthChange,
   handleSubmit,
 }) => {
   return (
@@ -61,7 +63,7 @@ const InterviewForm = ({
                   name="difficulty-radio"
                   checked={difficulty === level}
                   onChange={handleDifficultyChange}
-                  className="mr-2"
+                  className="mr-2"  
                 />
                 <label>{level.charAt(0).toUpperCase() + level.slice(1)}</label>
               </div>
@@ -69,6 +71,29 @@ const InterviewForm = ({
           ))}
         </ul>
         {errors.difficulty && <p className="ml-4 mb-3 text-red-500 text-sm mt-1">{errors.difficulty}</p>}
+      </div>
+
+      {/* Length Select */}
+      <div className="w-full border-2 relative mb-4">
+        <div className="ml-4 mt-2">Please select a number of questions:</div>
+        <ul className="items-center ml-4 mb-2 w-7/8 sm:flex">
+          {["1", "2", "3", "4", "5"].map((number) => (
+            <li key={number} className="w-full">
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  value={number}
+                  name="length-radio"
+                  checked={length === number}
+                  onChange={handleLengthChange}
+                  className="mr-2"
+                />
+                <label>{number}</label>
+              </div>
+            </li>
+          ))}
+        </ul>
+        {errors.length && <p className="ml-4 mb-3 text-red-500 text-sm mt-1">{errors.length}</p>}
       </div>
 
       <button type="submit" className="btn-primary bg-blue-500 text-white px-4 py-2 rounded">

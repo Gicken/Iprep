@@ -10,7 +10,7 @@ class InterviewSession(db.Model):
     job_id = db.Column(db.String(36), db.ForeignKey('job_description.id'), nullable=False)
     cv_id = db.Column(db.String(36), db.ForeignKey('cv.id'), nullable=False)
     difficulty = db.Column(db.String(50), nullable=False)
-    length = db.Column(db.IntInteger,nullable=False)
+    length = db.Column(db.Integer,nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, nullable=False)
 
 

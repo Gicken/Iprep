@@ -13,10 +13,12 @@ function StartInterview() {
     selectedCv,
     selectedJob,
     difficulty,
+    length,
     errors,
     handleChangeCV,
     handleChangeJob,
     handleDifficultyChange,
+    handleLengthChange,
     validateForm,
   } = useInterviewSetup();
 
@@ -29,7 +31,7 @@ function StartInterview() {
     try {
       if (validateForm()) {
         alert('Your interview is being prepared!')
-        const response = await startInterview(selectedCv.id,selectedJob.id,difficulty)
+        const response = await startInterview(selectedCv.id,selectedJob.id,difficulty,length)
         console.log("response",response)
         sessionStorage.setItem("sessionID",response["session_id"]);
         navigate("/dashboard/interviewQuestions");
@@ -43,7 +45,7 @@ function StartInterview() {
     <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
       <div className="bg-gray-800 rounded-md p-6">
         <h2 className="text-xl font-semibold mb-4">Select Interview Setup</h2>
-        <InterviewForm {...{ cvList, jobList, selectedCv, selectedJob, difficulty, errors, handleChangeCV, handleChangeJob, handleDifficultyChange, handleSubmit }} />
+        <InterviewForm {...{ cvList, jobList, selectedCv, selectedJob, difficulty, length, errors, handleChangeCV, handleChangeJob, handleDifficultyChange, handleLengthChange, handleSubmit }} />
       </div>
     </div>
   );

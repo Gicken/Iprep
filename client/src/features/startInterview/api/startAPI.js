@@ -35,22 +35,24 @@ export const fetchJobs = async () => {
   }
 };
 
-export const startInterview = async (cvId,jobId,difficulty) => {
+export const startInterview = async (cvId,jobId,difficulty,length) => {
   try {
-    const token = sessionStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     const params = {
       "cv_id": cvId,
       "job_id": jobId,
       "difficulty": difficulty,
+      "length": length
     }
-    const response = await axios.post(`${API_ENDPOINTS.START_INTERVIEW}`,params, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        accept: "application/json",
-      },
-    });
-    return response.data;
+    console.log(params)
+    // const response = await axios.post(`${API_ENDPOINTS.START_INTERVIEW}`,params, {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //     "Content-Type": "application/json",
+    //     accept: "application/json",
+    //   },
+    // });
+    // return response.data;
   } catch (err) {
     console.error("Start error:", err);
     return [];
