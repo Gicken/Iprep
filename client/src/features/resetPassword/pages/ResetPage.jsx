@@ -16,13 +16,12 @@ export default function ResetPage() {
         setError
     } = useReset();
 
-    // Extract token from URL (supports both query param and path formats)
     const getTokenFromUrl = () => {
-        // Try to get from query params first
+        
         const queryParams = new URLSearchParams(location.search);
         const queryToken = queryParams.get('token');
         
-        // If not in query params, try to get from path
+        
         if (!queryToken && location.pathname.includes('/validate_token/')) {
             return location.pathname.split('/validate_token/')[1];
         }

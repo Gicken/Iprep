@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const resetPasswordService = {
     validateToken: async (token) => {
         try {
-            console.log('Validating token:', token); // Log the token being validated
+            console.log('Validating token:', token);
             const response = await axios.get(
                 `${BASE_URL}/recover/validate_token/${token}`,
                 {

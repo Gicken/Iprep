@@ -4,7 +4,7 @@ import { resetPasswordService } from "../api/recoveryApi";
 export const useReset = () => {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
-    const [validToken, setValidToken] = useState(null); // null = not checked yet
+    const [validToken, setValidToken] = useState(null);
     const [isValidating, setIsValidating] = useState(false);
 
     const validateToken = useCallback(async (token) => {
@@ -16,7 +16,7 @@ export const useReset = () => {
             const isValid = await resetPasswordService.validateToken(token);
             setValidToken(isValid);
             
-            // Only set error if explicitly false (not null/undefined)
+            
             if (isValid === false) {
                 setError("Invalid or expired token");
             }
@@ -36,7 +36,7 @@ export const useReset = () => {
             setMessage("");
             const response = await resetPasswordService.resetPassword(token, password);
             setMessage(typeof response?.message === 'string' ? response.message : "Password reset successful");
-            // Ensure navigate exists before calling
+            
             if (navigate && typeof navigate === 'function') {
                 setTimeout(() => navigate('/login'), 2000);
             }
