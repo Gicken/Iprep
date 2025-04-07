@@ -2,7 +2,7 @@ import React from "react";
 import ViewButton from "./Buttons/ViewButton";
 import DeleteButton from "./Buttons/DeleteButton";
 
-const JobCard = ({ job, onView, onDelete }) => {
+const JobCard = ({ job, onView, onDelete, onEdit }) => {
   return (
     <div className="bg-gray-800 rounded-md p-6">
       <h3 className="text-lg font-semibold">{job.title}</h3>

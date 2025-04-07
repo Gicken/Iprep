@@ -58,17 +58,24 @@ export const addJob = async (formData) => {
 };
 
 export const updateJob = async (id, updatedJob) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const index = mockJobData.findIndex((job) => job.id === id);
-      if (index !== -1) {
-        mockJobData[index] = { ...mockJobData[index], ...updatedJob };
-        resolve(mockJobData[index]);
-      } else {
-        resolve(null);
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await axios.put(
+      `${API_ENDPOINTS.UPDATE_JOBDESCRIPTION}/${id}`,
+      updatedJob,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
       }
-    }, 500);
-  });
+    );
+    return response.data;
+  } catch (err) {
+    console.error("Job update error:", err);
+    return null;
+  }
 };
 
 

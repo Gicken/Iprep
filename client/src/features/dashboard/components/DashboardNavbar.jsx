@@ -30,7 +30,7 @@ const DashboardNavbar = ({ isSidebarOpen, toggleSidebar }) => {
   const navLinks = [
     { path: "/dashboard", icon: <FaHome className="h-6 w-6 mr-2" />, label: "Dashboard" },
     { path: "/dashboard/start", icon: <FaChalkboardUser className="h-6 w-6 mr-2" />, label: "Practice Interviews" },
-    { path: "/dashboard/job-descriptions", icon: <FaClipboardQuestion className="h-6 w-6 mr-2" />, label: "Job-Description" },
+    { path: "/dashboard/job-descriptions", icon: <FaClipboardQuestion className="h-6 w-6 mr-2" />, label: "Job Descriptions" },
     { path: "/dashboard/history", icon: <FaHistory className="h-6 w-6 mr-2" />, label: "Interview History" },
     { path: "/dashboard/cv-manager", icon: <FaFileAlt className="h-6 w-6 mr-2" />, label: "CV Manager" },
     { path: "/dashboard/feedback", icon: <FaCommentAlt className="h-6 w-6 mr-2" />, label: "Feedback" },

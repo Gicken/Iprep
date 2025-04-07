@@ -1,25 +1,44 @@
-import { useState, useEffect } from 'react'
-import { useJobDescription } from '../hooks/useJobDescription'
-import JobList from '../components/JobList'
-import AddButton from '../components/Buttons/AddButton'
-import JobModal from '../components/JobModal'
-import JobForm from '../components/JobForm'
+// JobDescriptionPage.js
+import { useState, useEffect } from 'react';
+import { useJobDescription } from '../hooks/useJobDescription';
+import JobList from '../components/JobList';
+import AddButton from '../components/Buttons/AddButton';
+import JobModal from '../components/JobModal';
+import JobForm from '../components/JobForm';
+import JobEditModal from '../components/JobEditModal';
+import JobEditForm from '../components/JobEditForm';
+import JobDetailsModal from '../components/JobDetailsModal';
 import { useOutletContext } from "react-router-dom";
 
 const JobDescriptionPage = () => {
-  const { jobs, createJob, removeJob } = useJobDescription()
-  const [isModalOpen, setModalOpen] = useState(false)
-  const { setTitle } = useOutletContext()
+  const { jobs, createJob, editJob, removeJob } = useJobDescription();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isDetailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const { setTitle } = useOutletContext();
 
   useEffect(() => {
-    setTitle('Job Descriptions')
-  })
+    setTitle('Job Descriptions');
+  }, [setTitle]);
+
+  // Open the edit modal and set the selected job
+  const handleEdit = (job) => {
+    setSelectedJob(job);
+    setEditModalOpen(true);
+  };
+
+  // Open the details modal
+  const handleView = (job) => {
+    setSelectedJob(job);
+    setDetailsModalOpen(true);
+  };
 
   return (
     <div>
-      {/* <h1 className='text-xl font-bold'>Job Descriptions</h1> */}
       <AddButton onClick={() => setModalOpen(true)} />
-      <JobList jobs={jobs} onView={() => {}} onDelete={removeJob} />
+      <JobList jobs={jobs} onView={handleView} onDelete={removeJob} onEdit={handleEdit} />
+
       <JobModal
         isOpen={isModalOpen}
         closeModal={() => setModalOpen(false)}
@@ -27,8 +46,33 @@ const JobDescriptionPage = () => {
       >
         <JobForm onSubmit={createJob} closeModal={() => setModalOpen(false)} />
       </JobModal>
-    </div>
-  )
-}
 
-export default JobDescriptionPage
+      <JobEditModal
+        isOpen={isEditModalOpen}
+        closeModal={() => setEditModalOpen(false)}
+        title='Edit Job Description'
+      >
+        {selectedJob && (
+          <JobEditForm
+            onSubmit={(updatedJob) => {
+              editJob(selectedJob.id, updatedJob); 
+              setEditModalOpen(false);
+            }}
+            closeModal={() => setEditModalOpen(false)}
+            initialData={selectedJob} 
+          />
+        )}
+      </JobEditModal>
+
+      {/* Pass handleEdit as onEdit to the JobDetailsModal */}
+      <JobDetailsModal 
+        job={selectedJob} 
+        closeModal={() => setDetailsModalOpen(false)} 
+        isOpen={isDetailsModalOpen}
+        onEdit={handleEdit}  
+      />
+    </div>
+  );
+};
+
+export default JobDescriptionPage;

@@ -105,10 +105,10 @@
 
 // export default VoiceRecorder;
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { FaMicrophone, FaStop, FaPlay, FaRedo } from 'react-icons/fa';
 
-const VoiceRecorder = ({ onRecordingComplete, onTranscription }) => {
+const VoiceRecorder = forwardRef(({ onRecordingComplete, onTranscription },ref) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -117,6 +117,14 @@ const VoiceRecorder = ({ onRecordingComplete, onTranscription }) => {
   const audioChunksRef = useRef([]);
   const timerRef = useRef(null);
   const recognitionRef = useRef(null);
+
+  const clearAudio = () => {
+    setAudioBlob(null)
+  }
+
+  useImperativeHandle(ref, () => ({
+    clearPreviousAudio: clearAudio,
+  }));
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -261,6 +269,6 @@ const VoiceRecorder = ({ onRecordingComplete, onTranscription }) => {
       )}
     </div>
   );
-};
+});
 
 export default VoiceRecorder;

@@ -10,11 +10,11 @@ feedback_ns = Namespace('feedback', description='Feedback related operations')
 
 # Define API models
 feedback_model = feedback_ns.model('Feedback', {
-    'id': fields.String(readOnly=True, description='Feedback ID'),
+    # 'id': fields.String(readOnly=True, description='Feedback ID'),
     'question': fields.String(required=True, description='Interview question'),
     'answer': fields.String(required=True, description='User answer'),
     'feedback': fields.String(required=True, description='AI-generated feedback'),
-    'created_at': fields.DateTime(readOnly=True, description='Timestamp')
+    # 'created_at': fields.DateTime(readOnly=True, description='Timestamp')
 })
 
 @feedback_ns.route('')
