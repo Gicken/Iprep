@@ -1,5 +1,6 @@
 from openai import OpenAI
 import json
+import os
 from ..models.UserResponse import UserResponse
 from ..models.Feedback import Feedback
 
@@ -63,7 +64,7 @@ class FeedbackProcessor:
 
         
         # Initialize OpenAI client
-        client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
+        client = OpenAI(base_url=os.getenv("LLM_URL"), api_key=os.getenv("LLM_KEY"))
                  
         prompt_content = (
             f"Question: \"{question}\"\n"

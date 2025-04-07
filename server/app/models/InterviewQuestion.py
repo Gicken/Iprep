@@ -8,6 +8,9 @@ class InterviewQuestion(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     question_text = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(255), nullable=False)
+    basis = db.Column(db.String(255), nullable=False)
+    followup = db.Column(db.Boolean,nullable=False)
+    justification = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, nullable=False)
 
     session_id = db.Column(db.String(36), db.ForeignKey("interview_session.id"), nullable=False)

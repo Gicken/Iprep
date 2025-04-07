@@ -3,36 +3,30 @@ from docx import Document
 from ..models.CV import CV
 from ..models.InterviewQuestion import InterviewQuestion
 from ..models.InterviewSession import InterviewSession
+from ..models.UserResponse import UserResponse
 
 from io import BytesIO
 from ..exts import db
 import json
-
+import os
 
 question_json_schema = {
     "type": "json_schema",
-    "json_schema": {
-        "name": "questions",
-        "schema": {
-            "type": "object",
-            "properties": {
-                "questions": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "question": {"type": "string"},
-                            "questionBasis": {"type": "string"},
-                        },
-                        "required": ["question", "questionBasis"]
-                    },
-                    "minItems": 1,
-                }
+        "json_schema": {
+            "name": "question",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "questionText": {"type": "string"},
+                    "questionCategory": {"type": "string"},
+                    "questionBasis":{"type":"string"},
+                    "justification":{"type":"string"},
+                    "followup" : {"type":"boolean"},
+                },
+                "required": ["questionText", "questionCategory", "questionBasis","justification","followup"]
             },
-            "required": ["questions"]
-        },
+        }
     }
-}
 
 class InterviewServices:
     @staticmethod
@@ -67,9 +61,9 @@ class InterviewServices:
         return finalString
     
     @staticmethod
-    def generate_questions(cv_as_string,job_description,difficulty):
+    def generate_question(cv_as_string,job_description,difficulty,session_id,context=None):
 
-        client = OpenAI(base_url="http://127.0.0.1:1234/v1", api_key="lm-studio")
+        client = OpenAI(base_url=os.getenv("LLM_URL"), api_key=os.getenv("LLM_KEY"))
         
         #Get rid of data we dont want to send to the LLM
         job_description.pop("id")
@@ -77,19 +71,59 @@ class InterviewServices:
         job_description.pop("created_at")
         job_description.pop("updated_at")
 
-        response = client.chat.completions.create(
-        model="qwen2.5-coder-7b-instruct",
-        messages=[ 
-            {"role": "system", "content": f"Generate 5 interview questions, some based on the provided CV and job description others looking at soft skills. Consider how well the CV matches the job description. Make the questions {difficulty}."},
-            {"role": "user", "content":f"CV: {cv_as_string}"},
-            {"role": "user", "content":f"Job Description: {job_description}"}
-            ],
-        temperature=0.7, 
-        response_format=question_json_schema
-        )
+        session = InterviewSession.query.filter_by(id=session_id).options(db.joinedload(InterviewSession.questions).joinedload(InterviewQuestion.user_response)).first()
+# 
+        catagoryString = f"Categorise the question as either soft skills or technical. Describe the question basis as either CV, job description or both. Give a short justification for why you asked this question. Make the questions {difficulty}."
+        systemPrompt = f"Generate an interview question, to try and evaluate if the candidate is a good fit for the job based on the provided CV and job description. "
+
+
+        #special case for first question
+        if(len(session.questions))==0:
+            response = client.chat.completions.create(
+            model="qwen2.5-coder-7b-instruct",
+            messages=[ 
+                {"role": "system", "content": f"{systemPrompt} {catagoryString} This is not a followup question."},
+                {"role": "user", "content":f"CV: {cv_as_string}"},
+                {"role": "user", "content":f"Job Description: {job_description}"}
+                ],
+            temperature=0.7, 
+            response_format=question_json_schema
+            )
+        else:
+            print("WE RAN THIS ONE")
+            plural = ""
+            if(len(session.questions))>1:
+                plural = "s"
+
+            previous_questions_responses = []
+            for question in session.questions:
+                print(type(question))
+                print((question.user_response)[0].text)
+
+                questionText = question.question_text
+                answerText = question.user_response[0].text
+                questionMessage = {"role": "assistant", "content": f"Previous Question: {questionText}"},
+                answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: {answerText}"},
+                previous_questions_responses.extend([questionMessage,answerMessage])
+
+            
+
+            response = client.chat.completions.create(
+            model="qwen2.5-coder-7b-instruct",
+            messages=[ 
+                {"role": "system", "content": f"You are continuing an interview, consider the candidates response{plural} to previous question{plural}. Then choose to either a follow up question if you think more detail would help you make your decision, otherwise: {systemPrompt}. In either case, {catagoryString}"},
+                {"role": "user", "content":f"CV: {cv_as_string}"},
+                {"role": "user", "content":f"Job Description: {job_description}"},
+                previous_questions_responses
+                ],
+            temperature=0.7, 
+            response_format=question_json_schema
+            )
+
 
         return json.loads(response.choices[0].message.content)
-    
+
+
     @staticmethod
     def add_questions_to_session(questionsJson,session_id):
         

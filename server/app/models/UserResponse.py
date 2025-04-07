@@ -47,6 +47,6 @@ class UserResponse(db.Model):
     #     return {key: getattr(self, key) for key in dir(self) if not key.startswith('_')}
     
 
-    def __repr__(self):
-        return f"<Transcription {self.id}: {self.filename}>"
+    # def __repr__(self):
+    #     return f"<UserResponse {self.id}: {self.filename}>"
     
