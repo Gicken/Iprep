@@ -105,7 +105,9 @@ class InterviewServices:
                     print("ANSWER:",question.user_response[0].text)
                     answerText = question.user_response[0].text
                     answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: {answerText}"}
-
+                else:
+                    print("ANSWER: Not found")
+                    answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: Nothing Found"}
 
                 # answerText = question.user_response[0].text
                 questionMessage = {"role": "assistant", "content": f"Previous Question: {questionText}"}

@@ -137,65 +137,63 @@ class InterviewStart(Resource):
     def post(self):
         """Start an interview session, including generating first question"""
         try:
-            # current_user_id = get_jwt_identity()
-            # data = request.get_json()
+            current_user_id = get_jwt_identity()
+            data = request.get_json()
 
-            # if not data:
-            #     return {"error": "No data provided"}, 400
+            if not data:
+                return {"error": "No data provided"}, 400
             
-            # job_id = data.get("job_id")
-            # cv_id = data.get("cv_id")
-            # difficulty = data.get("difficulty")
-            # length = data.get("length")
+            job_id = data.get("job_id")
+            cv_id = data.get("cv_id")
+            difficulty = data.get("difficulty")
+            length = data.get("length")
 
-            # if not all([job_id, cv_id, difficulty]):
-            #     return {"error": "Missing required fields"}, 400
+            if not all([job_id, cv_id, difficulty]):
+                return {"error": "Missing required fields"}, 400
             
-            # # Validate CV existence
-            # cv_string = InterviewServices.read_cv_doc(cv_id)
-            # if cv_string == "CV not found":
-            #     return {"error": "CV not found"}, 404
+            # Validate CV existence
+            cv_string = InterviewServices.read_cv_doc(cv_id)
+            if cv_string == "CV not found":
+                return {"error": "CV not found"}, 404
 
-            # # Validate Job Description existence
-            # job_desc_obj = JobDescriptionService.get_job_description_by_id(current_user_id, job_id)
-            # if not job_desc_obj:
-            #     return {"error": "Job description not found"}, 404
+            # Validate Job Description existence
+            job_desc_obj = JobDescriptionService.get_job_description_by_id(current_user_id, job_id)
+            if not job_desc_obj:
+                return {"error": "Job description not found"}, 404
             
-            # job_desc = job_desc_obj.to_dict()
+            job_desc = job_desc_obj.to_dict()
             
-            # # Create interview session
-            # new_session = InterviewSession(
-            #     user_id=current_user_id,
-            #     job_id=job_id,
-            #     cv_id=cv_id,
-            #     difficulty=difficulty,
-            #     length = length
-            # )
-            # db.session.add(new_session)
-            # db.session.commit()
+            # Create interview session
+            new_session = InterviewSession(
+                user_id=current_user_id,
+                job_id=job_id,
+                cv_id=cv_id,
+                difficulty=difficulty,
+                length = length
+            )
+            db.session.add(new_session)
+            db.session.commit()
 
-            # # Generate first question
-            # questionDict = InterviewServices.generate_question(cv_string, job_desc, difficulty,new_session.id)
+            # Generate first question
+            questionDict = InterviewServices.generate_question(cv_string, job_desc, difficulty,new_session.id)
 
-            # #Add first question to the session
-            # first_question = InterviewQuestion(
-            #     session_id=new_session.id,
-            #     question_text=questionDict["questionText"],
-            #     category=questionDict["questionCategory"],
-            #     basis=questionDict["questionBasis"],
-            #     justification=questionDict["justification"],
-            #     followup=questionDict["followup"]
-            # )
-            # db.session.add(first_question)
-            # db.session.commit()
+            #Add first question to the session
+            first_question = InterviewQuestion(
+                session_id=new_session.id,
+                question_text=questionDict["questionText"],
+                category=questionDict["questionCategory"],
+                basis=questionDict["questionBasis"],
+                justification=questionDict["justification"],
+                followup=questionDict["followup"]
+            )
+            db.session.add(first_question)
+            db.session.commit()
 
-
-            # InterviewServices.add_questions_to_session(questions, new_session.id)
             
             return {
                 'message': 'Session created successfully',
-                # 'session_id': new_session.id
-                'session_id': '9eb6c076-c323-4942-9129-df6f930a460d'
+                'session_id': new_session.id
+                # 'session_id': '9eb6c076-c323-4942-9129-df6f930a460d'
             }, 201
 
         except Exception as e:
