@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { fetchSessions } from '../api/feedbackApi';
 
 const SessionManagerPage = () => {
@@ -7,6 +7,8 @@ const SessionManagerPage = () => {
   // const [error, setError] = useState('');
   // const [success, setSuccess] = useState('');
   // const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const navigate = useNavigate();
+
   const { setTitle } = useOutletContext();
 
   // Set page title
@@ -17,16 +19,18 @@ const SessionManagerPage = () => {
   // Fetch sessions for user
   useEffect(() => {
     const getSessions = async () => {
-      setSessions(await fetchSessions());
+      const rawSessions = await fetchSessions();
+      //Sort sessions by datetime
+      setSessions([...rawSessions].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));   
     };
     getSessions();
-    
   }, []);
 
 
 
-  const openFeedbackDetails = () => {
-    console.log("Session",sessions[0]);
+  const openFeedbackDetails = (session_id) => {
+    navigate('/dashboard/feedback/'+session_id)
+    console.log("Session",session_id);
   };
 
 
@@ -65,7 +69,7 @@ const SessionManagerPage = () => {
               >
                 <div className="flex flex-col">
                   <span className="font-medium truncate max-w-[300px]">
-                    {session.job_description.title}, at {session.job_description.companyName}
+                    {session.job_description.title}, at {session.job_description.companyName}. Length: {session.length}
                   </span>
                   <span className="text-sm text-gray-500">
                     Created: {session.created_at}
@@ -73,7 +77,7 @@ const SessionManagerPage = () => {
                 </div>
                 <div className="flex gap-2 mt-2 sm:mt-0">
                   <button
-                    onClick={() => openFeedbackDetails()}
+                    onClick={() => openFeedbackDetails(session.id)}
                     className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
                   >
                     View Details
@@ -90,38 +94,6 @@ const SessionManagerPage = () => {
           </ul>
         )}
       </div>
-
-      {/* Feedback Details Modal */}
-      {/* {selectedFeedback && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">Feedback Details</h2>
-            <div className="mb-4">
-              <strong className="block mb-2">Question:</strong>
-              <p className="bg-black p-3 rounded">{selectedFeedback.question}</p>
-            </div>
-            <div className="mb-4">
-              <strong className="block mb-2">Your Answer:</strong>
-              <p className="bg-black p-3 rounded">{selectedFeedback.answer}</p>
-            </div>
-            <div className="mb-4">
-              <strong className="block mb-2">AI Feedback:</strong>
-              <div 
-                className="bg-black p-3 rounded prose prose-invert"
-                dangerouslySetInnerHTML={{ __html: selectedFeedback.feedback.replace(/\n/g, '<br>') }}
-              />
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={closeFeedbackDetails}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 };

@@ -49,6 +49,7 @@ function App() {
             <Route path = "job-details" element = {<JobDetailsPage/>}/>
             <Route path = "interviewQuestions" element = {<InterviewQuestionPage/>}/>
             <Route path = "feedback" element = {<SessionManagerPage/>}/>
+            <Route path = "feedback/:id" element = {<FeedbackManagerPage/>}/>
 
             <Route path = "*" element = {<ComingSoon/>}/>
             {/* <Route path='*' element={<NotFoundPage />} /> */}
