@@ -4,7 +4,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.exts import db
 from ..models.Feedback import Feedback
 from ..services.feedback_services import FeedbackProcessor
-import json
 
 # Create namespace for feedback
 feedback_ns = Namespace('feedback', description='Feedback related operations')
@@ -54,6 +53,9 @@ class FeedbackList(Resource):
         )
 
         try:
+            print("____________________________________________________________________________________________________________")
+            print(new_feedback.feedbackImprove)
+            print("____________________________________________________________________________________________________________")
             # return generated_feedback.get("strengths")
             db.session.add(new_feedback)
             db.session.commit()

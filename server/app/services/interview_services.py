@@ -72,7 +72,7 @@ class InterviewServices:
         job_description.pop("updated_at")
 
         session = InterviewSession.query.filter_by(id=session_id).options(db.joinedload(InterviewSession.questions).joinedload(InterviewQuestion.user_response)).first()
-# 
+
         catagoryString = f"Categorise the question as either soft skills or technical. Describe the question basis as either CV, job description or both. Give a short justification for why you asked this question. Make the questions {difficulty}."
         systemPrompt = f"Generate an interview question, to try and evaluate if the candidate is a good fit for the job based on the provided CV and job description. "
 
@@ -90,23 +90,34 @@ class InterviewServices:
             response_format=question_json_schema
             )
         else:
-            print("WE RAN THIS ONE")
             plural = ""
             if(len(session.questions))>1:
                 plural = "s"
 
             previous_questions_responses = []
             for question in session.questions:
-                print(type(question))
-                print((question.user_response)[0].text)
 
+                #If  question is passed in with no response a list index out of range error will happen here
                 questionText = question.question_text
-                answerText = question.user_response[0].text
-                questionMessage = {"role": "assistant", "content": f"Previous Question: {questionText}"},
-                answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: {answerText}"},
-                previous_questions_responses.extend([questionMessage,answerMessage])
+                print("QUESTION:",questionText)
 
-            
+                if question.user_response:
+                    print("ANSWER:",question.user_response[0].text)
+                    answerText = question.user_response[0].text
+                    answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: {answerText}"}
+
+
+                # answerText = question.user_response[0].text
+                questionMessage = {"role": "assistant", "content": f"Previous Question: {questionText}"}
+                # answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: {answerText}"}
+                previous_questions_responses.extend([questionMessage,answerMessage])
+                # previous_questions_responses.extend([questionMessage])
+
+
+            print("UNPACK12___________________________________________________________________________________")
+            print(*previous_questions_responses)
+            print(questionMessage)
+            print(answerMessage)
 
             response = client.chat.completions.create(
             model="qwen2.5-coder-7b-instruct",
@@ -114,7 +125,7 @@ class InterviewServices:
                 {"role": "system", "content": f"You are continuing an interview, consider the candidates response{plural} to previous question{plural}. Then choose to either a follow up question if you think more detail would help you make your decision, otherwise: {systemPrompt}. In either case, {catagoryString}"},
                 {"role": "user", "content":f"CV: {cv_as_string}"},
                 {"role": "user", "content":f"Job Description: {job_description}"},
-                previous_questions_responses
+                *previous_questions_responses
                 ],
             temperature=0.7, 
             response_format=question_json_schema
@@ -124,16 +135,3 @@ class InterviewServices:
         return json.loads(response.choices[0].message.content)
 
 
-    @staticmethod
-    def add_questions_to_session(questionsJson,session_id):
-        
-        for questionData in questionsJson["questions"]:
-            new_question = InterviewQuestion(
-                question_text=questionData["question"],
-                category=questionData["questionBasis"]
-            )
-            new_question.session_id = session_id
-            db.session.add(new_question)
-            
-        db.session.commit()
-        return 

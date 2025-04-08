@@ -13,6 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 export const InterviewContainer = ({ session }) => {
+  // const [updateSession,setUpdateSession] = useState(true)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [summaryData, setSummaryData] = useState('')
@@ -22,8 +23,11 @@ export const InterviewContainer = ({ session }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate();
   const currentQuestion = session.questions[currentQuestionIndex]
-  const isLastQuestion = currentQuestionIndex === session.questions.length - 1
+  const isLastQuestion = currentQuestionIndex === session.length - 1
   const childRef = useRef(null)
+
+
+
 
   const clearAudio = () => {
     if(childRef.current){
@@ -41,6 +45,9 @@ export const InterviewContainer = ({ session }) => {
     if (audioBlob) {
       const url = URL.createObjectURL(audioBlob)
       setAudioUrl(url)
+      // console.log(updateSession)
+      // setUpdateSession(!updateSession)
+
     } else {
       alert('Audio recording failed. Please try again.')
       return
@@ -80,15 +87,20 @@ export const InterviewContainer = ({ session }) => {
 
     try {
       setIsSubmitting(true)
-      await interviewApi.uploadResponse(
+      // 
+      const uploadedResponse = await interviewApi.uploadResponse(
         await fetch(audioUrl).then(r => r.blob()),
         currentQuestion.id
       )
-      //clear values after a submit
-      setTranscript("")
-      clearAudio()
-      setAudioUrl(null)
+     
 
+      //wait for feedback to be generated for our response
+      await interviewApi.generateFeedback(uploadedResponse.id)
+
+      //wait for next question to be generated
+      await interviewApi.generateQuestion(sessionStorage.getItem('sessionID'))
+
+      // setUpdateSession(!updateSession)
       if (!isLastQuestion) {
         setCurrentQuestionIndex(prevIndex => prevIndex + 1)
       } else {
@@ -99,12 +111,17 @@ export const InterviewContainer = ({ session }) => {
         const summary = Object.entries(allResponses)
           .map(([question, answer]) => `${question}: ${answer}`)
           .join('\n\n')
-
+        
         setSummaryData(summary)
         setIsModalOpen(true)
       }
+      //clear values after a submit
+      setTranscript("")
+      clearAudio()
+      setAudioUrl(null)
     } catch (error) {
       console.error('Upload failed:', error)
+      console.error('Error:',error.response.data)
       alert('Failed to submit response. Please try again.')
     } finally {
       setIsSubmitting(false)

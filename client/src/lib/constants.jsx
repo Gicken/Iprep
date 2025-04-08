@@ -18,6 +18,9 @@ export const API_ENDPOINTS = {
     START_INTERVIEW:`${BASE_URL}/interview/start`,
     GET_SESSION: `${BASE_URL}/interview`,
     UPLOAD_RESPONSE: `${BASE_URL}/response/transcribe`,
+    GENERATE_NEXT_QUESTION: `${BASE_URL}/interview/continue`,
+    GENERATE_FEEDBACK: `${BASE_URL}/feedback`,
+
 
     // USER_PROFILE: '/api/profile',
     All_feedbacks: `${BASE_URL}/feedback`

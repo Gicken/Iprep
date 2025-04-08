@@ -10,7 +10,7 @@ class InterviewQuestion(db.Model):
     category = db.Column(db.String(255), nullable=False)
     basis = db.Column(db.String(255), nullable=False)
     followup = db.Column(db.Boolean,nullable=False)
-    justification = db.Column(db.String(255), nullable=False)
+    justification = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow, nullable=False)
 
     session_id = db.Column(db.String(36), db.ForeignKey("interview_session.id"), nullable=False)

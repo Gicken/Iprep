@@ -9,6 +9,7 @@ const InterviewQuestionPage = () => {
   const sessionId = sessionStorage.getItem('sessionID');
   const { session, isLoading, error } = useInterviewSession(sessionId);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // const [updateSession,setUpdateSession] = useState(true)
 
   useEffect(() => {
     setTitle('Practice Interview');
@@ -23,6 +24,7 @@ const InterviewQuestionPage = () => {
       session={session} 
       currentQuestionIndex={currentQuestionIndex}
       onQuestionChange={setCurrentQuestionIndex}
+      // updateSession={setUpdateSession}
     />
   );
 };
