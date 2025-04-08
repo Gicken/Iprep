@@ -1,5 +1,4 @@
 import axios from "axios";
-import mockJobData from "../data/mockData";
 import { API_ENDPOINTS } from "../../../lib/constants";
 
 

@@ -14,7 +14,7 @@ import { StartInterview } from './features/startInterview'
 import { JobDescriptionPage, JobDetailsPage } from './features/JobDescriptionFeature'
 import { InterviewQuestionPage } from "./features/startQuestion"
 import {ComingSoon} from './features/dashboard'
-import FeedbackManager from './pages/FeedbackManager'
+import {FeedbackManagerPage,SessionManagerPage} from './features/feedbackManagement'
 
 
 function App() {
@@ -48,7 +48,7 @@ function App() {
             <Route path = "job-descriptions" element = {<JobDescriptionPage/>}/>
             <Route path = "job-details" element = {<JobDetailsPage/>}/>
             <Route path = "interviewQuestions" element = {<InterviewQuestionPage/>}/>
-            <Route path = "feedback" element = {<FeedbackManager/>}/>
+            <Route path = "feedback" element = {<SessionManagerPage/>}/>
 
             <Route path = "*" element = {<ComingSoon/>}/>
             {/* <Route path='*' element={<NotFoundPage />} /> */}

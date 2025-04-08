@@ -36,6 +36,29 @@ interview_session_model_response = interview_ns.model( "session_response",{
     }
 )
 
+
+def serialize_job(job):
+        return {
+            'id': job.id,
+            'title': job.title,
+            'description': job.description,
+            'companyName': job.companyName,
+            'companyIndustry': job.companyIndustry,
+            'companyInfo': job.companyInfo,
+            'skills': job.skills,
+            'experience_level': job.experience_level,
+            'created_at': job.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'updated_at': job.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+
+
+def serialize_cv(cv):
+        return {
+            'id': cv.id,
+            'file_name': cv.file_name,
+            'upload_date': cv.upload_date.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
 def serialize_feedback(feedback):
         return {
             'id': feedback.id,
@@ -71,6 +94,9 @@ def serialize_session(session):
         'cv_id': session.cv_id,
         'user_id': session.user_id,
         'length': session.length,
+        'job_description':serialize_job(session.job_description),
+        'cv':serialize_cv(session.cv),
+        'created_at': session.created_at.strftime('%Y-%m-%dT%H:%M:%S'),
         'questions': [serialize_interview_question(q) for q in session.questions]
     }
 

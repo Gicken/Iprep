@@ -10,6 +10,7 @@ export const fetchCVs = async (setCvs, setError) => {
     setCvs(response.data);
   } catch (err) {
     setError('Failed to fetch CVs. Please try again.', err);
+    console.error("Failed to fetch CVs:", err)
   }
 };
 
@@ -37,6 +38,7 @@ export const uploadCV = async (selectedFile, setIsUploading, setSuccess, setErro
     fetchCVs(setCvs, setError);
   } catch (err) {
     setError('Failed to upload CV. Please try again.', err);
+    console.error("Failed to upload CV:", err)
   } finally {
     setIsUploading(false);
   }
@@ -55,6 +57,7 @@ export const deleteCV = async (cvId, setCvs, setSuccess, setError) => {
     setSuccess('CV deleted successfully');
   } catch (err) {
     setError('Failed to delete CV. Please try again.', err);
+    console.error("Failed to delete CV:", err)
   }
 };
 
@@ -74,5 +77,6 @@ export const downloadCV = async (cvId, setError) => {
     link.click();
   } catch (err) {
     setError('Failed to download CV. Please try again.', err);
+    console.error("Failed to download CV:", err)
   }
 };

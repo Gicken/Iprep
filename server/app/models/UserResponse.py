@@ -22,31 +22,3 @@ class UserResponse(db.Model):
 
     question_id = db.Column(db.String(36), db.ForeignKey("interview_questions.id"), nullable=False)
     question = db.relationship("InterviewQuestion", back_populates="user_response")
-
-    # session_id = db.Column(db.String(36), db.ForeignKey("interview_session.id"), nullable=False)
-    # session = db.relationship("InterviewSession", back_populates="user_responses")
-
-
-    # def __init__(self, id, text):
-    #     self.id = id
-    #     self.text = text
-        
-   
-    # def __dict__(self):
-    #     return {
-    #         "id": self.id,
-    #         "text": self.text,
-    #     }
-
-    # def __init__(self, **kwargs):
-    #     for key, value in kwargs.items():
-    #         setattr(self, key, value)
-    
-    # # Correctly define __dict__ method to return a dictionary of the object's attributes
-    # def __dict__(self):
-    #     return {key: getattr(self, key) for key in dir(self) if not key.startswith('_')}
-    
-
-    # def __repr__(self):
-    #     return f"<UserResponse {self.id}: {self.filename}>"
-    

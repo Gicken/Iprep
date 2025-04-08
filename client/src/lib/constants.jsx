@@ -17,6 +17,7 @@ export const API_ENDPOINTS = {
     ADD_NEWJOBDESCRIPTION:`${BASE_URL}/jobdescription`,
     START_INTERVIEW:`${BASE_URL}/interview/start`,
     GET_SESSION: `${BASE_URL}/interview`,
+    GET_ALL_SESSIONS: `${BASE_URL}/interview/`,
     UPLOAD_RESPONSE: `${BASE_URL}/response/transcribe`,
     GENERATE_NEXT_QUESTION: `${BASE_URL}/interview/continue`,
     GENERATE_FEEDBACK: `${BASE_URL}/feedback`,
