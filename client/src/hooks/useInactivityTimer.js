@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from "react";
 
 export const useInactivityTimer = (
   isAuthenticated,
@@ -17,13 +17,13 @@ export const useInactivityTimer = (
   }, []);
 
   const startCountdown = useCallback(() => {
-    let seconds = 60;
+    let seconds = 300; // Start countdown from 5 minutes (300 seconds)
     setCountdown(seconds);
-    
+
     countdownIntervalRef.current = setInterval(() => {
       seconds -= 1;
       setCountdown(seconds);
-      
+
       if (seconds <= 0) {
         clearInterval(countdownIntervalRef.current);
       }
@@ -33,20 +33,21 @@ export const useInactivityTimer = (
   const resetInactivityTimer = useCallback(() => {
     if (!isAuthenticated) return;
 
-    // Clear any existing timers
+    // Clear existing timers
     clearTimers();
     setShowLogoutWarning(false);
-    setCountdown(60); // Reset countdown display
+    setCountdown(300); // Reset countdown display (5 minutes)
 
     // Set new timers
     warningTimerRef.current = setTimeout(() => {
       setShowLogoutWarning(true);
-      startCountdown(); // Start the visual countdown
+      startCountdown(); // Start the 5-minute countdown
       
       logoutTimerRef.current = setTimeout(() => {
         logout();
-      }, 1800000); // 30 minute until actual logout
-    }, 300000); // 5 minute until warning shows
+      }, 300000); // Logout exactly 5 minutes after warning
+    }, 3300000); // Show warning at 55 minutes (3300000ms)
+
   }, [isAuthenticated, logout, setShowLogoutWarning, clearTimers, startCountdown, setCountdown]);
 
   // Cleanup on unmount

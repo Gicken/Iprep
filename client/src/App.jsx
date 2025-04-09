@@ -14,6 +14,8 @@ import { StartInterview } from './features/startInterview'
 import { JobDescriptionPage, JobDetailsPage } from './features/JobDescriptionFeature'
 import { InterviewQuestionPage } from "./features/startQuestion"
 import {ComingSoon} from './features/dashboard'
+import { RecoveryPage } from './features/resetPassword'
+import {ResetPage} from './features/resetPassword'
 import {FeedbackManagerPage,SessionManagerPage} from './features/feedbackManagement'
 
 
@@ -26,9 +28,9 @@ function App() {
           <Route path='/' element={<MainLayout />}>
             <Route index element={<HomePage />} />
             <Route path='home' element={<HomePage />} />
-            {/* <Route path='recovery' element={<RecoveryPage />} /> */}
+            <Route path='recovery' element={<RecoveryPage />} />
             <Route path='registration' element={<RegisterPage />} />
-            {/* <Route path='reset' element={<ResetPage />} /> */}
+            <Route path='reset' element={<ResetPage />} />
             <Route path='how-it-works' element={<HowItWorks />} />
             <Route path='faqs' element={<FAQs />} />
             <Route path='login' element={<LoginPage />} />
