@@ -7,7 +7,8 @@ export const useInterviewSetup = () => {
   const [selectedCv, setSelectedCv] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [difficulty, setDifficulty] = useState("");
-  const [errors, setErrors] = useState({ cv: "", job: "", difficulty: "" });
+  const [length, setLength] = useState("");
+  const [errors, setErrors] = useState({ cv: "", job: "", difficulty: "", length: ""});
 
   useEffect(() => {
     const getData = async () => {
@@ -31,14 +32,19 @@ export const useInterviewSetup = () => {
     setDifficulty(event.target.value);
   };
 
+  const handleLengthChange = (event) => {
+    setLength(event.target.value);
+  };
+
   const validateForm = () => {
     const newErrors = {
       cv: selectedCv ? "" : "Please select a CV",
       job: selectedJob ? "" : "Please select a Job Description",
       difficulty: difficulty ? "" : "Please select a difficulty level",
+      length: length ? "":"Please select a number of questions"
     };
     setErrors(newErrors);
-    return !newErrors.cv && !newErrors.job && !newErrors.difficulty;
+    return !newErrors.cv && !newErrors.job && !newErrors.difficulty && !newErrors.length;
   };
 
   return {
@@ -47,10 +53,12 @@ export const useInterviewSetup = () => {
     selectedCv,
     selectedJob,
     difficulty,
+    length,
     errors,
     handleChangeCV,
     handleChangeJob,
     handleDifficultyChange,
+    handleLengthChange,
     validateForm,
   };
 };

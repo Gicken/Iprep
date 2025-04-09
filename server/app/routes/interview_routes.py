@@ -10,26 +10,19 @@ from flask import jsonify
 
 interview_ns = Namespace('interview_session', description='Interview operations')
 
-##Schema for incoming questions
 question_model = interview_ns.model("Question", {
-    'question': fields.String(required=True),
-    'questionBasis': fields.String(required=True),
+    'question_text': fields.String(required=True),
+    'category': fields.String(required=True),
+    'basis': fields.String(required=True),
+    'justification':fields.String(required=True),
+    'followup:':fields.Boolean(required=True),
 })
-
-questions_model = interview_ns.model("Questions", {
-    'questions': fields.List(fields.Nested(question_model), required=True, min_items=1),
-})
-
-json_schema_model = interview_ns.model("JsonSchemaModel", {
-    'name': fields.String(required=True),
-    'schema': fields.Nested(questions_model, required=True),
-})
-##
 
 interview_session_model = interview_ns.model( "session",{
         "job_id": fields.String(required=True, description="job_id"),
         "cv_id": fields.String(required=True, description="cv_id"),
-        "difficulty": fields.String(required=True, description="Difficulty")
+        "difficulty": fields.String(required=True, description="Difficulty"),
+        "length": fields.Integer(required=True, description="number of questions")
     }
 )
 
@@ -38,17 +31,47 @@ interview_session_model_response = interview_ns.model( "session_response",{
         "job_id": fields.String(required=True, description="job_id"),
         "cv_id": fields.String(required=True, description="cv_id"),
         "difficulty": fields.String(required=True, description="Difficulty"),
+        "length": fields.Integer(required=True, description="number of questions"),
         "questions": fields.List(fields.Nested(question_model), required=True, min_items=1)
     }
 )
 
 
+def serialize_job(job):
+        return {
+            'id': job.id,
+            'title': job.title,
+            'description': job.description,
+            'companyName': job.companyName,
+            'companyIndustry': job.companyIndustry,
+            'companyInfo': job.companyInfo,
+            'skills': job.skills,
+            'experience_level': job.experience_level,
+            'created_at': job.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'updated_at': job.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+
+
+def serialize_cv(cv):
+        return {
+            'id': cv.id,
+            'file_name': cv.file_name,
+            'upload_date': cv.upload_date.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+def serialize_feedback(feedback):
+        return {
+            'id': feedback.id,
+            'strength': feedback.feedbackStrength,
+            'improve': feedback.feedbackImprove,
+            'recommendation': feedback.feedbackRecommendation,
+        }
 
 def serialize_response(response):
         return {
             'id': response.id,
-            'text': response.text
-
+            'text': response.text,
+            'feedback': [serialize_feedback(f) for f in response.feedback]
         }
 
 def serialize_interview_question(question):
@@ -56,10 +79,10 @@ def serialize_interview_question(question):
             'id': question.id,
             'question_text': question.question_text,
             'category': question.category,
+            'basis':question.basis,
+            'justification':question.justification,
+            'followup:':question.followup,
             'response':[serialize_response(q) for q in question.user_response]
-            # 'response': serialize_response(question.user_response)
-            # 'response': question.user_response.__dict__
-
         }
 
 # JobDescriptionService.get_job_description_by_id(current_user_id,data["job_id"]).to_dict()
@@ -70,6 +93,10 @@ def serialize_session(session):
         'job_id': session.job_id,
         'cv_id': session.cv_id,
         'user_id': session.user_id,
+        'length': session.length,
+        'job_description':serialize_job(session.job_description),
+        'cv':serialize_cv(session.cv),
+        'created_at': session.created_at.strftime('%Y-%m-%dT%H:%M:%S'),
         'questions': [serialize_interview_question(q) for q in session.questions]
     }
 
@@ -105,6 +132,24 @@ class InterviewItem(Resource):
             return {'error': 'Session not found or you do not have permission to access it'}, 404
 
         return serialize_session(session), 200
+
+    @interview_ns.response(200, "Success")
+    @interview_ns.response(401,"Unauthorized")
+    @interview_ns.response(404,"Session not found")
+    @interview_ns.response(500, "Internal Server Error")
+    @interview_ns.doc(security='BearerAuth')
+    @jwt_required()
+    def delete(self, session_id):
+        """Delete session by ID"""
+        current_user_id = get_jwt_identity()
+        session = InterviewSession.query.filter_by(user_id=current_user_id, id=session_id).first()
+        if not session:
+            return {'error': 'Session not found or you do not have permission to access it'}, 404
+        else:
+            db.session.delete(session)
+            db.session.commit()
+
+            return {'message': 'Session has been deleted'}, 200
 @interview_ns.route('/start')
 class InterviewStart(Resource):
     @interview_ns.response(201, "Success")
@@ -116,7 +161,7 @@ class InterviewStart(Resource):
     @interview_ns.expect(interview_session_model)
     @jwt_required()
     def post(self):
-        """Start an interview session, including generating questions"""
+        """Start an interview session, including generating first question"""
         try:
             current_user_id = get_jwt_identity()
             data = request.get_json()
@@ -127,6 +172,7 @@ class InterviewStart(Resource):
             job_id = data.get("job_id")
             cv_id = data.get("cv_id")
             difficulty = data.get("difficulty")
+            length = data.get("length")
 
             if not all([job_id, cv_id, difficulty]):
                 return {"error": "Missing required fields"}, 400
@@ -145,22 +191,103 @@ class InterviewStart(Resource):
             
             # Create interview session
             new_session = InterviewSession(
+                user_id=current_user_id,
                 job_id=job_id,
                 cv_id=cv_id,
                 difficulty=difficulty,
-                user_id=current_user_id
+                length = length
             )
             db.session.add(new_session)
             db.session.commit()
 
-            # Generate questions
-            questions = InterviewServices.generate_questions(cv_string, job_desc, difficulty)
-            InterviewServices.add_questions_to_session(questions, new_session.id)
+            # Generate first question
+            questionDict = InterviewServices.generate_question(cv_string, job_desc, difficulty,new_session.id)
+
+            #Add first question to the session
+            first_question = InterviewQuestion(
+                session_id=new_session.id,
+                question_text=questionDict["questionText"],
+                category=questionDict["questionCategory"],
+                basis=questionDict["questionBasis"],
+                justification=questionDict["justification"],
+                followup=questionDict["followup"]
+            )
+            db.session.add(first_question)
+            db.session.commit()
+
             
             return {
                 'message': 'Session created successfully',
                 'session_id': new_session.id
-                # 'session_id': '0d17e3c0-f872-484c-af1f-088b0bcabefd'
+                # 'session_id': '9eb6c076-c323-4942-9129-df6f930a460d'
+            }, 201
+
+        except Exception as e:
+            db.session.rollback()
+            return {"error": str(e)}, 500
+
+
+@interview_ns.route('/continue/<string:session_id>')
+class InterviewContinue(Resource):
+    @interview_ns.response(201, "Success")
+    @interview_ns.response(400, "Bad Request")
+    @interview_ns.response(401, "Unauthorized")
+    @interview_ns.response(404, "CV or Job description not found")
+    @interview_ns.response(500, "Internal Server Error")
+    @interview_ns.doc(security='BearerAuth')
+    @jwt_required()
+    def post(self,session_id):
+        """Continue an interview session by generating a question"""
+        try:
+            
+            current_user_id = get_jwt_identity()
+
+            this_session = InterviewSession.query.get(session_id)
+
+            if not this_session:
+                return {"error": "Session not found"}, 404
+            
+            job_id = this_session.job_id
+            cv_id = this_session.cv_id
+            difficulty = this_session.difficulty
+            length = this_session.length
+
+            if not all([job_id, cv_id, difficulty]):
+                return {"error": "Missing required fields"}, 400
+            
+            # Validate CV existence
+            cv_string = InterviewServices.read_cv_doc(cv_id)
+            if cv_string == "CV not found":
+                return {"error": "CV not found"}, 404
+
+            # Validate Job Description existence
+            job_desc_obj = JobDescriptionService.get_job_description_by_id(current_user_id, job_id)
+            if not job_desc_obj:
+                return {"error": "Job description not found"}, 404
+            
+            job_desc = job_desc_obj.to_dict()
+
+            # Generate question
+            questionDict = InterviewServices.generate_question(cv_string, job_desc, difficulty,session_id)
+
+            #Add question to the session
+            new_question = InterviewQuestion(
+                session_id=this_session.id,
+                question_text=questionDict["questionText"],
+                category=questionDict["questionCategory"],
+                basis=questionDict["questionBasis"],
+                justification=questionDict["justification"],
+                followup=questionDict["followup"]
+            )
+            db.session.add(new_question)
+            db.session.commit()
+
+
+            # InterviewServices.add_questions_to_session(questions, new_session.id)
+            
+            return {
+                'message': 'Question created successfully',
+                'question': new_question.id
             }, 201
 
         except Exception as e:

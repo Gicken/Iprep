@@ -12,11 +12,11 @@ import { Dashboard } from './features/dashboard'
 import { CVManager } from './features/cvManagement'
 import { StartInterview } from './features/startInterview'
 import { JobDescriptionPage, JobDetailsPage } from './features/JobDescriptionFeature'
-import { InterviewQuestionPage, InterviewSummaryPage } from "./features/startQuestion"
+import { InterviewQuestionPage } from "./features/startQuestion"
 import {ComingSoon} from './features/dashboard'
 import { RecoveryPage } from './features/resetPassword'
 import {ResetPage} from './features/resetPassword'
-import FeedbackManager from './pages/FeedbackManager'
+import {FeedbackManagerPage,SessionManagerPage} from './features/feedbackManagement'
 
 
 function App() {
@@ -50,8 +50,8 @@ function App() {
             <Route path = "job-descriptions" element = {<JobDescriptionPage/>}/>
             <Route path = "job-details" element = {<JobDetailsPage/>}/>
             <Route path = "interviewQuestions" element = {<InterviewQuestionPage/>}/>
-            <Route path = "interview-summary" element = {<InterviewSummaryPage/>}/>
-            <Route path = "feedback" element = {<FeedbackManager/>}/>
+            <Route path = "feedback" element = {<SessionManagerPage/>}/>
+            <Route path = "feedback/:id" element = {<FeedbackManagerPage/>}/>
 
             <Route path = "*" element = {<ComingSoon/>}/>
             {/* <Route path='*' element={<NotFoundPage />} /> */}

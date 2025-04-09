@@ -51,5 +51,23 @@ export const interviewApi = {
       console.error('Upload failed:', error);
       throw error;
     }
+  },
+
+  generateQuestion: async (sessionId) => {
+    try {
+      return await api.post(`${API_ENDPOINTS.GENERATE_NEXT_QUESTION}/${sessionId}`);
+    } catch (error) {
+      console.error('Question Failed to Generate:', error);
+      throw error;
+    }
+  },
+
+  generateFeedback: async (responseId) => {
+    try {
+      return await api.post(`${API_ENDPOINTS.GENERATE_FEEDBACK}/${responseId}`);
+    } catch (error) {
+      console.error('Failed to generate Feedback :', error);
+      throw error;
+    }
   }
 }

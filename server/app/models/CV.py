@@ -12,7 +12,7 @@ class CV(db.Model):
     upload_date = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.String(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False, index=True)
 
-
+    sessions = db.relationship('InterviewSession', back_populates='cv', cascade="all, delete-orphan")
     user = db.relationship("User", backref=db.backref("cvs", lazy=True, cascade="all,delete-orphan"))
     user = db.relationship("User", backref=db.backref("feedbacks", lazy=True, cascade="all, delete-orphan"))
 

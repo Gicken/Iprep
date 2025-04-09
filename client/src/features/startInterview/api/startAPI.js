@@ -35,14 +35,16 @@ export const fetchJobs = async () => {
   }
 };
 
-export const startInterview = async (cvId,jobId,difficulty) => {
+export const startInterview = async (cvId,jobId,difficulty,length) => {
   try {
     const token = sessionStorage.getItem("token");
     const params = {
       "cv_id": cvId,
       "job_id": jobId,
       "difficulty": difficulty,
+      "length": length
     }
+    console.log(params)
     const response = await axios.post(`${API_ENDPOINTS.START_INTERVIEW}`,params, {
       headers: {
         Authorization: `Bearer ${token}`,

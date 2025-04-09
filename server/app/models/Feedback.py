@@ -1,16 +1,18 @@
 from ..exts import db
 import uuid
 from datetime import datetime
+from sqlalchemy.dialects.mysql import CHAR, JSON, DATETIME
+
 
 class Feedback(db.Model):
     __tablename__ = 'feedback'
 
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = db.Column(db.String(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False, index=True)
-
-    question = db.Column(db.Text, nullable=False)
-    answer = db.Column(db.Text, nullable=False)
-    feedback = db.Column(db.Text, nullable=False)
+    response_id = db.Column(db.String(36), db.ForeignKey("user_responses.id"), nullable=False)
+    response = db.relationship("UserResponse", back_populates="feedback")
+    feedbackStrength = db.Column(JSON, nullable=False)
+    feedbackImprove = db.Column(JSON, nullable=False)    
+    feedbackRecommendation = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # user = db.relationship('User', backref=db.backref('feedbacks', lazy=True))

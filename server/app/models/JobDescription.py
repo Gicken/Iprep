@@ -17,6 +17,7 @@ class JobDescription(db.Model):
     updated_at = db.Column(DATETIME, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     userid = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('jobs', lazy=True))
+    sessions = db.relationship('InterviewSession', back_populates='job_description', cascade="all, delete-orphan")
 
 
     def __repr__(self):
