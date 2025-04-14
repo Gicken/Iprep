@@ -14,11 +14,15 @@ function StartInterview() {
     selectedJob,
     difficulty,
     length,
+    start,
+    loading,
     errors,
     handleChangeCV,
     handleChangeJob,
     handleDifficultyChange,
     handleLengthChange,
+    handleStart,
+    handleLoading,
     validateForm,
   } = useInterviewSetup();
 
@@ -30,11 +34,19 @@ function StartInterview() {
     event.preventDefault();
     try {
       if (validateForm()) {
-        alert('Your interview is being prepared!')
+        handleLoading() //start loading
+        // alert('Your interview is being prepared!')
         const response = await startInterview(selectedCv.id,selectedJob.id,difficulty,length)
-        console.log("response",response)
-        sessionStorage.setItem("sessionID",response["session_id"]);
-        navigate("/dashboard/interviewQuestions");
+        handleStart(response.status)
+        if (response.status != 201){
+          console.log("err",response.status)
+          console.log("loading")
+          handleLoading() //should close loading
+        } else {
+          console.log("response",response)
+          sessionStorage.setItem("sessionID",response.data["session_id"]);
+          navigate("/dashboard/interviewQuestions");
+        }
     }
     } catch (error) {
       console.error(error);
@@ -45,7 +57,7 @@ function StartInterview() {
     <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
       <div className="bg-gray-800 rounded-md p-6">
         <h2 className="text-xl font-semibold mb-4">Select Interview Setup</h2>
-        <InterviewForm {...{ cvList, jobList, selectedCv, selectedJob, difficulty, length, errors, handleChangeCV, handleChangeJob, handleDifficultyChange, handleLengthChange, handleSubmit }} />
+        <InterviewForm {...{ cvList, jobList, selectedCv, selectedJob, difficulty, length, start, loading, errors, handleChangeCV, handleChangeJob, handleDifficultyChange, handleLengthChange, handleSubmit }} />
       </div>
     </div>
   );

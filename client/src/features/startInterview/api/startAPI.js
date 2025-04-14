@@ -52,9 +52,9 @@ export const startInterview = async (cvId,jobId,difficulty,length) => {
         accept: "application/json",
       },
     });
-    return response.data;
+    return response;
   } catch (err) {
     console.error("Start error:", err);
-    return [];
+    return err;
   }
 };

@@ -8,6 +8,8 @@ const InterviewForm = ({
   difficulty,
   length,
   errors,
+  start,
+  loading,
   handleChangeCV,
   handleChangeJob,
   handleDifficultyChange,
@@ -95,10 +97,13 @@ const InterviewForm = ({
         </ul>
         {errors.length && <p className="ml-4 mb-3 text-red-500 text-sm mt-1">{errors.length}</p>}
       </div>
-
+      <div className="flex">
       <button type="submit" className="btn-primary bg-blue-500 text-white px-4 py-2 rounded">
         Begin Interview!
       </button>
+      {loading && <p className="ml-4 text-green-500 text-sm mt-2">Please wait while your interview is prepared...</p>}
+      </div>
+      {start && <p className="ml-4 text-red-500 text-sm mt-4">{start}</p>}
     </form>
   );
 };

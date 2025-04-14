@@ -60,6 +60,9 @@ class FeedbackProcessor:
 
         question = user_response.question.question_text
         answer = user_response.text
+        #context would be a field in the user_response table which is populated with an ai review of the users input
+        #eg things to go in context eye tracking evaluation, professional language usage, facial emotion recognition information
+        #the field could read eg/ "The user appeared axious, but used strong profession language and tone"
         context = "Nothing to add"
 
         

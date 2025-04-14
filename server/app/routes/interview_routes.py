@@ -200,8 +200,15 @@ class InterviewStart(Resource):
             db.session.add(new_session)
             db.session.commit()
 
-            # Generate first question
-            questionDict = InterviewServices.generate_question(cv_string, job_desc, difficulty,new_session.id)
+            try:                 
+                # Generate first question
+                questionDict = InterviewServices.generate_question(cv_string, job_desc, difficulty,new_session.id)
+            except Exception as e:
+                # remove session if generation failed
+                db.session.delete(new_session)
+                db.session.commit()
+                return {"error generationg questions": str(e)}, 500
+                
 
             #Add first question to the session
             first_question = InterviewQuestion(

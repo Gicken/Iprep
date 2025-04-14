@@ -8,6 +8,9 @@ export const useInterviewSetup = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [difficulty, setDifficulty] = useState("");
   const [length, setLength] = useState("");
+  const [start, setStart] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [errors, setErrors] = useState({ cv: "", job: "", difficulty: "", length: ""});
 
   useEffect(() => {
@@ -36,12 +39,25 @@ export const useInterviewSetup = () => {
     setLength(event.target.value);
   };
 
+  const handleStart = (status) => {
+    if(status==201) {
+      setStart("Your interview is starting now");
+    } else {
+      setStart("Something went wrong, please try again");
+    }
+  };
+
+  const handleLoading = () => {
+    setLoading(!loading)
+    console.log(loading)
+  };
+
   const validateForm = () => {
     const newErrors = {
       cv: selectedCv ? "" : "Please select a CV",
       job: selectedJob ? "" : "Please select a Job Description",
       difficulty: difficulty ? "" : "Please select a difficulty level",
-      length: length ? "":"Please select a number of questions"
+      length: length ? "":"Please select a number of questions",
     };
     setErrors(newErrors);
     return !newErrors.cv && !newErrors.job && !newErrors.difficulty && !newErrors.length;
@@ -55,10 +71,14 @@ export const useInterviewSetup = () => {
     difficulty,
     length,
     errors,
+    start,
+    loading,
     handleChangeCV,
     handleChangeJob,
     handleDifficultyChange,
     handleLengthChange,
+    handleStart,
+    handleLoading,
     validateForm,
   };
 };

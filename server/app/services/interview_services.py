@@ -99,32 +99,26 @@ class InterviewServices:
 
                 #If  question is passed in with no response a list index out of range error will happen here
                 questionText = question.question_text
-                print("QUESTION:",questionText)
+                # print("QUESTION:",questionText)
 
                 if question.user_response:
-                    print("ANSWER:",question.user_response[0].text)
+                    # print("ANSWER:",question.user_response[0].text)
                     answerText = question.user_response[0].text
                     answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: {answerText}"}
                 else:
                     print("ANSWER: Not found")
+                    #This should not happen, only here to stop system crash. Idealy any question we are evaluating should have a response by this stage
                     answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: Nothing Found"}
 
-                # answerText = question.user_response[0].text
                 questionMessage = {"role": "assistant", "content": f"Previous Question: {questionText}"}
-                # answerMessage = {"role": "user", "content": f"Candidate's Response to Previous Question: {answerText}"}
                 previous_questions_responses.extend([questionMessage,answerMessage])
-                # previous_questions_responses.extend([questionMessage])
 
 
-            print("UNPACK12___________________________________________________________________________________")
-            print(*previous_questions_responses)
-            print(questionMessage)
-            print(answerMessage)
 
             response = client.chat.completions.create(
             model="qwen2.5-coder-7b-instruct",
             messages=[ 
-                {"role": "system", "content": f"You are continuing an interview, consider the candidates response{plural} to previous question{plural}. Then choose to either a follow up question if you think more detail would help you make your decision, otherwise: {systemPrompt}. In either case, {catagoryString}"},
+                {"role": "system", "content": f"You are continuing an interview, consider the candidates response{plural} to previous question{plural}. Then choose to either ask a follow up question if you think more detail is needed, otherwise, ensuring you do not repeat a previous question: {systemPrompt}. In either case, {catagoryString}"},
                 {"role": "user", "content":f"CV: {cv_as_string}"},
                 {"role": "user", "content":f"Job Description: {job_description}"},
                 *previous_questions_responses
